@@ -39,7 +39,7 @@ const messages = {
         registerDisclaimer2: 'Click here to register.'
       },
       failed: 'Username or password is incorrect.',
-      error: 'Something went wrong. Please try again later.'
+      error: 'An error has occurred. Please try again later.'
     },
     register: {
       header: 'Create your Account',

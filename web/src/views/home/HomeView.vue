@@ -1,10 +1,10 @@
 <script>
-import LoginView from '@/views/home/LoginView.vue'
-import RegisterView from '@/views/home/RegisterView.vue'
+import LoginPanel from '@/views/home/LoginPanel.vue'
+import RegisterPanel from '@/views/home/RegisterPanel.vue'
 
 export default {
   name: 'HomeView',
-  components: { RegisterView, LoginView },
+  components: { RegisterPanel, LoginPanel },
 
   data() {
     return {
@@ -25,8 +25,8 @@ export default {
 </script>
 
 <template>
-  <LoginView v-if="!register" @register="toRegister" />
-  <RegisterView v-if="register" @done="toLogin" />
+  <LoginPanel v-if="!register" @register="toRegister" />
+  <RegisterPanel v-if="register" @done="toLogin" />
 </template>
 
 <style scoped></style>

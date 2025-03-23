@@ -34,7 +34,7 @@ import { helpers, required } from '@vuelidate/validators'
 import FormsMixin from '../../mixins/FormsMixin.vue'
 
 export default {
-  name: 'LoginView',
+  name: 'LoginPanel',
   mixins: [FormsMixin],
   components: { TextInput },
 
@@ -64,14 +64,6 @@ export default {
 
   methods: {
     async submit() {
-      // this.v$.$validate()
-      // if (!this.v$.$error) {
-      //   this.login()
-      // } else {
-      //   this.displayValidationErrors()
-      // }
-      // this.$router.push('/dashboard')
-
       this.login()
     },
 

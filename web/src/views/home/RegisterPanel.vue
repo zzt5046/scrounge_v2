@@ -5,7 +5,7 @@ import { accountService } from '@/service/.service-registry'
 import FormsMixin from '../../mixins/FormsMixin.vue'
 
 export default {
-  name: 'RegisterView',
+  name: 'RegisterPanel',
   mixins: [FormsMixin],
   components: { TextInput, SelectInput },
 
