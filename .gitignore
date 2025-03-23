@@ -34,3 +34,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+.kotlin/
+node_modules/
+web/.vscode
+web/node_modules/

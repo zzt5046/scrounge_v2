@@ -1,4 +1,4 @@
-package zjt.projects.util
+package zjt.projects.util.serializer
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
