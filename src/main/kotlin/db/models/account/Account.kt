@@ -12,11 +12,4 @@ data class Account(
     val securityQuestionId: String,
     val securityQuestionAnswer: String,
     val preferences: Map<AccountPreference, String>,
-) {
-    fun toDocument(): Document = Document.parse(Json.encodeToString(this))
-
-    companion object {
-        private val json = Json { ignoreUnknownKeys = true }
-        fun fromDocument(document: Document): Account = json.decodeFromString(document.toJson())
-    }
-}
+)

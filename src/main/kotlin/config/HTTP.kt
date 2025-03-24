@@ -15,12 +15,7 @@ fun Application.configureHTTP() {
         allowMethod(HttpMethod.Put)
         allowMethod(HttpMethod.Delete)
 
-        allowHeader(HttpHeaders.Accept)
-        allowHeader(HttpHeaders.AccessControlAllowOrigin)
         allowHeader(HttpHeaders.ContentType)
-        allowHeader(HttpHeaders.Referrer)
-        allowHeader(HttpHeaders.Authorization)
-        allowHeader(HttpHeaders.UserAgent)
 
         allowCredentials = true
         allowSameOrigin = true

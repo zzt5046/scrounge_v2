@@ -18,7 +18,7 @@ fun Application.accountsModule(db: MongoDatabase){
         //Auth account (login)
         post("/accounts/login") {
             val request = call.receive<AccountLoginRequest>()
-            when(accountService.authenticate(request)){
+            when(accountService.authenticate(request).status){
                 AccountLoginStatus.SUCCESS ->
                     call.respond(HttpStatusCode.OK, 200)
                 AccountLoginStatus.FAILURE ->

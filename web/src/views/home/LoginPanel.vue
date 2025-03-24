@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="login-panel form">
+    <div class="login-panel panel form">
       <h3>{{ $t('login.header') }}</h3>
       <p>
         <TextInput id="login-username" :label="$t('fields.username')" v-model="username" />
@@ -29,18 +29,12 @@
 <script>
 import { accountService } from '@/service/.service-registry'
 import TextInput from '@/components/core/input/TextInput.vue'
-import { useVuelidate } from '@vuelidate/core'
-import { helpers, required } from '@vuelidate/validators'
 import FormsMixin from '../../mixins/FormsMixin.vue'
 
 export default {
   name: 'LoginPanel',
   mixins: [FormsMixin],
   components: { TextInput },
-
-  setup() {
-    return { v$: useVuelidate() }
-  },
 
   data() {
     return {
@@ -51,17 +45,6 @@ export default {
     }
   },
 
-  validations() {
-    return {
-      username: {
-        required: helpers.withMessage('Username is required', required)
-      },
-      password: {
-        required: helpers.withMessage('Password is required', required)
-      }
-    }
-  },
-
   methods: {
     async submit() {
       this.login()
@@ -69,7 +52,6 @@ export default {
 
     async login() {
 
-      //Hash creds
       const secretHash = await this.hashStrings(this.password).then((hashed) => {
         return hashed
       })
@@ -85,20 +67,12 @@ export default {
         .then((response) => {
           if(response == 200){
             this.$router.push('/dashboard')
-          } else if(response == 401){
+          }else if(response.status == 401){
             this.errorText = this.$t('login.failed')
           } else {
             this.errorText = this.$t('login.error')
           }
         })
-    },
-
-    displayValidationErrors() {
-      for (let error in this.v$.$errors) {
-        console.log(error)
-      }
-      this.usernameError = null
-      this.passwordError = null
     },
 
     clearError() {

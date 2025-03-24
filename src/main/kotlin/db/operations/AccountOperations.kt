@@ -5,6 +5,7 @@ import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import org.bson.Document
 import org.bson.types.ObjectId
 import zjt.projects.db.models.account.*
@@ -17,12 +18,25 @@ class AccountService(database: MongoDatabase) {
         collection = database.getCollection("accounts")
     }
 
-    suspend fun authenticate(request: AccountLoginRequest): AccountLoginStatus {
-        readByUsername(request.userName)?.let {
-            return if (it.credentials == request.credentials) AccountLoginStatus.SUCCESS else AccountLoginStatus.FAILURE
-        }
+    suspend fun authenticate(request: AccountLoginRequest): AccountLoginResponse {
+        val document = readDocumentByUsername(request.userName)
+        val account = document?.toAccount()
+        val status = account?.let {
+            if (it.credentials == request.credentials) AccountLoginStatus.SUCCESS else AccountLoginStatus.FAILURE
+        } ?: AccountLoginStatus.FAILURE
 
-        return AccountLoginStatus.FAILURE
+        return if (status == AccountLoginStatus.SUCCESS){
+            AccountLoginResponse(
+                accountId = document?.get("_id").toString(),
+                status = AccountLoginStatus.SUCCESS
+
+            )
+        }else{
+            AccountLoginResponse(
+                accountId = null,
+                status = AccountLoginStatus.FAILURE
+            )
+        }
     }
 
     suspend fun create(request: AccountCreateRequest): String = withContext(Dispatchers.IO) {
@@ -35,16 +49,20 @@ class AccountService(database: MongoDatabase) {
             preferences = defaultAccountPreferences(),
         )
         val doc = account.toDocument()
-        collection.insertOne(doc)
+        collection.insertOne(account.toDocument())
         doc["_id"].toString()
     }
 
     suspend fun read(id: String): Account? = withContext(Dispatchers.IO) {
-        collection.find(Filters.eq("_id", ObjectId(id))).first()?.let(Account.Companion::fromDocument)
+        collection.find(Filters.eq("_id", ObjectId(id))).first()?.toAccount()
     }
 
     suspend fun readByUsername(userName: String): Account? = withContext(Dispatchers.IO) {
-        collection.find(Filters.eq("userName", userName)).first()?.let(Account.Companion::fromDocument)
+        collection.find(Filters.eq("userName", userName)).first()?.toAccount()
+    }
+
+    suspend fun readDocumentByUsername(userName: String): Document? = withContext(Dispatchers.IO) {
+        collection.find(Filters.eq("userName", userName)).first()
     }
 
     suspend fun update(id: String, account: Account): Document? = withContext(Dispatchers.IO) {
@@ -60,6 +78,13 @@ class AccountService(database: MongoDatabase) {
 
     suspend fun delete(id: String): Document? = withContext(Dispatchers.IO) {
         collection.findOneAndDelete(Filters.eq("_id", ObjectId(id)))
+    }
+
+    private fun Document.toAccount(): Account = json.decodeFromString(this.toJson())
+    private fun Account.toDocument(): Document = Document.parse(Json.encodeToString(this))
+
+    companion object {
+        private val json = Json { ignoreUnknownKeys = true }
     }
 }
 

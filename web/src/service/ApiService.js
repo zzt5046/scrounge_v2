@@ -4,8 +4,7 @@ export const baseUrl = 'http://localhost:8080'
 
 const config = {
   headers: {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*"
+    "Content-Type": "application/json"
   }
 };
 
@@ -18,6 +17,7 @@ export class ApiService {
     } catch (e) {
       console.log('Error during GET to: ' + path)
       console.error(e)
+      return e
     }
   }
 
@@ -29,6 +29,7 @@ export class ApiService {
     } catch (e) {
       console.log('Error during POST to: ' + path)
       console.error(e)
+      return e
     }
 
     return null

@@ -4,7 +4,12 @@ export class AccountService {
   async login(request) {
     try {
       const loginResponse = await api.post('accounts/login', request)
-      console.log(loginResponse)
+
+      //if login is successful, set the active account
+      if(loginResponse == 200) {
+        api.post('accounts/setActive', request)
+      }
+
       return loginResponse
     } catch (e) {
       console.error(e)

@@ -2,11 +2,10 @@ package zjt.projects.db.schema
 
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
-import com.mongodb.client.model.Filters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import org.bson.Document
-import org.bson.types.ObjectId
 import zjt.projects.db.models.security_question.SecurityQuestion
 import zjt.projects.db.models.security_question.SecurityQuestionResponse
 
@@ -23,12 +22,23 @@ class SecurityQuestionService(database: MongoDatabase, questions: List<String>) 
 
     suspend fun getAll(): List<SecurityQuestionResponse> = withContext(Dispatchers.IO) {
         val questions = mutableListOf<SecurityQuestionResponse>()
-        collection.find().forEach { questions.add(SecurityQuestion.toResponse(it)) }
+        collection.find().forEach { questions.add(it.toSecurityQuestionResponse()) }
         questions
     }
 
-    suspend fun delete(id: String): Document? = withContext(Dispatchers.IO) {
-        collection.findOneAndDelete(Filters.eq("_id", ObjectId(id)))
+    private fun Document.toSecurityQuestion(): SecurityQuestion = json.decodeFromString(this.toJson())
+
+    private fun Document.toSecurityQuestionResponse(): SecurityQuestionResponse {
+        return SecurityQuestionResponse(
+            this["_id"].toString(),
+            this["question"].toString()
+        )
+    }
+
+    private fun SecurityQuestion.toDocument(): Document = Document.parse(Json.encodeToString(this))
+
+    companion object {
+        private val json = Json { ignoreUnknownKeys = true }
     }
 }
 

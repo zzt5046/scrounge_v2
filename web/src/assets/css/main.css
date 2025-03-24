@@ -110,8 +110,10 @@ body {
   display: inline;
 }
 
-.form {
+.panel {
   background: white !important;
+  padding: 1.5rem;
+  box-shadow: 0em 0em 1.2em 0.36em rgba(0, 0, 0, 0.075);
 }
 
 .form label {

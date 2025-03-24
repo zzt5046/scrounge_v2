@@ -1,80 +1,6 @@
-<script>
-import SelectInput from '@/components/core/input/SelectInput.vue'
-import TextInput from '@/components/core/input/TextInput.vue'
-import { accountService } from '@/service/.service-registry'
-import FormsMixin from '../../mixins/FormsMixin.vue'
-
-export default {
-  name: 'RegisterPanel',
-  mixins: [FormsMixin],
-  components: { TextInput, SelectInput },
-
-  data() {
-    return {
-      username: null,
-      email: null,
-      password: null,
-      confirmPassword: null,
-      questions: [],
-      securityQuestion: null,
-      securityAnswer: null,
-      response: null,
-    }
-  },
-
-  created() {
-    accountService.getSecurityQuestions().then((response) => {
-      this.questions = response.map((question) => {
-        return {
-          id: question.id,
-          name: question.question
-        }
-      })
-    })
-  },
-
-  methods: {
-    back() {
-      this.$emit('done')
-    },
-
-    async register() {
-
-      //Hash creds
-      const secretHash = await this.hashStrings(this.password).then((hashed) => {
-        return hashed
-      })
-
-      //Hash security question answer
-      const answerHash = await this.hashStrings(this.securityAnswer).then((hashed) => {
-        return hashed
-      })
-
-      const decoder = new TextDecoder()
-
-      const request = {
-          userName: this.username,
-          credentials: encodeURI(decoder.decode(secretHash)),
-          emailAddress: this.email,
-          securityQuestionId: this.securityQuestion,
-          securityQuestionAnswer: encodeURI(decoder.decode(answerHash))
-      }
-
-      console.log(request)
-
-      accountService.register(request)
-        .then((response) => {
-          this.response = response
-        })
-
-    }
-  }
-}
-</script>
-
 <template>
   <div class="container">
-    <div class="register-panel form">
+    <div class="register-panel panel form">
       <div class="register-header">
         <h3>
           <a href="#" id="backButton">
@@ -148,3 +74,80 @@ export default {
     </div>
   </div>
 </template>
+
+<script>
+import SelectInput from '@/components/core/input/SelectInput.vue'
+import TextInput from '@/components/core/input/TextInput.vue'
+import { accountService } from '@/service/.service-registry'
+import FormsMixin from '../../mixins/FormsMixin.vue'
+
+export default {
+  name: 'RegisterPanel',
+  mixins: [FormsMixin],
+  components: { TextInput, SelectInput },
+
+  data() {
+    return {
+      username: null,
+      email: null,
+      password: null,
+      confirmPassword: null,
+      questions: [],
+      securityQuestion: null,
+      securityAnswer: null,
+      response: null,
+    }
+  },
+
+  created() {
+    accountService.getSecurityQuestions().then((response) => {
+      this.questions = response.map((question) => {
+        return {
+          id: question.id,
+          name: question.question
+        }
+      })
+    })
+  },
+
+  methods: {
+    back() {
+      this.$emit('done')
+    },
+
+    async register() {
+
+      //Hash creds
+      const secretHash = await this.hashStrings(this.password).then((hashed) => {
+        return hashed
+      })
+
+      //Hash security question answer
+      const answerHash = await this.hashStrings(this.securityAnswer).then((hashed) => {
+        return hashed
+      })
+
+      const decoder = new TextDecoder()
+
+      const request = {
+          userName: this.username,
+          credentials: encodeURI(decoder.decode(secretHash)),
+          emailAddress: this.email,
+          securityQuestionId: this.securityQuestion,
+          securityQuestionAnswer: encodeURI(decoder.decode(answerHash))
+      }
+
+      try{
+        accountService.register(request)
+        .then((response) => {
+          this.response = response
+        })
+
+      this.$emit('registerSuccess')
+      }catch(e){
+        console.log(e)
+      }
+    }
+  }
+}
+</script>

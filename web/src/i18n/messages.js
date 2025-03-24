@@ -30,7 +30,8 @@ const messages = {
       remove: 'Remove',
       delete: 'Delete',
       yes: 'Yes',
-      no: 'No'
+      no: 'No',
+      done: 'Done'
     },
     login: {
       header: 'Sign In',
@@ -43,7 +44,8 @@ const messages = {
     },
     register: {
       header: 'Create your Account',
-      nameTaken: 'Sorry, that username is not available.'
+      nameTaken: 'Sorry, that username is not available.',
+      success: 'Account created successfully. Please login to continue.',
     }
   }
 }
