@@ -1,8 +1,5 @@
 const messages = {
   en: {
-    wtf: {
-      hashSecret: 'temporaryhashsecretboiiiiii3',
-    },
     common: {
       required: 'Required'
     },

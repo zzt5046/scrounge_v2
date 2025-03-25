@@ -5,6 +5,7 @@
   </div>
 </template>
 <script>
+  import { accountService } from '@/service/.service-registry'
   export default {
     name: 'DashboardView',
 

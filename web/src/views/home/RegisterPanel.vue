@@ -127,14 +127,12 @@ export default {
         return hashed
       })
 
-      const decoder = new TextDecoder()
-
       const request = {
           userName: this.username,
-          credentials: encodeURI(decoder.decode(secretHash)),
+          credentials: encodeURI(secretHash),
           emailAddress: this.email,
           securityQuestionId: this.securityQuestion,
-          securityQuestionAnswer: encodeURI(decoder.decode(answerHash))
+          securityQuestionAnswer: encodeURI(answerHash)
       }
 
       try{
