@@ -9,9 +9,11 @@ import kotlinx.serialization.json.Json
 import org.bson.Document
 import org.bson.types.ObjectId
 import zjt.projects.db.models.account.*
+import zjt.projects.services.SessionService
 
 class AccountService(database: MongoDatabase) {
     private var collection: MongoCollection<Document>
+    private var sessionService = SessionService()
 
     init {
         database.createCollection("accounts")
@@ -26,10 +28,10 @@ class AccountService(database: MongoDatabase) {
         } ?: AccountLoginStatus.FAILURE
 
         return if (status == AccountLoginStatus.SUCCESS){
+            val accountId = document?.get("_id").toString()
             AccountLoginResponse(
-                accountId = document?.get("_id").toString(),
-                status = AccountLoginStatus.SUCCESS
-
+                accountId = accountId,
+                status = AccountLoginStatus.SUCCESS,
             )
         }else{
             AccountLoginResponse(
@@ -37,6 +39,10 @@ class AccountService(database: MongoDatabase) {
                 status = AccountLoginStatus.FAILURE
             )
         }
+    }
+
+    fun logout(accountId: String){
+        sessionService.deleteSession(accountId = accountId)
     }
 
     suspend fun create(request: AccountCreateRequest): String = withContext(Dispatchers.IO) {
@@ -80,11 +86,10 @@ class AccountService(database: MongoDatabase) {
         collection.findOneAndDelete(Filters.eq("_id", ObjectId(id)))
     }
 
-    private fun Document.toAccount(): Account = json.decodeFromString(this.toJson())
-    private fun Account.toDocument(): Document = Document.parse(Json.encodeToString(this))
-
     companion object {
         private val json = Json { ignoreUnknownKeys = true }
+        fun Document.toAccount(): Account = json.decodeFromString(this.toJson())
+        fun Account.toDocument(): Document = Document.parse(Json.encodeToString(this))
     }
 }
 

@@ -16,17 +16,17 @@
     },
 
     created() {
-      this.loadAccount()
+      // this.loadAccount()
     },
 
     methods: {
-      async loadAccount() {
-        const activeAccount = await accountService.getAccount(this.activeUserId)
-        .then((response) => {
-          return response
-        })
-        this.account = activeAccount
-      },
+      // async loadAccount() {
+      //   const activeAccount = await accountService.getAccount(this.activeUserId)
+      //   .then((response) => {
+      //     return response
+      //   })
+      //   this.account = activeAccount
+      // },
     },
   };
 </script>

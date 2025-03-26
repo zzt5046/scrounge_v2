@@ -6,9 +6,9 @@ export class AccountService {
       const loginResponse = await api.post('accounts/login', request)
 
       //if login is successful, set the active account
-      if(loginResponse == 200) {
-        api.post('accounts/setActive', request)
-      }
+      // if(loginResponse == 200) {
+      //   api.post('accounts/setActive', request)
+      // }
 
       return loginResponse
     } catch (e) {
