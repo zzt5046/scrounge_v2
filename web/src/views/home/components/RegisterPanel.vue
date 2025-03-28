@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div class="home-container">
     <div class="register-panel panel form">
       <div class="register-header">
         <h3>
-          <a href="#" id="backButton">
+          <a :href="back" id="register-backArrow">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -11,7 +11,6 @@
               fill="currentColor"
               class="bi bi-arrow-left"
               viewBox="0 0 16 16"
-              @click="back"
             >
               <path
                 fill-rule="evenodd"
@@ -79,7 +78,7 @@
 import SelectInput from '@/components/core/input/SelectInput.vue'
 import TextInput from '@/components/core/input/TextInput.vue'
 import { accountService } from '@/service/.service-registry'
-import FormsMixin from '../../mixins/FormsMixin.vue'
+import FormsMixin from '../../../mixins/FormsMixin.vue'
 
 export default {
   name: 'RegisterPanel',
@@ -95,7 +94,7 @@ export default {
       questions: [],
       securityQuestion: null,
       securityAnswer: null,
-      response: null,
+      errorText: null,
     }
   },
 
@@ -112,7 +111,7 @@ export default {
 
   methods: {
     back() {
-      this.$emit('done')
+      this.$emit('back')
     },
 
     async register() {
@@ -136,12 +135,14 @@ export default {
       }
 
       try{
-        accountService.register(request)
-        .then((response) => {
-          this.response = response
-        })
+        const registerResponse = await accountService.register(request)
 
-      this.$emit('registerSuccess')
+        if(registerResponse?.status === 500){
+          this.errorText = this.$t('errors.registerError')
+          return
+        }else{
+          this.$emit('registerSuccess')
+        }
       }catch(e){
         console.log(e)
       }

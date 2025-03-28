@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="home-container">
     <div class="login-panel panel form">
-      <h3>{{ $t('login.header') }}</h3>
+      <h3>{{ $t('home.login.header') }}</h3>
       <p>
         <TextInput id="login-username" :label="$t('fields.username')" v-model="username" />
         <TextInput id="login-password" :label="$t('fields.password')" v-model="password" type="password" />
@@ -18,8 +18,8 @@
           </div>
         </div>
         <div class="action-section flex-box">
-          {{ $t('login.misc.registerDisclaimer1') }}
-          <a href="#" @click="gotoRegister"> {{ $t('login.misc.registerDisclaimer2') }} </a>
+          {{ $t('home.login.misc.registerDisclaimer1') }}
+          <a href="#" @click="gotoRegister"> {{ $t('home.login.misc.registerDisclaimer2') }} </a>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
 <script>
 import { accountService } from '@/service/.service-registry'
 import TextInput from '@/components/core/input/TextInput.vue'
-import FormsMixin from '../../mixins/FormsMixin.vue'
+import FormsMixin from '../../../mixins/FormsMixin.vue'
 
 export default {
   name: 'LoginPanel',
@@ -63,12 +63,12 @@ export default {
 
       await accountService.login(request)
         .then((response) => {
-          if(response == 200){
+          if(response?.userName != null){
             this.$router.push('/dashboard')
           }else if(response.status == 401){
-            this.errorText = this.$t('login.failed')
+            this.errorText = this.$t('home.login.failed')
           } else {
-            this.errorText = this.$t('login.error')
+            this.errorText = this.$t('home.login.error')
           }
         })
     },

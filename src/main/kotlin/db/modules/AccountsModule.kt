@@ -6,11 +6,10 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import zjt.projects.db.models.account.Account
-import zjt.projects.db.models.account.AccountCreateRequest
-import zjt.projects.db.models.account.AccountLoginRequest
-import zjt.projects.db.models.account.AccountLoginStatus
+import io.ktor.util.reflect.*
 import zjt.projects.db.operations.AccountService
+import zjt.projects.models.account.*
+import zjt.projects.models.error.ScroungeError
 import zjt.projects.services.SessionService
 
 fun Application.accountsModule(db: MongoDatabase){
@@ -22,15 +21,23 @@ fun Application.accountsModule(db: MongoDatabase){
         post("/accounts/login") {
             val request = call.receive<AccountLoginRequest>()
 
-            val status = accountService.authenticate(request).status
-            if(status == AccountLoginStatus.SUCCESS){
-                val accountDoc = accountService.readDocumentByUsername(request.userName)
-                call.response.cookies.append(sessionService.getSessionCookie(accountDoc))
-                call.respond(HttpStatusCode.OK, 200)
-            }else if(status == AccountLoginStatus.FAILURE){
-                call.respond(HttpStatusCode.Unauthorized, 401)
-            }else{
-                call.respond(HttpStatusCode.InternalServerError, 500)
+            val loginResponse = accountService.authenticate(request)
+            when(loginResponse.status){
+                AccountLoginStatus.SUCCESS -> {
+                    val accountId = loginResponse.accountId
+                    var accountResponse: AccountResponse? = null
+                    if(!accountId.isNullOrEmpty()){
+                        accountResponse = accountService.findAccount(accountId)
+                        call.response.cookies.append(sessionService.getSessionCookie(loginResponse.accountId))
+                    }
+                    call.respond(HttpStatusCode.OK, accountResponse, TypeInfo(AccountResponse::class))
+                }
+                AccountLoginStatus.FAILURE -> {
+                    call.respond(HttpStatusCode.Unauthorized, 401)
+                }
+                AccountLoginStatus.UNKNOWN -> {
+                    call.respond(HttpStatusCode.InternalServerError, 500)
+                }
             }
         }
 
@@ -41,20 +48,35 @@ fun Application.accountsModule(db: MongoDatabase){
             call.respond(HttpStatusCode.Created, id)
         }
 
-        // Read account by id
+        // Get account by id
         get("/accounts/{id}") {
             val id = call.parameters["id"] ?: throw IllegalArgumentException("No ID found")
-            accountService.read(id)?.let { account ->
+            accountService.findAccount(id)?.let { account ->
                 call.respond(account)
             } ?: call.respond(HttpStatusCode.NotFound)
         }
 
-        // Read account by userName
+        // Get account by userName
         get("/accounts/{username}") {
             val userName = call.parameters["userName"] ?: throw IllegalArgumentException("No userName found")
-            accountService.readByUsername(userName)?.let { account ->
+            accountService.findAccountByUsername(userName)?.let { account ->
                 call.respond(account)
             } ?: call.respond(HttpStatusCode.NotFound)
+        }
+
+        // Get account settings
+        get("/accounts/{id}/settings") {
+            try{
+                val id = call.parameters["id"] ?: throw IllegalArgumentException("No ID found")
+                call.respond(accountService.getAccountSettings(id))
+            }catch(e: Exception){
+                call.respond(AccountResponse(
+                    userName = null,
+                    settings = null,
+                    emailAddress = null,
+                    errors = listOf(ScroungeError(400, "No ID Found"))
+                ))
+            }
         }
 
         // Update account

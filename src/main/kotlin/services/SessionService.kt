@@ -2,7 +2,7 @@ package zjt.projects.services
 
 import io.ktor.http.*
 import org.bson.Document
-import zjt.projects.db.models.session.Session
+import zjt.projects.models.session.Session
 import java.time.OffsetDateTime
 import java.util.*
 
@@ -40,11 +40,11 @@ class SessionService {
 
     fun deleteSession(accountId: String) = sessionMap.remove(accountId)
 
-    fun getSessionCookie(doc: Document?): Cookie {
+    fun getSessionCookie(documentId: String): Cookie {
         //If running in an actual env, we'll need to change secure, domain, and extensions
         return Cookie(
             name = COOKIE_HEADER,
-            value = doc?.get("_id")?.let { createSession(it.toString()) }.toString(),
+            value = createSession(documentId).toString(),
             maxAge = 900,
             path = "/",
             secure = false,

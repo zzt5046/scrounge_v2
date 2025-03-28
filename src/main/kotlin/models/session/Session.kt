@@ -1,4 +1,4 @@
-package zjt.projects.db.models.session
+package zjt.projects.models.session
 
 import java.time.OffsetDateTime
 import java.util.*

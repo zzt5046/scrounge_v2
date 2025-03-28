@@ -8,7 +8,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.bson.Document
 import org.bson.types.ObjectId
-import zjt.projects.db.models.account.*
+import zjt.projects.models.account.*
+import zjt.projects.models.account.Account.Companion.toAccountResponse
 import zjt.projects.services.SessionService
 
 class AccountService(database: MongoDatabase) {
@@ -20,11 +21,12 @@ class AccountService(database: MongoDatabase) {
         collection = database.getCollection("accounts")
     }
 
+    // Account Login / Logout
+    // -----------------------------------------------------------------------------------------------------------
     suspend fun authenticate(request: AccountLoginRequest): AccountLoginResponse {
-        val document = readDocumentByUsername(request.userName)
-        val account = document?.toAccount()
-        val status = account?.let {
-            if (it.credentials == request.credentials) AccountLoginStatus.SUCCESS else AccountLoginStatus.FAILURE
+        val document = readDocument(null, userName = request.userName)
+        val status = document?.let {
+            if (it["credentials"] == request.credentials) AccountLoginStatus.SUCCESS else AccountLoginStatus.FAILURE
         } ?: AccountLoginStatus.FAILURE
 
         return if (status == AccountLoginStatus.SUCCESS){
@@ -44,7 +46,14 @@ class AccountService(database: MongoDatabase) {
     fun logout(accountId: String){
         sessionService.deleteSession(accountId = accountId)
     }
+    // -----------------------------------------------------------------------------------------------------------
 
+
+    // CRUD
+    // -----------------------------------------------------------------------------------------------------------
+
+    // CREATE
+    // ------------------------------------------
     suspend fun create(request: AccountCreateRequest): String = withContext(Dispatchers.IO) {
         val account = Account(
             userName = request.userName,
@@ -52,40 +61,65 @@ class AccountService(database: MongoDatabase) {
             emailAddress = request.emailAddress,
             securityQuestionId = request.securityQuestionId,
             securityQuestionAnswer = request.securityQuestionAnswer,
-            preferences = defaultAccountPreferences(),
+            settings = defaultAccountSettings(),
         )
         val doc = account.toDocument()
         collection.insertOne(account.toDocument())
         doc["_id"].toString()
     }
 
-    suspend fun read(id: String): Account? = withContext(Dispatchers.IO) {
+
+    // READ
+    // ------------------------------------------
+    private suspend fun read(id: String): Account? = withContext(Dispatchers.IO) {
         collection.find(Filters.eq("_id", ObjectId(id))).first()?.toAccount()
     }
-
-    suspend fun readByUsername(userName: String): Account? = withContext(Dispatchers.IO) {
+    private suspend fun readByUsername(userName: String): Account? = withContext(Dispatchers.IO) {
         collection.find(Filters.eq("userName", userName)).first()?.toAccount()
     }
-
-    suspend fun readDocumentByUsername(userName: String): Document? = withContext(Dispatchers.IO) {
-        collection.find(Filters.eq("userName", userName)).first()
+    private fun readDocument(accountId: String?, userName: String?): Document?{
+        require (!(accountId.isNullOrEmpty() && userName.isNullOrEmpty())){
+            throw IllegalArgumentException("Must supply accountId or userName when retrieving Account Document")
+        }
+        return if(accountId.isNullOrEmpty()){
+            collection.find(Filters.eq("userName", userName)).first()
+        }else{
+            collection.find(Filters.eq("_id", ObjectId(accountId))).first()
+        }
     }
 
+    suspend fun findAccount(accountId: String): AccountResponse? =
+        read(accountId).toAccountResponse()
+
+    suspend fun findAccountByUsername(userName: String): AccountResponse? =
+        readByUsername(userName).toAccountResponse()
+
+    fun getAccountSettings(accountId: String): AccountSettingsResponse =
+        defaultAccountSettings().toResponse()
+
+
+
+    // UPDATE
+    // ------------------------------------------
     suspend fun update(id: String, account: Account): Document? = withContext(Dispatchers.IO) {
         collection.findOneAndReplace(Filters.eq("_id", ObjectId(id)), account.toDocument())
     }
 
-    suspend fun updateAccountPreferences(id: String, accountPreferences: AccountPreferences): Document? = withContext(Dispatchers.IO) {
+    suspend fun updateAccountSettings(id: String, accountSettings: AccountSettings): Document? = withContext(Dispatchers.IO) {
         val account = read(id)?.copy(
-            preferences = accountPreferences.value()
+            settings = accountSettings.value()
         )
         account?.toDocument()?.let { collection.findOneAndReplace(Filters.eq("_id", ObjectId(id)), it) }
     }
 
+
+    // DELETE
+    // ------------------------------------------
     suspend fun delete(id: String): Document? = withContext(Dispatchers.IO) {
         collection.findOneAndDelete(Filters.eq("_id", ObjectId(id)))
     }
 
+    // END CRUD --------------------------------------------------------------------------------------------------
     companion object {
         private val json = Json { ignoreUnknownKeys = true }
         fun Document.toAccount(): Account = json.decodeFromString(this.toJson())

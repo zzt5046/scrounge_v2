@@ -1,4 +1,5 @@
 @import "home/home.css";
+@import "dashboard/dashboard.css";
 
 /*This file should contain themes that propagate the entire domainofapplication*/
 /*Ex: Action button themes, input sizes, etc.*/
@@ -74,7 +75,7 @@
   font-weight: normal;
 }
 
-body {
+/* body {
   min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background) !important;
@@ -86,21 +87,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-#app {
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-}
+} */
 
 /*FORMS AND INPUTS ------------------------------------*/
 
