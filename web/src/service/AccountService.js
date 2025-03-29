@@ -4,7 +4,6 @@ export class AccountService {
   async login(request) {
     try {
       const loginResponse = await api.post('accounts/login', request)
-      console.log(loginResponse)
       return loginResponse
     } catch (e) {
       console.error(e)

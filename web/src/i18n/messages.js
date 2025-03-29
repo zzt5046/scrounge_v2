@@ -50,6 +50,8 @@ const messages = {
       header: 'Dashboard',
       navbar: {
         home: 'Home',
+        recipes: 'Recipes',
+        account: 'Account',
         settings: 'Settings',
         logout: 'Logout'
       },

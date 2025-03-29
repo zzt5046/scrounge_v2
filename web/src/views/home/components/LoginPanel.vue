@@ -52,6 +52,8 @@ export default {
 
     async login() {
 
+      this.errorText = null
+
       const secretHash = await this.hashStrings(this.password).then((hashed) => {
         return hashed
       })

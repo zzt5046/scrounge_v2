@@ -1,6 +1,6 @@
 <template>
     <div class="dashboard-header">
-        <h1>{{ $t('dashboard.header') }} - Welcome {{ account.userName }}.</h1>
+        <h2>{{ title }}</h2>
     </div>
 </template>
 
@@ -12,7 +12,11 @@ export default {
         account: {
             type: Object,
             required: true
+        },
+        title: {
+            type: String,
+            required: true
         }
-    }
+    },
 }
 </script>

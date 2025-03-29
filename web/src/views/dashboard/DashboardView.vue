@@ -1,36 +1,17 @@
 <template>
   <div class="dashboard-container">
 
-    <header class="dashboard-header">
+    <header class="dashboard-header" :value="activeSectionTitle">
       <!-- <h1>{{ $t('dashboard.header') }}</h1>
       <div>
         <AccountSettings :account="account" class="dashboard-settings"/>
       </div> -->
-      <DashboardHeader :account="account" />
+      <DashboardHeader :account="account" :title="activeSectionTitle"/>
     </header>
 
-    <aside class="dashboard-sidebar">
-      <!-- <nav>
-        <ul>
-          <li>
-            <router-link to="/dashboard">{{ $t('dashboard.menu.home') }}</router-link>
-          </li>
-          <li>
-            <router-link to="/dashboard/account">{{ $t('dashboard.menu.account') }}</router-link>
-          </li>
-          <li>
-            <router-link to="/dashboard/transactions">{{ $t('dashboard.menu.recipes') }}</router-link>
-          </li>
-          <li>
-            <router-link to="/dashboard/transfer">{{ $t('dashboard.menu.transfer') }}</router-link>
-          </li>
-          <li>
-            <router-link to="/dashboard/settings">{{ $t('dashboard.menu.settings') }}</router-link>
-          </li>
-        </ul>
-      </nav> -->
-      <DashboardNavbar />
-      <button type="button" id="navbar-resize" @click="navbarToggle">&#9776;</button>
+    <aside class="dashboard-navbar">
+      <DashboardNavbar @change-title="changeTitle"/>
+      <button type="button" id="navbar-resize" @click="navbarToggle"><strong>&#9776;</strong></button>
     </aside>
 
     <main class="dashboard-main">
@@ -58,6 +39,7 @@ import AccountSettings from './components/AccountSettings.vue';
     data() {
       return {
         account: null,
+        activeSectionTitle: this.$t('dashboard.header'),
       };
     },
 
@@ -77,11 +59,16 @@ import AccountSettings from './components/AccountSettings.vue';
 
     methods: {
       async loadAccount() {
+        //TODO finish implementing session management to resolve account
         const account = await accountService.getAccount("67e4549c1cabf45e727f0620")
         .then((response) => {
           return response
         })
         this.account = account
+      },
+
+      changeTitle(title) {
+        this.activeSectionTitle = title
       },
     },
   };
