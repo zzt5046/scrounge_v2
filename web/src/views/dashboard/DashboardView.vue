@@ -2,20 +2,16 @@
   <div class="dashboard-container">
 
     <header class="dashboard-header" :value="activeSectionTitle">
-      <!-- <h1>{{ $t('dashboard.header') }}</h1>
-      <div>
-        <AccountSettings :account="account" class="dashboard-settings"/>
-      </div> -->
       <DashboardHeader :account="account" :title="activeSectionTitle"/>
     </header>
 
     <aside class="dashboard-navbar">
-      <DashboardNavbar @change-title="changeTitle"/>
+      <DashboardNavbar @change-title="changeTitle" @logout="logout"/>
       <button type="button" id="navbar-resize" @click="navbarToggle"><strong>&#9776;</strong></button>
     </aside>
 
     <main class="dashboard-main">
-      <router-view ></router-view>
+      
     </main>
     
     <footer class="dashboard-footer">
@@ -27,7 +23,7 @@
 import { accountService } from '@/service/.service-registry'
 import DashboardHeader from './components/DashboardHeader.vue';
 import DashboardNavbar from './components/DashboardNavbar.vue';
-import AccountSettings from './components/AccountSettings.vue';
+import AccountSettings from './content/SettingsPanel.vue';
   export default {
     name: 'DashboardView',
     components: {
@@ -69,6 +65,11 @@ import AccountSettings from './components/AccountSettings.vue';
 
       changeTitle(title) {
         this.activeSectionTitle = title
+      },
+
+      logout() {
+        //TODO implement logout
+        this.$router.push({ name: 'root' })
       },
     },
   };

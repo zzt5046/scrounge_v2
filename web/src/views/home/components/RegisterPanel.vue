@@ -1,5 +1,6 @@
 <template>
-  <div class="home-container">
+  <!-- <div class="home-container"> -->
+  <div>
     <div class="register-panel panel form">
       <div class="register-header">
         <h3>

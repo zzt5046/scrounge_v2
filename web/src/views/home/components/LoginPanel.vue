@@ -1,7 +1,12 @@
 <template>
-  <div class="home-container">
+  <!-- <div class="home-container"> -->
+  <div>
     <div class="login-panel panel form">
-      <h3>{{ $t('home.login.header') }}</h3>
+      <div class="login-header">
+        <h3 class="login-header">{{ $t('home.login.header') }}</h3>
+        {{ $t('home.login.misc.registerDisclaimer1') }}
+        <a href="#" @click="gotoRegister"> {{ $t('home.login.misc.registerDisclaimer2') }} </a>
+      </div>
       <p>
         <TextInput id="login-username" :label="$t('fields.username')" v-model="username" />
         <TextInput id="login-password" :label="$t('fields.password')" v-model="password" type="password" />
@@ -11,15 +16,15 @@
           <button id="login-button" class="btn btn-primary" @click="submit">
             {{ $t('actions.login') }}
           </button>
-          <div class="login-error">
+        </div>
+        <div class="login-error-section flex-box">
+          <!-- {{ $t('home.login.misc.registerDisclaimer1') }}
+          <a href="#" @click="gotoRegister"> {{ $t('home.login.misc.registerDisclaimer2') }} </a> -->
+          
             <span class="login-error error-text" v-if="errorText" @click="clearError">
               {{ errorText }}
             </span>
-          </div>
-        </div>
-        <div class="action-section flex-box">
-          {{ $t('home.login.misc.registerDisclaimer1') }}
-          <a href="#" @click="gotoRegister"> {{ $t('home.login.misc.registerDisclaimer2') }} </a>
+          
         </div>
       </div>
     </div>

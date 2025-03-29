@@ -1,5 +1,6 @@
 <template>
   <div class="home-container">
+    <img src="@/assets/img/logo-grayscale-transparent.png" alt="logo" class="home-logo" />
     <LoginPanel v-if="showLogin" @register="toRegister" />
     <RegisterPanel v-if="showRegister" @registerSuccess="toRegisterSuccess" @back="toLogin"/>
     <RegisterSuccessPanel v-if="showRegisterSuccess" @done="toLogin"/>

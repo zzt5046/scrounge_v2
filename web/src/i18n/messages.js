@@ -32,10 +32,10 @@ const messages = {
     },
     home:{
       login: {
-        header: 'Sign In',
+        header: 'LOGIN',
         misc: {
           registerDisclaimer1: "Don't have an account?",
-          registerDisclaimer2: 'Click here to register.'
+          registerDisclaimer2: 'Sign Up'
         },
         failed: 'Username or password is incorrect.',
         error: 'An error has occurred. Please try again later.'

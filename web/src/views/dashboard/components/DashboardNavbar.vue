@@ -25,7 +25,8 @@
                     { name: 'home', title: this.$t('dashboard.navbar.home') },
                     { name: 'recipes', title: this.$t('dashboard.navbar.recipes') },
                     { name: 'account', title: this.$t('dashboard.navbar.account') },
-                    { name: 'settings', title: this.$t('dashboard.navbar.settings') }
+                    { name: 'settings', title: this.$t('dashboard.navbar.settings') },
+                    { name: 'logout', title: this.$t('dashboard.navbar.logout') },
                 ]
             };
         },
@@ -39,7 +40,12 @@
             //send new title to parent component
             changeSection(newSectionName) {
                 this.selectedSection = newSectionName;
-                this.$emit('changeTitle', this.sections.find(s => s.name === this.selectedSection).title);
+                if(this.selectedSection === 'logout') {
+                    this.$emit('logout');
+                } else {
+                    //send the title of the selected section to the parent component
+                    this.$emit('changeTitle', this.sections.find(s => s.name === this.selectedSection).title);
+                }
             }
         }
     }
