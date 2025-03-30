@@ -68,8 +68,9 @@ import AccountSettings from './content/SettingsPanel.vue';
       },
 
       logout() {
-        //TODO implement logout
-        this.$router.push({ name: 'root' })
+        accountService.logout().then(() =>{
+          this.$router.push({ name: 'root' })
+        })
       },
     },
   };

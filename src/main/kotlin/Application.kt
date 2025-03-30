@@ -15,7 +15,8 @@ fun Application.module() {
     configureDatabases()
     configureHTTP()
     configureMonitoring()
-    configureSecurity()
+    configureSessions()
+    configureSessionAuthentication()
     configureRouting()
 }
 

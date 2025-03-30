@@ -10,11 +10,11 @@ import org.bson.Document
 import org.bson.types.ObjectId
 import zjt.projects.models.account.*
 import zjt.projects.models.account.Account.Companion.toAccountResponse
-import zjt.projects.services.SessionService
+import zjt.projects.db.services.SessionService
 
 class AccountService(database: MongoDatabase) {
     private var collection: MongoCollection<Document>
-    private var sessionService = SessionService()
+    private var sessionService = SessionService(database)
 
     init {
         database.createCollection("accounts")

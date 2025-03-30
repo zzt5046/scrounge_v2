@@ -3,18 +3,21 @@ package zjt.projects.db.modules
 import com.mongodb.client.MongoDatabase
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import io.ktor.util.reflect.*
+import zjt.projects.config.UserSession
 import zjt.projects.db.operations.AccountService
 import zjt.projects.models.account.*
 import zjt.projects.models.error.ScroungeError
-import zjt.projects.services.SessionService
+import zjt.projects.db.services.SessionService
 
 fun Application.accountsModule(db: MongoDatabase){
     val accountService = AccountService(db)
-    val sessionService = SessionService()
+    val sessionService = SessionService(db)
 
     routing {
         //Auth account (login)
@@ -24,21 +27,43 @@ fun Application.accountsModule(db: MongoDatabase){
             val loginResponse = accountService.authenticate(request)
             when(loginResponse.status){
                 AccountLoginStatus.SUCCESS -> {
-                    val accountId = loginResponse.accountId
-                    var accountResponse: AccountResponse? = null
-                    if(!accountId.isNullOrEmpty()){
-                        accountResponse = accountService.findAccount(accountId)
-                        call.response.cookies.append(sessionService.getSessionCookie(loginResponse.accountId))
+                    val accountResponse = loginResponse.accountId?.let { accountService.findAccount(it) }
+                    val session = loginResponse.accountId?.let {
+                        UserSession(
+                            accountId = it,
+                        )
                     }
+                    call.sessions.set(session)
                     call.respond(HttpStatusCode.OK, accountResponse, TypeInfo(AccountResponse::class))
                 }
                 AccountLoginStatus.FAILURE -> {
-                    call.respond(HttpStatusCode.Unauthorized, 401)
+                    call.respond(
+                        HttpStatusCode.Unauthorized,
+                        AccountResponse.Unauthorized,
+                        TypeInfo(AccountResponse::class)
+                    )
                 }
                 AccountLoginStatus.UNKNOWN -> {
-                    call.respond(HttpStatusCode.InternalServerError, 500)
+                    call.respond(
+                        HttpStatusCode.Unauthorized,
+                        AccountResponse.ServerError,
+                        TypeInfo(AccountResponse::class)
+                    )
                 }
             }
+        }
+
+        post("/accounts/login/cookie") {
+            //if there is already a session cookie, let em in
+            if(call.sessions.get<UserSession>() != null){
+                call.respond(HttpStatusCode.OK, "cookie-auth")
+            }else{
+                call.respond(HttpStatusCode.Unauthorized, "No Cookie")
+            }
+        }
+
+        post("/accounts/logout"){
+            call.sessions.clear<UserSession>()
         }
 
         // Create account

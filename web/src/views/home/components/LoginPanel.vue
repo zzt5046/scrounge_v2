@@ -13,7 +13,7 @@
       </p>
       <div>
         <div class="button-section flex-box">
-          <button id="login-button" class="btn btn-primary" @click="submit">
+          <button id="login-button" class="btn btn-primary" @click="login">
             {{ $t('actions.login') }}
           </button>
         </div>
@@ -50,9 +50,18 @@ export default {
     }
   },
 
+  created(){
+    this.cookieLogin()
+  },
+
   methods: {
-    async submit() {
-      this.login()
+
+    //auth silently in the background and skip login if there's a session cookie
+    async cookieLogin() {
+      const cookieLoginResponse = await accountService.cookieLogin()
+      if(cookieLoginResponse.message === "cookie-auth"){
+          this.$router.push('/dashboard')
+      }
     },
 
     async login() {
@@ -68,16 +77,15 @@ export default {
         credentials: encodeURI(secretHash)
       }
 
-      await accountService.login(request)
-        .then((response) => {
-          if(response?.userName != null){
-            this.$router.push('/dashboard')
-          }else if(response.status == 401){
-            this.errorText = this.$t('home.login.failed')
-          } else {
-            this.errorText = this.$t('home.login.error')
-          }
-        })
+      const loginResponse = await accountService.login(request)
+
+      if(loginResponse.errors == null){
+        this.$router.push('/dashboard')
+      }else if(loginResponse.status == 401){
+        this.errorText = this.$t('home.login.failed')
+      } else {
+        this.errorText = this.$t('home.login.error')
+      }
     },
 
     clearError() {
@@ -87,6 +95,7 @@ export default {
     gotoRegister() {
       this.$emit('register')
     }
-  }
+  },
 }
+
 </script>

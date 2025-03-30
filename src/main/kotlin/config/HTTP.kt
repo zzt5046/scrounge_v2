@@ -16,6 +16,8 @@ fun Application.configureHTTP() {
         allowMethod(HttpMethod.Delete)
 
         allowHeader(HttpHeaders.ContentType)
+        allowHeader(UserSession.COOKIE_NAME)
+        exposeHeader(UserSession.COOKIE_NAME)
 
         allowCredentials = true
         allowSameOrigin = true

@@ -11,6 +11,15 @@ export class AccountService {
     }
   }
 
+  async logout() {
+    await api.post('accounts/logout')
+  }
+
+  async cookieLogin() {
+      const loginResponse = await api.post('accounts/login/cookie')
+      return loginResponse
+  }
+
   async register(request) {
     try {
       return await api.post('accounts', request)
