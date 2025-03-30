@@ -1,4 +1,4 @@
-package zjt.projects.db.models.account
+package zjt.projects.models.account
 
 data class AccountCreateRequest(
     val userName: String,

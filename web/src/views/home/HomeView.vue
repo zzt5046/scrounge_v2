@@ -1,7 +1,18 @@
+<template>
+  <div class="home-container">
+    <img src="@/assets/img/logo-grayscale-transparent.png" alt="logo" class="home-logo" />
+    <LoginPanel v-if="showLogin" @register="toRegister" />
+    <RegisterPanel v-if="showRegister" @registerSuccess="toRegisterSuccess" @back="toLogin"/>
+    <RegisterSuccessPanel v-if="showRegisterSuccess" @done="toLogin"/>
+  </div>
+</template>
+
+<style scoped></style>
+
 <script>
-import LoginPanel from '@/views/home/LoginPanel.vue'
-import RegisterPanel from '@/views/home/RegisterPanel.vue'
-import RegisterSuccessPanel from '@/views/home/RegisterSuccessPanel.vue'
+import LoginPanel from '@/views/home/components/LoginPanel.vue'
+import RegisterPanel from '@/views/home/components/RegisterPanel.vue'
+import RegisterSuccessPanel from '@/views/home/components/RegisterSuccessPanel.vue'
 
 export default {
   name: 'HomeView',
@@ -39,18 +50,7 @@ export default {
     toRegisterSuccess() {
       this.register = false
       this.registerSuccess = true
-      console.log('showLogin: ' + this.showLogin)
-      console.log('showRegister: ' + this.showRegister)
-      console.log('showRegisterSuccess: ' + this.showRegisterSuccess)
     }
   }
 }
 </script>
-
-<template>
-  <LoginPanel v-if="showLogin" @register="toRegister" />
-  <RegisterPanel v-if="showRegister" @registerSuccess="toRegisterSuccess" />
-  <RegisterSuccessPanel v-if="showRegisterSuccess" @done="toLogin"/>
-</template>
-
-<style scoped></style>

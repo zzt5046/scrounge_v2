@@ -1,16 +1,41 @@
 <template>
-  <div>
-    <h1>Scrounge</h1>
-    <h3>Dashboard</h3>
+  <div class="dashboard-container">
+
+    <header class="dashboard-header" :value="activeSectionTitle">
+      <DashboardHeader :account="account" :title="activeSectionTitle"/>
+    </header>
+
+    <aside class="dashboard-navbar">
+      <DashboardNavbar @change-title="changeTitle" @logout="logout"/>
+      <button type="button" id="navbar-resize" @click="navbarToggle"><strong>&#9776;</strong></button>
+    </aside>
+
+    <main class="dashboard-main">
+      
+    </main>
+    
+    <footer class="dashboard-footer">
+      {{ $t('dashboard.footer') }}
+    </footer>
   </div>
 </template>
 <script>
+import { accountService } from '@/service/.service-registry'
+import DashboardHeader from './components/DashboardHeader.vue';
+import DashboardNavbar from './components/DashboardNavbar.vue';
+import AccountSettings from './content/SettingsPanel.vue';
   export default {
     name: 'DashboardView',
+    components: {
+      AccountSettings,
+      DashboardHeader,
+      DashboardNavbar,
+    },
 
     data() {
       return {
         account: null,
+        activeSectionTitle: this.$t('dashboard.header'),
       };
     },
 
@@ -18,13 +43,34 @@
       this.loadAccount()
     },
 
+    mounted() {
+      //set up the sidebar toggle
+      const container = document.querySelector('.dashboard-container');
+      const resizeButton = document.getElementById('navbar-resize');
+        resizeButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          container.classList.toggle('sb-shrink')
+        });
+    },
+
     methods: {
       async loadAccount() {
-        const activeAccount = await accountService.getAccount(this.activeUserId)
+        //TODO finish implementing session management to resolve account
+        const account = await accountService.getAccount("67e4549c1cabf45e727f0620")
         .then((response) => {
           return response
         })
-        this.account = activeAccount
+        this.account = account
+      },
+
+      changeTitle(title) {
+        this.activeSectionTitle = title
+      },
+
+      logout() {
+        accountService.logout().then(() =>{
+          this.$router.push({ name: 'root' })
+        })
       },
     },
   };

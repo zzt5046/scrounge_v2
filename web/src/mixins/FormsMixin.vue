@@ -2,12 +2,14 @@
 
 export default {
     methods: {
-        hashStrings(...args) {
+        async hashStrings(...args) {
             const enc = new TextEncoder();
-            return window.crypto.subtle.digest('SHA-256', enc.encode(args.join('')))
-                .then((hash) => {
-                    return hash;
-                });
+            const hashBuffer = await window.crypto.subtle.digest('SHA-256', enc.encode(args.join('')));
+            const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
+            const hashHex = hashArray
+                .map((b) => b.toString(16).padStart(2, "0"))
+                .join(""); // convert bytes to hex string
+            return hashHex;
         }
     }
 };

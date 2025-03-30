@@ -6,8 +6,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.bson.Document
-import zjt.projects.db.models.security_question.SecurityQuestion
-import zjt.projects.db.models.security_question.SecurityQuestionResponse
+import zjt.projects.models.security_question.SecurityQuestion
+import zjt.projects.models.security_question.SecurityQuestionResponse
 
 class SecurityQuestionService(database: MongoDatabase, questions: List<String>) {
     private var collection: MongoCollection<Document>

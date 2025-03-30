@@ -2,7 +2,7 @@
     <div class="container">
       <div class="register-success-panel panel">
         <p>
-          {{ $t('register.success') }}
+          {{ $t('home.register.success') }}
         </p>
         <div>
           <div class="button-section flex-box">
@@ -19,10 +19,6 @@
   
   export default {
     name: 'RegisterSuccessPanel',
-
-    mounted() {
-      console.log('RegisterSuccessPanel mounted')
-    },
 
     methods: {
         done() {

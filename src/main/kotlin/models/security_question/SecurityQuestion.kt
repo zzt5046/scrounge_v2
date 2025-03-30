@@ -1,4 +1,4 @@
-package zjt.projects.db.models.security_question
+package zjt.projects.models.security_question
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
