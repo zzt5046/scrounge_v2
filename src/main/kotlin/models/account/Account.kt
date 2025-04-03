@@ -19,8 +19,7 @@ data class Account(
                 AccountResponse(
                     userName = userName,
                     emailAddress = emailAddress,
-                    settings = settings,
-                    errors = null
+                    settings = settings
                 )
             }
         }
