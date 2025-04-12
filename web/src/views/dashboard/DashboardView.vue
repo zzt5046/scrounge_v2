@@ -11,7 +11,8 @@
     </aside>
 
     <main class="dashboard-main">
-      
+      <HomePanel v-show="showHomeSection"/>
+      <RecipesPanel :account="account" v-show="showRecipeSection"/>
     </main>
     
     <footer class="dashboard-footer">
@@ -21,15 +22,20 @@
 </template>
 <script>
 import { accountService } from '@/service/.service-registry'
+import { store } from '../../store.js'
 import DashboardHeader from './components/DashboardHeader.vue';
 import DashboardNavbar from './components/DashboardNavbar.vue';
 import AccountSettings from './content/SettingsPanel.vue';
+import HomePanel from './content/HomePanel.vue';
+import RecipesPanel from './content/recipes/RecipesPanel.vue';
   export default {
     name: 'DashboardView',
     components: {
       AccountSettings,
       DashboardHeader,
       DashboardNavbar,
+      HomePanel,
+      RecipesPanel,
     },
 
     data() {
@@ -53,10 +59,25 @@ import AccountSettings from './content/SettingsPanel.vue';
         });
     },
 
+    computed: {
+      showHomeSection() {
+        return this.activeSectionTitle === this.$t('dashboard.navbar.home')
+      },
+      showRecipeSection() {
+        return this.activeSectionTitle === this.$t('dashboard.navbar.recipes')
+      },
+      showSettingsSection() {
+        return this.activeSectionTitle === this.$t('dashboard.navbar.settings')
+      },
+      showAccountSection() {
+        return this.activeSectionTitle === this.$t('dashboard.navbar.account')
+      },
+    },
+
     methods: {
       async loadAccount() {
         //TODO finish implementing session management to resolve account
-        const account = await accountService.getAccount("67e4549c1cabf45e727f0620")
+        const account = await accountService.getAccount(store.activeAccountId)
         .then((response) => {
           return response
         })
@@ -75,3 +96,12 @@ import AccountSettings from './content/SettingsPanel.vue';
     },
   };
 </script>
+
+<style>
+
+.dashboard-hero {
+  max-width: 10rem;
+  max-height: auto;
+}
+
+</style>

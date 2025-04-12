@@ -30,7 +30,7 @@ const messages = {
       no: 'No',
       done: 'Done'
     },
-    home:{
+    home: {
       login: {
         header: 'LOGIN',
         misc: {

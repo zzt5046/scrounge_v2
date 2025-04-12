@@ -31,25 +31,27 @@ export class ApiService {
       console.error(e)
       return e
     }
-
-    return null
   }
 
-  patch(path, request) {
-    return axios({
-      method: 'patch',
-      url: baseUrl + path,
-      data: request,
-      config: config
-    })
+  async put(path, request) {
+    const fullPath = `${baseUrl}/${path}`
+    try {
+      await axios.put(fullPath, request, config)
+    } catch (e) {
+      console.log('Error during PUT to: ' + path)
+      console.error(e)
+      return e
+    }
   }
 
-  delete(path, request) {
-    return axios({
-      method: 'delete',
-      url: baseUrl + path,
-      data: request,
-      config: config
-    })
+  async put(path, request) {
+    const fullPath = `${baseUrl}/${path}`
+    try {
+      await axios.delete(fullPath, request, config)
+    } catch (e) {
+      console.log('Error during DELETE to: ' + path)
+      console.error(e)
+      return e
+    }
   }
 }

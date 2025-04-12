@@ -24,21 +24,26 @@ class AccountService(database: MongoDatabase) {
     // Account Login / Logout
     // -----------------------------------------------------------------------------------------------------------
     suspend fun authenticate(request: AccountLoginRequest): AccountLoginResponse {
-        val document = readDocument(null, userName = request.userName)
-        val status = document?.let {
-            if (it["credentials"] == request.credentials) AccountLoginStatus.SUCCESS else AccountLoginStatus.FAILURE
-        } ?: AccountLoginStatus.FAILURE
+        var account: Account? = null
+        var status = AccountLoginStatus.FAILURE
+        var accountId = ""
+        readDocument(null, userName = request.userName)?.let {
+            status = if (it["credentials"] == request.credentials) AccountLoginStatus.SUCCESS else AccountLoginStatus.FAILURE
+            accountId = it["_id"].toString()
+            account = it.toAccount()
+        }
 
         return if (status == AccountLoginStatus.SUCCESS){
-            val accountId = document?.get("_id").toString()
             AccountLoginResponse(
                 accountId = accountId,
                 status = AccountLoginStatus.SUCCESS,
+                settings = account!!.settings
             )
         }else{
             AccountLoginResponse(
                 accountId = null,
-                status = AccountLoginStatus.FAILURE
+                status = AccountLoginStatus.FAILURE,
+                settings = null
             )
         }
     }
@@ -64,7 +69,7 @@ class AccountService(database: MongoDatabase) {
             settings = defaultAccountSettings(),
         )
         val doc = account.toDocument()
-        collection.insertOne(account.toDocument())
+        collection.insertOne(doc)
         doc["_id"].toString()
     }
 
@@ -87,6 +92,9 @@ class AccountService(database: MongoDatabase) {
             collection.find(Filters.eq("_id", ObjectId(accountId))).first()
         }
     }
+
+    suspend fun accountExists(accountId: String): Boolean =
+        read(accountId) != null
 
     suspend fun findAccount(accountId: String): AccountResponse? =
         read(accountId).toAccountResponse()

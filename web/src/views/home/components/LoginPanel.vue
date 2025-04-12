@@ -35,6 +35,7 @@
 import { accountService } from '@/service/.service-registry'
 import TextInput from '@/components/core/input/TextInput.vue'
 import FormsMixin from '../../../mixins/FormsMixin.vue'
+import { store } from '../../../store.js'
 
 export default {
   name: 'LoginPanel',
@@ -50,19 +51,19 @@ export default {
     }
   },
 
-  created(){
-    this.cookieLogin()
-  },
+  // created(){
+  //   this.cookieLogin()
+  // },
 
   methods: {
 
     //auth silently in the background and skip login if there's a session cookie
-    async cookieLogin() {
-      const cookieLoginResponse = await accountService.cookieLogin()
-      if(cookieLoginResponse.message === "cookie-auth"){
-          this.$router.push('/dashboard')
-      }
-    },
+    // async cookieLogin() {
+    //   const cookieLoginResponse = await accountService.cookieLogin()
+    //   if(cookieLoginResponse.message === "cookie-auth"){
+    //       this.$router.push('/dashboard')
+    //   }
+    // },
 
     async login() {
 
@@ -78,8 +79,13 @@ export default {
       }
 
       const loginResponse = await accountService.login(request)
+        .then((response) => {
+          return response
+        })
 
-      if(loginResponse.errors == null){
+      if(loginResponse.accountId != null){
+        store.setActiveAccountId(loginResponse.accountId)
+        store.setActiveAccountSettings(loginResponse.settings)
         this.$router.push('/dashboard')
       }else if(loginResponse.status == 401){
         this.errorText = this.$t('home.login.failed')
