@@ -99,7 +99,8 @@ fun Application.accountsModule(db: MongoDatabase){
                     userName = null,
                     settings = null,
                     emailAddress = null,
-                    errors = listOf(ScroungeError(400, "No ID Found"))
+                    errors = listOf(ScroungeError(400, "No ID Found")),
+                    favoriteRecipes = null,
                 ))
             }
         }

@@ -6,6 +6,7 @@ data class AccountResponse (
     val userName: String?,
     val emailAddress: String?,
     val settings: Map<AccountSetting, String>?,
+    val favoriteRecipes: List<String>?,
     val errors: List<ScroungeError>? = listOf()
 ){
     companion object {
@@ -13,11 +14,13 @@ data class AccountResponse (
             userName = null,
             emailAddress = null,
             settings = null,
+            favoriteRecipes = null
         )
         val ServerError = AccountResponse(
             userName = null,
             emailAddress = null,
             settings = null,
+            favoriteRecipes = null
         )
     }
 }

@@ -10,6 +10,7 @@ data class Account(
     val securityQuestionId: String,
     val securityQuestionAnswer: String,
     val settings: Map<AccountSetting, String>,
+    val favoriteRecipes: List<String> = listOf()
 ){
     companion object {
         fun Account?.toAccountResponse(): AccountResponse? {
@@ -19,7 +20,8 @@ data class Account(
                 AccountResponse(
                     userName = userName,
                     emailAddress = emailAddress,
-                    settings = settings
+                    settings = settings,
+                    favoriteRecipes = favoriteRecipes
                 )
             }
         }
