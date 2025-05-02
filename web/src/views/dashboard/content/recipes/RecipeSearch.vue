@@ -10,7 +10,7 @@
                 v-for="recipeData in searchRecipes"
                 :key="recipeData.id"
                 :recipeName="recipeData.recipe.name"
-                @select-recipe="selectRecipe(recipeData.recipe)"
+                @select-recipe="selectRecipe(recipeData)"
             />
             <div v-if="showNoResultsNote" class="no-recipes-found">No recipes found.</div>
         </div>
@@ -68,8 +68,8 @@ export default {
             })
         },
 
-        selectRecipe(recipe){
-            this.$emit('select-recipe', recipe)
+        selectRecipe(recipeData){
+            this.$emit('select-recipe', recipeData)
         },
     },
 }

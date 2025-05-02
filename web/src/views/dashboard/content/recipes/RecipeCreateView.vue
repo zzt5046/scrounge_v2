@@ -67,14 +67,9 @@ export default {
     },
 
     created() {
-        this.loadMeasurements()
+        this.measurements = store.measurementUnits
     },
     methods: {
-        async loadMeasurements() {
-            const measurementSystem = store.activeAccountSettings.MEASUREMENT_SYSTEM
-            const measurementUnits = await recipeService.getMeasurementUnits(measurementSystem)
-            this.measurements = measurementUnits
-        },
 
         addIngredient() {
             this.ingredients.push({ 

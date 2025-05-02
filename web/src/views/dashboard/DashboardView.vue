@@ -41,7 +41,7 @@ import RecipesPanel from './content/recipes/RecipesPanel.vue';
     data() {
       return {
         account: null,
-        activeSectionTitle: this.$t('dashboard.header'),
+        activeSectionTitle: this.$t('dashboard.navbar.home'),
       };
     },
 

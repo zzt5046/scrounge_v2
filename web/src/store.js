@@ -16,4 +16,9 @@ export const store = reactive({
   setCurrentDashboardView(view) {
     this.currentDashboardView = view
   },
+
+  measurementUnits: [],
+  setMeasurementUnits(units) {
+    this.measurementUnits = units
+  },
 })

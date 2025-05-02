@@ -12,7 +12,7 @@
                 v-for="recipeData in accountRecipes"
                 :key="recipeData.id"
                 :recipeName="recipeData.recipe.name"
-                @select-recipe="selectRecipe(recipeData.recipe)"
+                @select-recipe="selectRecipe(recipeData)"
             />
         </div>
 
@@ -27,7 +27,6 @@ import { store } from '../../../../store'
 import RecipeCard from './RecipeCard.vue'
 import TextInput from '@/components/core/input/TextInput.vue'
 import AppModal from '@/components/core/modal/AppModal.vue'
-import { toRaw } from 'vue'
 
 export default {
     name: 'RecipeList',
@@ -56,8 +55,8 @@ export default {
             })
         },
 
-        selectRecipe(recipe){
-            this.$emit('select-recipe', toRaw(recipe))
+        selectRecipe(recipeData){
+            this.$emit('select-recipe', recipeData)
         },
     },
 }
