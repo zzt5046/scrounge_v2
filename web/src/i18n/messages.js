@@ -18,6 +18,7 @@ const messages = {
       login: 'Login',
       logout: 'Logout',
       register: 'Register',
+      save: 'Save',
       submit: 'Submit',
       cancel: 'Cancel',
       back: 'Back',
@@ -56,6 +57,36 @@ const messages = {
         logout: 'Logout'
       },
       footer: 'Footer',
+    },
+    recipe: {
+      information: 'Information',
+      description: 'Description',
+      ingredients: 'Ingredients',
+      no_ingredients: 'No ingredients found.',
+      directions: 'Directions',
+      add_direction: 'Add Direction',
+      no_directions: 'No directions found.',
+      notes: 'Notes',
+      add_notes: 'Add notes here.',
+      no_notes: 'No notes found.',
+      actions: {
+        add: 'Add Recipe',
+        edit: 'Edit Recipe',
+        delete: 'Delete Recipe',
+        cancel: 'Cancel'
+      },
+      ingredient: {
+        name: 'Name',
+        quantity: 'Quantity',
+        unit: 'Unit',
+        add: '+ Add',
+      },
+      direction: {
+        add: '+ Add',
+      },
+      inspect: {
+        submitted: 'Submitted by:',
+      },
     },
   }
 }
