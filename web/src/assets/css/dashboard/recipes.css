@@ -21,7 +21,8 @@
 }
 
 .recipe-inspect,
-.recipe-edit {
+.recipe-edit,
+.recipe-create {
     display: flex;
     flex-direction: column;
     margin-bottom: 0.5rem;
@@ -42,7 +43,8 @@
 }
 
 .recipe-inspect-actions,
-.recipe-edit-actions {
+.recipe-edit-actions,
+.recipe-create-actions {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -52,19 +54,22 @@
     padding: 1rem;
 }
 
-.recipe-edit-actions {
+.recipe-edit-actions,
+.recipe-create-actions {
     margin-bottom: 2rem;
 }
 
 .recipe-inspect-actions button,
-.recipe-edit-actions button {
+.recipe-edit-actions button,
+.recipe-create-actions button {
     margin-right: 1rem;
 }
 
 .recipe-list-content,
 .recipe-search-content,
 .recipe-inspect-content,
-.recipe-edit-content {
+.recipe-edit-content,
+.recipe-create-content {
     display: flex;
     flex-direction: column;
     padding: 0 1rem 0 1rem;
@@ -107,57 +112,89 @@
 
 .recipe-info-edit,
 .recipe-ingredients-edit,
-.recipe-directions-edit {
+.recipe-directions-edit,
+.recipe-info-create,
+.recipe-ingredients-create,
+.recipe-directions-create {
     margin-top: 1rem;
 }
 
-.recipe-notes-edit {
+.recipe-notes-edit,
+.recipe-notes-create {
     margin-top: 1rem;
-    margin-bottom: 2rem;
+}
+
+.recipe-public-edit,
+.recipe-public-create {
+    margin-top: 1rem;
+    margin-bottom: 2rem
 }
 
 .recipe-edit-list-element,
-.recipe-edit-list-add {
+.recipe-edit-list-add,
+.recipe-create-list-element,
+.recipe-create-list-add {
     display: flex;
     flex-direction: row;
     margin-top: 1.5rem;
     margin-bottom: 1rem;
 }
 
-.recipe-edit-list-element {
+.remove-item-icon {
+    cursor: pointer;
+    margin-right: 1rem;
+    margin-top: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+}
+
+.recipe-edit-list-element,
+.recipe-create-list-element {
     justify-content: space-between;
     max-width: 60%;
 }
 
-.recipe-edit-list-element span {
+.recipe-edit-list-element span,
+.recipe-create-list-element span {
     max-width: 60%;
 }
 
 #edit-recipe-recipeName,
-#edit-recipe-recipeDesc {
+#edit-recipe-recipeDesc,
+#create-recipe-recipeName,
+#create-recipe-recipeDesc {
     width: 60%;
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
 
-#edit-recipe-newIngredientQuantity {
+#edit-recipe-newIngredientQuantity,
+#create-recipe-newIngredientQuantity {
     width: 9%;
     margin-right: 1rem;
 }
 
-#edit-recipe-newIngredientUnit {
+#edit-recipe-newIngredientUnit,
+#create-recipe-newIngredientUnit {
     width: 10%;
     margin-right: 1rem;
 }
 
-#edit-recipe-newIngredientName {
+#edit-recipe-newIngredientName,
+#create-recipe-newIngredientName {
     width: 30%;
     margin-right: 1rem;
 }
 
-#edit-recipe-newDirection {
+#edit-recipe-newDirection,
+#create-recipe-newDirection {
     width: 52.5%;
     margin-right: 1rem;
+}
+
+#edit-recipe-notes,
+#create-recipe-notes {
+    margin-top: 1rem;
 }
 
 .recipe-update-success {
@@ -169,7 +206,8 @@
     margin-top: 1rem;
 }
 
-.recipe-update-error {
+.recipe-update-error,
+.recipe-create-error {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -180,6 +218,7 @@
 }
 
 .recipe-update-success p,
-.recipe-update-error p {
+.recipe-update-error p,
+.recipe-create-error p {
     cursor: pointer;
 }

@@ -25,13 +25,6 @@ export default {
       default: 'Select an option'
     },
   },
-
-  methods: {
-    updateValue() {
-      this.value = event.target.value
-      this.$emit('update:$id', this.value)
-    }
-  }
 }
 </script>
 

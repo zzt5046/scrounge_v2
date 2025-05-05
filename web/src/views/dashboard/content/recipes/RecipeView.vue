@@ -52,8 +52,12 @@
         <div class="recipe-edit-content">
             <div class="recipe-info-edit">
                 <h3>{{ $t('recipe.information') }}</h3>
+
+                <h5>{{ $t('recipe.name') }}</h5>
                 <TextInput id="edit-recipe-recipeName" v-model="editRecipe.name"/>
-                <textarea  id="edit-recipe-recipeDesc" rows="5" cols="60" placeholder="Add notes here." v-model="editRecipe.description"></textarea>
+
+                <h5>{{ $t('recipe.description') }}</h5>
+                <textarea  id="edit-recipe-recipeDesc" rows="5" cols="60" :placeholder="$t('recipe.add_description')" v-model="editRecipe.description"></textarea>
             </div>
 
             <div class="recipe-ingredients-edit">
@@ -81,7 +85,6 @@
                             :placeholder="$t('recipe.ingredient.unit')"
                             :options="units"
                             v-model="newIngredient.unit"
-                            @change="debugUnit"
                         />
                         
                         <TextInput id="edit-recipe-newIngredientName" :placeholder="$t('recipe.ingredient.name')" v-model="newIngredient.name"/>
@@ -116,6 +119,9 @@
                 <h3>{{ $t('recipe.notes') }}</h3>
                 <textarea id="edit-recipe-notes" v-model="editRecipe.notes" rows="10" cols="100" :placeholder="$t('recipe.add_notes')"></textarea>
             </div>
+            <div class="recipe-public-edit">
+                <CheckboxField id="recipe-public-checkbox-edit" :label="$t('recipe.make_public')" v-model="recipe.public"/>
+            </div>
             <div class="recipe-edit-actions">
                 <button class="btn btn-primary" @click="saveRecipe">{{ $t('actions.save') }}</button>
                 <button class="btn btn-primary" @click="cancelEditRecipe">{{ $t('actions.cancel') }}</button>
@@ -130,6 +136,7 @@
 <script>
 import TextInput from '../../../../components/core/input/TextInput.vue'
 import SelectInput from '../../../../components/core/input/SelectInput.vue'
+import CheckboxField from '../../../../components/core/input/CheckboxField.vue'
 import { store } from '../../../../store'
 import { recipeService } from '@/service/.service-registry'
 
@@ -137,7 +144,8 @@ export default {
     name: 'RecipeView',
     components: {
         TextInput,
-        SelectInput
+        SelectInput,
+        CheckboxField
     },
     props: {
         recipeData: {
@@ -155,6 +163,7 @@ export default {
             recipe: null,
             editRecipe: {
                 accountId: null,
+                public: false,
                 name: null,
                 description: null,
                 ingredients: [],
@@ -192,6 +201,7 @@ export default {
             this.editRecipe = {
                 accountId: this.recipe.accountId,
                 name: this.recipe.name,
+                public: this.recipe.public,
                 description: this.recipe.description,
                 ingredients: this.recipe.ingredients.map((ingredient) => {
                     return {
@@ -265,16 +275,3 @@ export default {
     },
 }
 </script>
-<style scoped>
-    .remove-item-icon {
-        cursor: pointer;
-        margin-right: 1rem;
-        margin-top: 0.25rem;
-        width: 1rem;
-        height: 1rem;
-    }
-
-    #edit-recipe-notes {
-        margin-top: 1rem;
-    }
-</style>

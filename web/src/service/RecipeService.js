@@ -37,9 +37,17 @@ export class RecipeService {
         }
     }
 
+    async createRecipe(recipe) {
+        try {
+            return await api.post('recipes', recipe)
+        } catch (e) {
+            console.error(e)
+            return e
+        }
+    }
+
     async updateRecipe(recipeId, newRecipe) {
         try {
-            console.log('Updating recipe:', recipeId, newRecipe)
             return await api.put(`recipes/${recipeId}`, newRecipe)
         } catch (e) {
             console.error(e)

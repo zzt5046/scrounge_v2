@@ -61,18 +61,23 @@ const messages = {
     recipe: {
       list: {
         header: 'My Recipes',
+        no_recipes: 'No recipes found. Add a recipe to see it listed here!',
         deleted: 'Deleted recipe: ',
       },
       information: 'Information',
+      name: 'Name',
       description: 'Description',
+      add_description: 'Add description here.',
       ingredients: 'Ingredients',
       no_ingredients: 'No ingredients found.',
       directions: 'Directions',
-      add_direction: 'Add Direction',
+      add_direction: 'Add direction.',
       no_directions: 'No directions found.',
       notes: 'Notes',
       add_notes: 'Add notes here.',
       no_notes: 'No notes found.',
+      make_public: 'Make this recipe public?',
+      make_public_desc: 'This will allow other users to see this recipe.',
       actions: {
         add: '+ Add Recipe',
         edit: 'Edit Recipe',
@@ -92,6 +97,11 @@ const messages = {
       },
       inspect: {
         submitted: 'Submitted by:',
+      },
+      create: {
+        header: 'Create Recipe',
+        success: 'Recipe created successfully.',
+        error: 'An error has occurred. Please try again later.'
       },
       update: {
         success: 'Recipe updated successfully.',

@@ -16,6 +16,12 @@
         />
 
         <!-- Separate recipe management views -->
+        <RecipeCreateView 
+            v-show="createView" 
+            @create-recipe="loadRecipes" 
+            @back="showDefaultView"
+        />
+
         <RecipeView 
             v-show="inspectView"
             v-if="selectedRecipe"

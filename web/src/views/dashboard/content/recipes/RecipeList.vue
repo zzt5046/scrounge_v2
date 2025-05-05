@@ -3,11 +3,11 @@
         <div class="recipe-list-header">
             <h2>{{ $t('recipe.list.header') }}</h2>
             <p class="recipe-list-info" v-if="info" @click="this.$emit('clear-info')">{{ info }}</p>
-            <button id="add-recipe-button" class="btn btn-primary" @click="showAddRecipeModal = true">
+            <button id="add-recipe-button" class="btn btn-primary" @click="$emit('add-recipe')">
                 {{ $t('recipe.actions.add') }}
             </button>
         </div>
-        <div class="recipe-list-content">
+        <div class="recipe-list-content" v-if="recipes.length > 0">
             <RecipeCard
                 class="recipe-card"
                 v-for="recipeData in recipes"
@@ -15,6 +15,9 @@
                 :recipeName="recipeData.recipe.name"
                 @select-recipe="selectRecipe(recipeData)"
             />
+        </div>
+        <div class="recipe-list-content" v-else>
+            <p>{{ $t('recipe.list.no_recipes') }}</p>
         </div>
     </div>
 </template>

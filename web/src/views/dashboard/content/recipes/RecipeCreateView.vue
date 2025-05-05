@@ -1,37 +1,84 @@
 <template>
-    <div class="recipe-inspect-view">
-        <h2>New Recipe</h2>
-        <div class="recipe-form">
+    <div class="recipe-create">
+        <div class="recipe-create-content">
+            <div class="recipe-info-create">
+                <h3>{{ $t('recipe.information') }}</h3>
 
-            <h3>Information</h3>
-            <TextInput id="recipe-name" :placeholder="$t('fields.recipe.name')" v-model="name" />
-            <TextInput id="recipe-description" :label="$t('fields.recipe.desc')" v-model="description" />
+                <h5>{{ $t('recipe.name') }}</h5>
+                <TextInput id="create-recipe-recipeName" v-model="recipe.name"/>
 
-            <div class="recipe-ingredients">
-                <h3>Ingredients</h3>
-                <div v-for="(ingredient, index) in ingredients" :key="index" class="ingredient-item">
-                    {{ ingredient.quantity + " " + ingredient.measurement + " " + ingredient.name }}
-                    <button @click="removeIngredient(index)" class="btn btn-secondary">Remove</button>
-                </div>
-                <TextInput :label="$t('fields.recipe.quantity')" v-model="ingredient.quantity" />
-                <SelectInput
-                    id="recipe-ingredient-measurement"
-                    :options="measurements"
-                    v-model="ingredient.measurement"
-                    required
-                />
-                <TextInput :label="$t('fields.ingredient')" v-model="ingredient.name" />
-                <button @click="addIngredient">+ Add</button>
+                <h5>{{ $t('recipe.description') }}</h5>
+                <textarea  id="create-recipe-recipeDesc" rows="5" cols="60" :placeholder="$t('recipe.add_description')" v-model="recipe.description"></textarea>
             </div>
 
-            <div class="recipe-directions">
-                <h3>Directions</h3>
-                <div v-for="(direction, index) in directions" :key="index" class="direction-item">
-                    {{ (index + 1) + ". " + direction }}
-                    <button @click="removeDirection(index)" class="btn btn-secondary">Remove</button>
+            <div class="recipe-ingredients-create">
+                <h3>{{ $t('recipe.ingredients') }}</h3>
+                <p v-if="recipe.ingredients.length === 0">{{ $t('recipe.no_ingredients') }}</p>
+                <div>
+                    <ul>
+                        <li v-for="(ingredient, index) in recipe.ingredients" :key="index">
+                            <div class="recipe-create-list-element">
+                                <span>{{ ingredient.measurement.quantity }} {{ getUnitName(ingredient.measurement.measurementUnit) }} {{ ingredient.name }}</span>
+                                <img
+                                    src="../../../../assets/icon/x-icon.png"
+                                    class="remove-item-icon"
+                                    :title="$t('actions.remove')"
+                                    @click="removeIngredient(index)"
+                                />
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="recipe-create-list-add">
+                        <TextInput id="create-recipe-newIngredientQuantity" :placeholder="$t('recipe.ingredient.quantity')" v-model="newIngredient.quantity"/>
+
+                        <SelectInput
+                            id="create-recipe-newIngredientUnit"
+                            :placeholder="$t('recipe.ingredient.unit')"
+                            :options="units"
+                            v-model="newIngredient.unit"
+                        />
+                        
+                        <TextInput id="create-recipe-newIngredientName" :placeholder="$t('recipe.ingredient.name')" v-model="newIngredient.name"/>
+                        <button class="btn btn-primary" @click="addIngredient">{{ $t('recipe.ingredient.add') }}</button>
+                    </div>
                 </div>
-                <TextInput :label="$t('fields.recipe.new-direction')" v-model="direction" />
-                <button @click="addDirection">+ Add</button>
+            </div>
+            <div class="recipe-directions-create">
+                <h3>{{ $t('recipe.directions') }}</h3>
+                <p v-if="emptyDirections">{{ $t('recipe.no_directions') }}</p>
+                <div v-else>
+                    <ol>
+                        <li v-for="(direction, index) in recipe.directions" :key="index">
+                            <div class="recipe-create-list-element">
+                                <span>{{ direction }}</span>
+                                <img
+                                    src="../../../../assets/icon/x-icon.png"
+                                    class="remove-item-icon"
+                                    :title="$t('actions.remove')"
+                                    @click="removeDirection(index)"
+                                />
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+                <div class="recipe-create-list-add">
+                    <TextInput id="create-recipe-newDirection" :placeholder="$t('recipe.add_direction')" v-model="newDirection"/>
+                    <button class="btn btn-primary" @click="addDirection">{{ $t('recipe.direction.add') }}</button>
+                </div>
+            </div>
+            <div class="recipe-notes-create">
+                <h3>{{ $t('recipe.notes') }}</h3>
+                <textarea id="create-recipe-notes" v-model="recipe.notes" rows="10" cols="100" :placeholder="$t('recipe.add_notes')"></textarea>
+            </div>
+            <div class="recipe-public-create">
+                <CheckboxField id="recipe-public-checkbox-create" :label="$t('recipe.make_public')" v-model="recipe.public"/>
+            </div>
+            <div class="recipe-create-actions">
+                <button class="btn btn-primary" @click="saveRecipe">{{ $t('actions.save') }}</button>
+                <button class="btn btn-primary" @click="back">{{ $t('actions.cancel') }}</button>
+            </div>
+            <div class="recipe-create-error" v-if="errorMessage">
+                <p @click="errorMessage = null">{{ errorMessage }}</p>
             </div>
         </div>
     </div>
@@ -39,74 +86,111 @@
 
 <script>
 import TextInput from '@/components/core/input/TextInput.vue'
+import SelectInput from '@/components/core/input/SelectInput.vue'
+import CheckboxField from '@/components/core/input/CheckboxField.vue'
 import { recipeService } from '@/service/.service-registry'
 import { store } from '../../../../store'
 
 export default {
     name: 'RecipeCreateView',
-    components: { TextInput },
+    components: { TextInput, SelectInput, CheckboxField },
         
     data() {
         return {
-            accountId: store.activeAccountId,
-            measurements: [],
-
-            name: null,
-            description: null,
-
-            ingredient:{
+            recipe: {
+                accountId: store.activeAccountId,
+                public: false,
+                name: null,
+                description: null,
+                ingredients: [],
+                directions: [],
+                notes: null,
+            },
+            newIngredient: {
                 quantity: null,
-                measurement: null,
+                unit: null,
                 name: null,
             },
-            ingredients: [],
-
-            direction: null,
-            directions: [],
+            newDirection: null,
+            successMessage: null,
+            errorMessage: null,
         }
     },
 
-    created() {
-        this.measurements = store.measurementUnits
+    computed: {
+        emptyDirections() {
+            return this.recipe.directions.length === 0
+        },
+        units() {
+            return Array.from(Object.entries(store.measurementUnits))
+                .map(([id, name]) => {
+                    return { name, id }
+                });
+        },
     },
+
     methods: {
+        back() {
+            this.recipe = {
+                accountId: store.activeAccountId,
+                public: false,
+                name: null,
+                description: null,
+                ingredients: [],
+                directions: [],
+                notes: null,
+            },
+            this.newIngredient = {
+                quantity: null,
+                unit: null,
+                name: null,
+            }
+            this.$emit('back')
+        },
 
         addIngredient() {
-            this.ingredients.push({ 
-                    quantity: this.ingredient.quantity, 
-                    measurement: this.ingredient.measurement, 
-                    name: this.ingredient.name 
+            if (this.newIngredient.quantity && this.newIngredient.unit && this.newIngredient.name) {
+                this.recipe.ingredients.push({
+                    measurement: {
+                        quantity: this.newIngredient.quantity,
+                        measurementUnit: this.newIngredient.unit,
+                    },
+                    name: this.newIngredient.name,
                 })
-            this.ingredient.quantity = null
-            this.ingredient.measurement = null
-            this.ingredient.name = null
+
+                this.newIngredient = {
+                    quantity: null,
+                    unit: null,
+                    name: null,
+                }
+            }
         },
         removeIngredient(index) {
-            this.ingredients.remove(index)
+            this.recipe.ingredients.splice(index, 1)
         },
-
+        getUnitName(inputUnit) {
+            return this.units.find((unit) => unit.id === inputUnit)?.name || ''
+        },
+        
         addDirection() {
-            this.directions.push(this.direction)
-            this.direction = null
+            if (this.newDirection) {
+                this.recipe.directions.push(this.newDirection)
+                this.newDirection = null
+            }
         },
         removeDirection(index) {
-            this.directions.remove(index)
+            this.recipe.directions.splice(index, 1)
         },
 
-        saveRecipe(){
-            //UNFINISHED
-            const recipe = {
-                name: this.name,
-                description: this.description,
-                ingredients: this.ingredients,
-                directions: this.directions,
-            }
-            recipeService.createRecipe(this.accountId, recipe).then(() => {
-                this.$emit('recipe-created', recipe)
+        async saveRecipe() {
+            await recipeService.createRecipe(this.recipe).then(() => {
+                this.$emit('create-recipe')
+                this.back()
             }).catch((error) => {
                 console.error('Error creating recipe:', error)
+                this.errorMessage = this.$t('recipe.create.error')
             })
-        }
+        },
     },
 }
 
