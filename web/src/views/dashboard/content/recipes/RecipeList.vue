@@ -2,6 +2,7 @@
     <div class="recipe-list" v-if="recipes">
         <div class="recipe-list-header">
             <h2>{{ $t('recipe.list.header') }}</h2>
+            <p class="recipe-list-info" v-if="info" @click="this.$emit('clear-info')">{{ info }}</p>
             <button id="add-recipe-button" class="btn btn-primary" @click="showAddRecipeModal = true">
                 {{ $t('recipe.actions.add') }}
             </button>
@@ -32,11 +33,25 @@ export default {
             type: Object,
             required: true,
         },
+        infoMessage: {
+            type: String,
+            default: null,
+        },
     },
 
     data(){
         return {
             accountRecipes: [],
+            info: null,
+        }
+    },
+
+    watch: {
+        infoMessage: {
+            immediate: true,
+            handler(newValue) {
+                this.info = newValue
+            }
         }
     },
 

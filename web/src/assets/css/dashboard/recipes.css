@@ -70,13 +70,29 @@
     padding: 0 1rem 0 1rem;
 }
 
+.recipe-list-content {
+    margin-top: 0.5rem;
+}
+
 #recipe-search-input {
     width: 40rem;
     margin-bottom: 1rem;
 }
 
+.recipe-list-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.recipe-list-info {
+    padding-top: 0.7rem;
+    color: red;
+    cursor: pointer;
+}
+
 .recipe-card {
-    padding-bottom: 0.25rem;
+    margin-bottom: 0.25rem;
     width: 20rem;
     height: 2rem;
     background-color: #EADE8E;

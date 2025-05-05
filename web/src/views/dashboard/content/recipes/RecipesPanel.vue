@@ -5,6 +5,8 @@
         <RecipeList 
             v-show="showDefault" 
             :recipes="accountRecipes"
+            :infoMessage="recipeListInfo"
+            @clear-info="recipeListInfo = null"
             @select-recipe="selectRecipe" 
             @add-recipe="showRecipeCreateView"
         />
@@ -54,13 +56,22 @@ import { recipeService } from '@/service/.service-registry'
 
     data(){
         return {
+            interval: null,
             accountRecipes: [],
             showDefault: true,
             createRecipe: false,
             inspectRecipe: false,
             editRecipe: false,
             selectedRecipe: null,
+            recipeListInfo: null,
         }
+    },
+
+    created(){
+        this.loadRecipes()
+        this.interval = setInterval(() =>{
+            this.loadRecipes()
+        }, 5000)
     },
 
     computed: {
@@ -79,10 +90,6 @@ import { recipeService } from '@/service/.service-registry'
         currentDashboardView(){
             return store.currentDashboardView
         },
-    },
-
-    created(){
-        this.loadRecipes()
     },
 
     methods: {
@@ -114,6 +121,7 @@ import { recipeService } from '@/service/.service-registry'
 
         async loadRecipes(){
             const accountRecipes = await recipeService.getAccountRecipes(store.activeAccountId)
+            this.accountRecipes = []
             accountRecipes.recipes?.forEach(recipeData => {
                 this.accountRecipes.push({
                     id: recipeData.recipeId,
@@ -129,6 +137,17 @@ import { recipeService } from '@/service/.service-registry'
 
         editSelectedRecipe(){
             this.showRecipeEditView()
+        },
+
+        async deleteRecipe(id){
+            await recipeService.deleteRecipe(id)
+            this.recipeListInfo = this.$t('recipe.list.deleted') + this.getRecipeName(id)
+            this.loadRecipes()
+            this.showDefaultView()
+        },
+        getRecipeName(id){
+            const recipeData = this.accountRecipes.find(recipeData => recipeData.id === id)
+            return recipeData ? recipeData.recipe.name : null
         },
     },
 

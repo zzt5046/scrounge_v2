@@ -60,7 +60,8 @@ const messages = {
     },
     recipe: {
       list: {
-        header: 'Recipes',
+        header: 'My Recipes',
+        deleted: 'Deleted recipe: ',
       },
       information: 'Information',
       description: 'Description',
@@ -73,7 +74,7 @@ const messages = {
       add_notes: 'Add notes here.',
       no_notes: 'No notes found.',
       actions: {
-        add: 'Add Recipe',
+        add: '+ Add Recipe',
         edit: 'Edit Recipe',
         save: 'Save Recipe',
         favorite: 'Favorite Recipe',
