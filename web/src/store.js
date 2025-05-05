@@ -1,7 +1,7 @@
 import { reactive } from 'vue'
 
 export const store = reactive({
-    
+
   activeAccountId: null,
   setActiveAccountId(accountId) {
     this.activeAccountId = accountId
@@ -17,7 +17,7 @@ export const store = reactive({
     this.currentDashboardView = view
   },
 
-  measurementUnits: [],
+  measurementUnits: {},
   setMeasurementUnits(units) {
     this.measurementUnits = units
   },

@@ -27,5 +27,5 @@ enum class MeasurementUnit(val label: String, val system: MeasurementSystem?) {
     NO_UNIT(" ", null),
 }
 
-fun getMeasurementUnits(system: MeasurementSystem): List<String> =
-    MeasurementUnit.entries.filter { it.system == system }.map { it.label }
+fun getMeasurementUnits(system: MeasurementSystem): Map<MeasurementUnit, String> =
+    MeasurementUnit.entries.filter { it.system == system }.associateWith { it.label }

@@ -59,6 +59,9 @@ const messages = {
       footer: 'Footer',
     },
     recipe: {
+      list: {
+        header: 'Recipes',
+      },
       information: 'Information',
       description: 'Description',
       ingredients: 'Ingredients',
@@ -72,6 +75,8 @@ const messages = {
       actions: {
         add: 'Add Recipe',
         edit: 'Edit Recipe',
+        save: 'Save Recipe',
+        favorite: 'Favorite Recipe',
         delete: 'Delete Recipe',
         cancel: 'Cancel'
       },
@@ -86,6 +91,10 @@ const messages = {
       },
       inspect: {
         submitted: 'Submitted by:',
+      },
+      update: {
+        success: 'Recipe updated successfully.',
+        error: 'An error has occurred. Please try again later.'
       },
     },
   }

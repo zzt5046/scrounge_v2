@@ -52,11 +52,11 @@ fun Application.recipesModule(db: MongoDatabase){
             call.respond(getMeasurementUnits(systemEnum))
         }
 
-        // Update account
+        // Update recipe
         put("/recipes/{id}") {
             val id = call.parameters["id"] ?: throw IllegalArgumentException("No ID found")
-            val account = call.receive<Recipe>()
-            recipeService.updateRecipe(id, account)?.let {
+            val recipe = call.receive<Recipe>()
+            recipeService.updateRecipe(id, recipe)?.let {
                 call.respond(HttpStatusCode.OK)
             } ?: call.respond(HttpStatusCode.NotFound)
         }

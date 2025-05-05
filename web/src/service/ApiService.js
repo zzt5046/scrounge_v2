@@ -44,7 +44,7 @@ export class ApiService {
     }
   }
 
-  async put(path, request) {
+  async delete(path, request) {
     const fullPath = `${baseUrl}/${path}`
     try {
       await axios.delete(fullPath, request, config)

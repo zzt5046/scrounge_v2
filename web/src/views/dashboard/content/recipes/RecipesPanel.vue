@@ -2,16 +2,25 @@
     <div class="recipes-panel">
 
         <!-- Default view -->
-        <RecipeList v-show="showDefault" @select-recipe="selectRecipe" @add-recipe="showRecipeCreateView"/>
-        <RecipeSearch v-show="showDefault" @select-recipe="selectRecipe"/>
+        <RecipeList 
+            v-show="showDefault" 
+            :recipes="accountRecipes"
+            @select-recipe="selectRecipe" 
+            @add-recipe="showRecipeCreateView"
+        />
+        <RecipeSearch 
+            v-show="showDefault" 
+            @select-recipe="selectRecipe"
+        />
 
         <!-- Separate recipe management views -->
-        <RecipeInspectView 
+        <RecipeView 
             v-show="inspectView"
             v-if="selectedRecipe"
-            :recipe="selectedRecipe.recipe"  
+            :recipeData="selectedRecipe"  
             @edit-recipe="editSelectedRecipe" 
-            @delete-recipe="deleteRecipe" 
+            @delete-recipe="deleteRecipe"
+            @save-recipe="loadRecipes"
             @favorite-recipe="favoriteRecipe"
             @cancel-inspect="showDefaultView" 
         />
@@ -21,10 +30,11 @@
 <script>
 import RecipeList from './RecipeList.vue'
 import RecipeCreateView from './RecipeCreateView.vue'
-import RecipeInspectView from './RecipeInspectView.vue'
+import RecipeView from './RecipeView.vue'
 import RecipeSearch from './RecipeSearch.vue'
 import { store } from '../../../../store'
-import { toRaw } from 'vue'
+import { recipeService } from '@/service/.service-registry'
+
 
     export default {
     name: 'RecipesPanel',
@@ -32,7 +42,7 @@ import { toRaw } from 'vue'
         RecipeList, 
         RecipeSearch, 
         RecipeCreateView, 
-        RecipeInspectView
+        RecipeView
     },
 
     props: {
@@ -44,6 +54,7 @@ import { toRaw } from 'vue'
 
     data(){
         return {
+            accountRecipes: [],
             showDefault: true,
             createRecipe: false,
             inspectRecipe: false,
@@ -54,15 +65,12 @@ import { toRaw } from 'vue'
 
     computed: {
         defaultView(){
-            // return this.showDefault && !this.createRecipe && !this.inspectRecipe
             return this.showDefault
         },
         createView(){
-            // return !this.showDefault && this.createRecipe && !this.inspectRecipe
             return this.createRecipe
         },
         inspectView(){
-            // return !this.showDefault && !this.createRecipe && this.inspectRecipe && this.selectedRecipe !== null
             return this.inspectRecipe && this.selectedRecipe !== null
         },
         editView(){
@@ -71,6 +79,10 @@ import { toRaw } from 'vue'
         currentDashboardView(){
             return store.currentDashboardView
         },
+    },
+
+    created(){
+        this.loadRecipes()
     },
 
     methods: {
@@ -100,21 +112,23 @@ import { toRaw } from 'vue'
             this.editRecipe = true
         },
 
+        async loadRecipes(){
+            const accountRecipes = await recipeService.getAccountRecipes(store.activeAccountId)
+            accountRecipes.recipes?.forEach(recipeData => {
+                this.accountRecipes.push({
+                    id: recipeData.recipeId,
+                    recipe: recipeData.recipe,
+                })
+            })
+        },
+
         selectRecipe(recipeData){
-            this.selectedRecipe = toRaw(recipeData)
+            this.selectedRecipe = recipeData
             this.showRecipeInspectView()
         },
 
         editSelectedRecipe(){
             this.showRecipeEditView()
-        },
-        
-        deleteRecipe(recipeId){
-            recipeService.deleteRecipe(recipeId)
-
-        },
-        favoriteRecipe(recipeId){
-            recipeService.favoriteRecipe(store.activeAccountId, recipeId)
         },
     },
 

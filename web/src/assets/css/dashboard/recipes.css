@@ -143,3 +143,27 @@
     width: 52.5%;
     margin-right: 1rem;
 }
+
+.recipe-update-success {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: green;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.recipe-update-error {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: red;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.recipe-update-success p,
+.recipe-update-error p {
+    cursor: pointer;
+}
