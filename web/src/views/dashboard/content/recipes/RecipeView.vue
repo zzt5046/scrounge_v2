@@ -68,12 +68,30 @@
                         <li v-for="(ingredient, index) in editRecipe.ingredients" :key="index">
                             <div class="recipe-edit-list-element">
                                 <span>{{ ingredient.measurement.quantity }} {{ getUnitName(ingredient.measurement.measurementUnit) }} {{ ingredient.name }}</span>
-                                <img
+                                <div class="recipe-list-element-icons">
+                                    <img
+                                    v-if="index > 0"
+                                    src="../../../../assets/icon/up-arrow.png"
+                                    class="up-arrow-icon"
+                                    :title="$t('actions.move_up')"
+                                    @click="moveIngredientUp(index)"
+                                    />
+
+                                    <img
+                                    v-if="index < this.editRecipe.ingredients.length - 1"
+                                    src="../../../../assets/icon/down-arrow.png"
+                                    class="down-arrow-icon"
+                                    :title="$t('actions.move_down')"
+                                    @click="moveIngredientDown(index)"
+                                    />
+
+                                    <img
                                     src="../../../../assets/icon/x-icon.png"
                                     class="remove-item-icon"
                                     :title="$t('actions.remove')"
                                     @click="removeIngredient(index)"
-                                />
+                                    />
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -100,12 +118,30 @@
                         <li v-for="(direction, index) in editRecipe.directions" :key="index">
                             <div class="recipe-edit-list-element">
                                 <span>{{ direction }}</span>
-                                <img
+                                <div class="recipe-list-element-icons">
+                                    <img
+                                    v-if="index > 0"
+                                    src="../../../../assets/icon/up-arrow.png"
+                                    class="up-arrow-icon"
+                                    :title="$t('actions.move_up')"
+                                    @click="moveDirectionUp(index)"
+                                    />
+
+                                    <img
+                                    v-if="index < this.editRecipe.directions.length - 1"
+                                    src="../../../../assets/icon/down-arrow.png"
+                                    class="down-arrow-icon"
+                                    :title="$t('actions.move_down')"
+                                    @click="moveDirectionDown(index)"
+                                    />
+
+                                    <img
                                     src="../../../../assets/icon/x-icon.png"
                                     class="remove-item-icon"
                                     :title="$t('actions.remove')"
                                     @click="removeDirection(index)"
-                                />
+                                    />
+                                </div>
                             </div>
                         </li>
                     </ol>
@@ -196,6 +232,74 @@ export default {
     },
 
     methods: {
+        showEditView() {
+            this.syncRecipe()
+            this.editMode = true
+        },
+        cancelEditRecipe() {
+            this.syncRecipe()
+            this.editMode = false
+        },
+
+        // Ingredients --------------------------------------------------
+        addIngredient() {
+            if (this.newIngredient.quantity && this.newIngredient.unit && this.newIngredient.name) {
+                this.editRecipe.ingredients.push({
+                    measurement: {
+                        quantity: this.newIngredient.quantity,
+                        measurementUnit: this.newIngredient.unit,
+                    },
+                    name: this.newIngredient.name,
+                })
+
+                this.newIngredient = {
+                    quantity: null,
+                    unit: null,
+                    name: null,
+                }
+            }
+        },
+        moveIngredientUp(index) {
+            const temp = this.editRecipe.ingredients[index]
+            this.editRecipe.ingredients[index] = this.editRecipe.ingredients[index - 1]
+            this.editRecipe.ingredients[index - 1] = temp
+        },
+        moveIngredientDown(index) {
+            const temp = this.editRecipe.ingredients[index]
+            this.editRecipe.ingredients[index] = this.editRecipe.ingredients[index + 1]
+            this.editRecipe.ingredients[index + 1] = temp
+        },
+        removeIngredient(index) {
+            this.editRecipe.ingredients.splice(index, 1)
+        },
+        // END Ingredients-----------------------------------------------
+
+        getUnitName(inputUnit) {
+            return this.units.find((unit) => unit.id === inputUnit)?.name || ''
+        },
+        
+        // Directions ---------------------------------------------------
+        addDirection() {
+            if (this.newDirection) {
+                this.editRecipe.directions.push(this.newDirection)
+                this.newDirection = null
+            }
+        },
+        moveDirectionUp(index) {
+            const temp = this.editRecipe.directions[index]
+            this.editRecipe.directions[index] = this.editRecipe.directions[index - 1]
+            this.editRecipe.directions[index - 1] = temp
+        },
+        moveDirectionDown(index) {
+            const temp = this.editRecipe.directions[index]
+            this.editRecipe.directions[index] = this.editRecipe.directions[index + 1]
+            this.editRecipe.directions[index + 1] = temp
+        },
+        removeDirection(index) {
+            this.editRecipe.directions.splice(index, 1)
+        },
+        // END Directions-----------------------------------------------
+
         syncRecipe() {
             this.recipe = this.recipeData.recipe
             this.editRecipe = {
@@ -217,48 +321,6 @@ export default {
                 }),
                 notes: this.recipe.notes,
             }
-        },
-        showEditView() {
-            this.syncRecipe()
-            this.editMode = true
-        },
-        cancelEditRecipe() {
-            this.syncRecipe()
-            this.editMode = false
-        },
-
-        addIngredient() {
-            if (this.newIngredient.quantity && this.newIngredient.unit && this.newIngredient.name) {
-                this.editRecipe.ingredients.push({
-                    measurement: {
-                        quantity: this.newIngredient.quantity,
-                        measurementUnit: this.newIngredient.unit,
-                    },
-                    name: this.newIngredient.name,
-                })
-
-                this.newIngredient = {
-                    quantity: null,
-                    unit: null,
-                    name: null,
-                }
-            }
-        },
-        removeIngredient(index) {
-            this.editRecipe.ingredients.splice(index, 1)
-        },
-        getUnitName(inputUnit) {
-            return this.units.find((unit) => unit.id === inputUnit)?.name || ''
-        },
-        
-        addDirection() {
-            if (this.newDirection) {
-                this.editRecipe.directions.push(this.newDirection)
-                this.newDirection = null
-            }
-        },
-        removeDirection(index) {
-            this.editRecipe.directions.splice(index, 1)
         },
 
         async saveRecipe() {

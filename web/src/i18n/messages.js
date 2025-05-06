@@ -29,7 +29,9 @@ const messages = {
       delete: 'Delete',
       yes: 'Yes',
       no: 'No',
-      done: 'Done'
+      done: 'Done',
+      move_up: 'Move Up',
+      move_down: 'Move Down',
     },
     home: {
       login: {

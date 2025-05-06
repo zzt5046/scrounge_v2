@@ -140,6 +140,14 @@
     margin-bottom: 1rem;
 }
 
+.recipe-list-element-icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.up-arrow-icon,
+.down-arrow-icon,
 .remove-item-icon {
     cursor: pointer;
     margin-right: 1rem;

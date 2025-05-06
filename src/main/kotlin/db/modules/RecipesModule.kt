@@ -17,6 +17,9 @@ import zjt.projects.models.recipe.getMeasurementUnits
 fun Application.recipesModule(db: MongoDatabase){
     val recipeService = RecipeService(db)
 
+    val targetRecipePath = "/recipes/{id}"
+    val noIdFound = "No ID found"
+
     routing {
 
         // Create recipe
@@ -33,8 +36,8 @@ fun Application.recipesModule(db: MongoDatabase){
         }
 
         // Get recipe by id
-        get("/recipes/{id}") {
-            val id = call.parameters["id"] ?: throw IllegalArgumentException("No ID found")
+        get(targetRecipePath) {
+            val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
             recipeService.getRecipeById(id)?.let { recipe ->
                 call.respond(recipe)
             } ?: call.respond(HttpStatusCode.NotFound)
@@ -42,7 +45,7 @@ fun Application.recipesModule(db: MongoDatabase){
 
         // Get recipes by accountId
         get("/recipes/all/{accountId}") {
-            val accountId = call.parameters["accountId"] ?: throw IllegalArgumentException("No accountId found")
+            val accountId = call.parameters["accountId"] ?: throw IllegalArgumentException(noIdFound)
             call.respond(recipeService.getRecipesByAccountId(accountId))
         }
 
@@ -54,8 +57,8 @@ fun Application.recipesModule(db: MongoDatabase){
         }
 
         // Update recipe
-        put("/recipes/{id}") {
-            val id = call.parameters["id"] ?: throw IllegalArgumentException("No ID found")
+        put(targetRecipePath) {
+            val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
             val recipe = call.receive<Recipe>()
             recipeService.updateRecipe(id, recipe)?.let {
                 call.respond(HttpStatusCode.OK)
@@ -63,8 +66,8 @@ fun Application.recipesModule(db: MongoDatabase){
         }
 
         // Delete recipe
-        delete("/recipes/{id}") {
-            val id = call.parameters["id"] ?: throw IllegalArgumentException("No ID found")
+        delete(targetRecipePath) {
+            val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
             recipeService.deleteRecipe(id)?.let {
                 call.respond(HttpStatusCode.OK)
             } ?: call.respond(HttpStatusCode.NotFound)

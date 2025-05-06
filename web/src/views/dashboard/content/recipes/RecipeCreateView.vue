@@ -19,12 +19,30 @@
                         <li v-for="(ingredient, index) in recipe.ingredients" :key="index">
                             <div class="recipe-create-list-element">
                                 <span>{{ ingredient.measurement.quantity }} {{ getUnitName(ingredient.measurement.measurementUnit) }} {{ ingredient.name }}</span>
-                                <img
+                                <div class="recipe-list-element-icons">
+                                    <img
+                                    v-if="index > 0"
+                                    src="../../../../assets/icon/up-arrow.png"
+                                    class="up-arrow-icon"
+                                    :title="$t('actions.move_up')"
+                                    @click="moveIngredientUp(index)"
+                                    />
+
+                                    <img
+                                    v-if="index < this.recipe.ingredients.length - 1"
+                                    src="../../../../assets/icon/down-arrow.png"
+                                    class="down-arrow-icon"
+                                    :title="$t('actions.move_down')"
+                                    @click="moveIngredientDown(index)"
+                                    />
+
+                                    <img
                                     src="../../../../assets/icon/x-icon.png"
                                     class="remove-item-icon"
                                     :title="$t('actions.remove')"
                                     @click="removeIngredient(index)"
-                                />
+                                    />
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -51,12 +69,30 @@
                         <li v-for="(direction, index) in recipe.directions" :key="index">
                             <div class="recipe-create-list-element">
                                 <span>{{ direction }}</span>
-                                <img
+                                <div class="recipe-list-element-icons">
+                                    <img
+                                    v-if="index > 0"
+                                    src="../../../../assets/icon/up-arrow.png"
+                                    class="up-arrow-icon"
+                                    :title="$t('actions.move_up')"
+                                    @click="moveDirectionUp(index)"
+                                    />
+
+                                    <img
+                                    v-if="index < this.recipe.directions.length - 1"
+                                    src="../../../../assets/icon/down-arrow.png"
+                                    class="down-arrow-icon"
+                                    :title="$t('actions.move_down')"
+                                    @click="moveDirectionDown(index)"
+                                    />
+
+                                    <img
                                     src="../../../../assets/icon/x-icon.png"
                                     class="remove-item-icon"
                                     :title="$t('actions.remove')"
                                     @click="removeDirection(index)"
-                                />
+                                    />
+                                </div>
                             </div>
                         </li>
                     </ol>
@@ -165,6 +201,16 @@ export default {
                 }
             }
         },
+        moveIngredientUp(index) {
+            const temp = this.recipe.ingredients[index]
+            this.recipe.ingredients[index] = this.recipe.ingredients[index - 1]
+            this.recipe.ingredients[index - 1] = temp
+        },
+        moveIngredientDown(index) {
+            const temp = this.recipe.ingredients[index]
+            this.recipe.ingredients[index] = this.recipe.ingredients[index + 1]
+            this.recipe.ingredients[index + 1] = temp
+        },
         removeIngredient(index) {
             this.recipe.ingredients.splice(index, 1)
         },
@@ -177,6 +223,16 @@ export default {
                 this.recipe.directions.push(this.newDirection)
                 this.newDirection = null
             }
+        },
+        moveDirectionUp(index) {
+            const temp = this.recipe.directions[index]
+            this.recipe.directions[index] = this.recipe.directions[index - 1]
+            this.recipe.directions[index - 1] = temp
+        },
+        moveDirectionDown(index) {
+            const temp = this.recipe.directions[index]
+            this.recipe.directions[index] = this.recipe.directions[index + 1]
+            this.recipe.directions[index + 1] = temp
         },
         removeDirection(index) {
             this.recipe.directions.splice(index, 1)
