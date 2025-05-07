@@ -62,7 +62,6 @@ import { recipeService } from '@/service/.service-registry'
 
     data(){
         return {
-            interval: null,
             accountRecipes: [],
             showDefault: true,
             createRecipe: false,
@@ -75,9 +74,6 @@ import { recipeService } from '@/service/.service-registry'
 
     created(){
         this.loadRecipes()
-        this.interval = setInterval(() =>{
-            this.loadRecipes()
-        }, 5000)
     },
 
     computed: {
@@ -105,6 +101,7 @@ import { recipeService } from '@/service/.service-registry'
             this.createRecipe = false
             this.inspectRecipe = false
             this.editRecipe = false
+            this.loadRecipes()
         },
         showRecipeCreateView(){
             this.showDefault = false
