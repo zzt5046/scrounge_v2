@@ -1,6 +1,7 @@
 @import "fonts.css";
 @import "home/home.css";
 @import "dashboard/dashboard.css";
+@import "dashboard/recipes.css";
 
 /*This file should contain themes that propagate the entire domainofapplication*/
 /*Ex: Action button themes, input sizes, etc.*/
@@ -34,7 +35,6 @@
   --vt-c-vanilla: #ECE4B7;
   --vt-c-fawn: #E6AA68;
   --vt-c-zblack: #02020B;
-
 }
 
 /* semantic color variables for this project */

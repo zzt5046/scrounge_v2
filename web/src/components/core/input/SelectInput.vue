@@ -19,15 +19,12 @@ export default {
     },
     label: {
       type: String
-    }
+    },
+    placeholder: {
+      type: String,
+      default: 'Select an option'
+    },
   },
-
-  methods: {
-    updateValue() {
-      this.value = event.target.value
-      this.$emit('update:$id', this.value)
-    }
-  }
 }
 </script>
 
@@ -39,8 +36,8 @@ export default {
     @change="$emit('update:modelValue', $event.target.value)"
     v-bind="$attrs"
   >
-    <option disabled selected value>- Select a question - </option>
-    <option v-for="option in options" :value="option.id">{{ option.name }}</option>
+    <option disabled selected value>{{ placeholder }}</option>
+    <option v-for="option in options" :key="option.id" :value="option.id">{{ option.name }}</option>
   </select>
 </template>
 

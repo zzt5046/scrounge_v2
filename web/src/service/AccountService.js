@@ -1,4 +1,5 @@
 import { api } from '@/service/.service-registry'
+import { store } from '../store'
 
 export class AccountService {
   async login(request) {
@@ -12,12 +13,13 @@ export class AccountService {
   }
 
   async logout() {
+    store.setActiveAccountId(null)
     await api.post('accounts/logout')
   }
 
   async cookieLogin() {
-      const loginResponse = await api.post('accounts/login/cookie')
-      return loginResponse
+    const loginResponse = await api.post('accounts/login/cookie')
+    return loginResponse
   }
 
   async register(request) {

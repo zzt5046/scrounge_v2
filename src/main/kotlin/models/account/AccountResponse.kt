@@ -6,20 +6,21 @@ data class AccountResponse (
     val userName: String?,
     val emailAddress: String?,
     val settings: Map<AccountSetting, String>?,
-    val errors: List<ScroungeError>?
+    val favoriteRecipes: List<String>?,
+    val errors: List<ScroungeError>? = listOf()
 ){
     companion object {
         val Unauthorized = AccountResponse(
             userName = null,
             emailAddress = null,
             settings = null,
-            errors = listOf(ScroungeError.Unauthorized)
+            favoriteRecipes = null
         )
         val ServerError = AccountResponse(
             userName = null,
             emailAddress = null,
             settings = null,
-            errors = listOf(ScroungeError.ServerError)
+            favoriteRecipes = null
         )
     }
 }

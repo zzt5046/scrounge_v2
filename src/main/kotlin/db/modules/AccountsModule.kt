@@ -17,7 +17,7 @@ import zjt.projects.db.services.SessionService
 
 fun Application.accountsModule(db: MongoDatabase){
     val accountService = AccountService(db)
-    val sessionService = SessionService(db)
+    //val sessionService = SessionService(db)
 
     routing {
         //Auth account (login)
@@ -27,14 +27,14 @@ fun Application.accountsModule(db: MongoDatabase){
             val loginResponse = accountService.authenticate(request)
             when(loginResponse.status){
                 AccountLoginStatus.SUCCESS -> {
-                    val accountResponse = loginResponse.accountId?.let { accountService.findAccount(it) }
-                    val session = loginResponse.accountId?.let {
-                        UserSession(
-                            accountId = it,
-                        )
-                    }
-                    call.sessions.set(session)
-                    call.respond(HttpStatusCode.OK, accountResponse, TypeInfo(AccountResponse::class))
+                    //val accountResponse = loginResponse.accountId?.let { accountService.findAccount(it) }
+//                    val session = loginResponse.accountId?.let {
+//                        UserSession(
+//                            accountId = it,
+//                        )
+//                    }
+//                    call.sessions.set(session)
+                    call.respond(HttpStatusCode.OK, loginResponse, TypeInfo(AccountLoginResponse::class))
                 }
                 AccountLoginStatus.FAILURE -> {
                     call.respond(
@@ -99,7 +99,8 @@ fun Application.accountsModule(db: MongoDatabase){
                     userName = null,
                     settings = null,
                     emailAddress = null,
-                    errors = listOf(ScroungeError(400, "No ID Found"))
+                    errors = listOf(ScroungeError(400, "No ID Found")),
+                    favoriteRecipes = null,
                 ))
             }
         }

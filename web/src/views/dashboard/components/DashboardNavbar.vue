@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { store } from '../../../store'
     export default {
         name: 'DashboardNavbar',
 
@@ -39,6 +40,7 @@
         methods: {
             //send new title to parent component
             changeSection(newSectionName) {
+                store.setCurrentDashboardView(newSectionName);
                 this.selectedSection = newSectionName;
                 if(this.selectedSection === 'logout') {
                     this.$emit('logout');

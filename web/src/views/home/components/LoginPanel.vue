@@ -18,13 +18,9 @@
           </button>
         </div>
         <div class="login-error-section flex-box">
-          <!-- {{ $t('home.login.misc.registerDisclaimer1') }}
-          <a href="#" @click="gotoRegister"> {{ $t('home.login.misc.registerDisclaimer2') }} </a> -->
-          
-            <span class="login-error error-text" v-if="errorText" @click="clearError">
-              {{ errorText }}
-            </span>
-          
+          <span class="login-error error-text" v-if="errorText" @click="clearError">
+            {{ errorText }}
+          </span>
         </div>
       </div>
     </div>
@@ -32,9 +28,10 @@
 </template>
 
 <script>
-import { accountService } from '@/service/.service-registry'
+import { accountService, recipeService } from '@/service/.service-registry'
 import TextInput from '@/components/core/input/TextInput.vue'
 import FormsMixin from '../../../mixins/FormsMixin.vue'
+import { store } from '../../../store.js'
 
 export default {
   name: 'LoginPanel',
@@ -50,19 +47,19 @@ export default {
     }
   },
 
-  created(){
-    this.cookieLogin()
-  },
+  // created(){
+  //   this.cookieLogin()
+  // },
 
   methods: {
 
     //auth silently in the background and skip login if there's a session cookie
-    async cookieLogin() {
-      const cookieLoginResponse = await accountService.cookieLogin()
-      if(cookieLoginResponse.message === "cookie-auth"){
-          this.$router.push('/dashboard')
-      }
-    },
+    // async cookieLogin() {
+    //   const cookieLoginResponse = await accountService.cookieLogin()
+    //   if(cookieLoginResponse.message === "cookie-auth"){
+    //       this.$router.push('/dashboard')
+    //   }
+    // },
 
     async login() {
 
@@ -78,14 +75,26 @@ export default {
       }
 
       const loginResponse = await accountService.login(request)
+        .then((response) => {
+          return response
+        })
 
-      if(loginResponse.errors == null){
+      if(loginResponse.accountId != null){
+        await this.setCommonStoreValues(loginResponse)
         this.$router.push('/dashboard')
       }else if(loginResponse.status == 401){
         this.errorText = this.$t('home.login.failed')
       } else {
         this.errorText = this.$t('home.login.error')
       }
+    },
+
+    async setCommonStoreValues(loginResponse) {
+      store.setActiveAccountId(loginResponse.accountId)
+      store.setActiveAccountSettings(loginResponse.settings)
+
+      const units = await recipeService.getMeasurementUnits(loginResponse.settings.MEASUREMENT_SYSTEM)
+      store.setMeasurementUnits(units)
     },
 
     clearError() {

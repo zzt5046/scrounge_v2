@@ -9,7 +9,7 @@ data class AccountSettings(
 fun defaultAccountSettings(): Map<AccountSetting, String> =
     mapOf(
         AccountSetting.LANGUAGE to Language.ENGLISH.name,
-        AccountSetting.UNIT_OF_MEASURE to UnitOfMeasure.IMPERIAL.name,
+        AccountSetting.MEASUREMENT_SYSTEM to MeasurementSystem.IMPERIAL.name,
         AccountSetting.THEME to Theme.LIGHT.name
     )
 
@@ -21,7 +21,7 @@ fun Map<AccountSetting, String>.toResponse(): AccountSettingsResponse =
 enum class AccountSetting {
     LANGUAGE,
     THEME,
-    UNIT_OF_MEASURE
+    MEASUREMENT_SYSTEM
 }
 
 enum class Language {
@@ -29,7 +29,7 @@ enum class Language {
     SPANISH
 }
 
-enum class UnitOfMeasure{
+enum class MeasurementSystem{
     IMPERIAL,
     METRIC,
 }
