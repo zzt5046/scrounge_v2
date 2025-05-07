@@ -80,21 +80,12 @@ export default {
         })
 
       if(loginResponse.accountId != null){
-        await this.setCommonStoreValues(loginResponse)
         this.$router.push('/dashboard')
       }else if(loginResponse.status == 401){
         this.errorText = this.$t('home.login.failed')
       } else {
         this.errorText = this.$t('home.login.error')
       }
-    },
-
-    async setCommonStoreValues(loginResponse) {
-      store.setActiveAccountId(loginResponse.accountId)
-      store.setActiveAccountSettings(loginResponse.settings)
-
-      const units = await recipeService.getMeasurementUnits(loginResponse.settings.MEASUREMENT_SYSTEM)
-      store.setMeasurementUnits(units)
     },
 
     clearError() {

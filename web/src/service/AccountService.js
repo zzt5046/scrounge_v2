@@ -1,10 +1,19 @@
 import { api } from '@/service/.service-registry'
+import { recipeService } from '@/service/.service-registry'
 import { store } from '../store'
 
 export class AccountService {
   async login(request) {
     try {
       const loginResponse = await api.post('accounts/login', request)
+      if (loginResponse && loginResponse.status === 'SUCCESS') {
+        store.setActiveAccountId(loginResponse.accountId)
+        store.setActiveAccountSettings(loginResponse.settings)
+        store.setActiveAccountUsername(loginResponse.userName)
+
+        const units = await recipeService.getMeasurementUnits(loginResponse.settings.MEASUREMENT_SYSTEM)
+        store.setMeasurementUnits(units)
+      }
       return loginResponse
     } catch (e) {
       console.error(e)
@@ -17,10 +26,10 @@ export class AccountService {
     await api.post('accounts/logout')
   }
 
-  async cookieLogin() {
-    const loginResponse = await api.post('accounts/login/cookie')
-    return loginResponse
-  }
+  // async cookieLogin() {
+  //   const loginResponse = await api.post('accounts/login/cookie')
+  //   return loginResponse
+  // }
 
   async register(request) {
     try {
@@ -39,6 +48,10 @@ export class AccountService {
       console.error(e)
       return e
     }
+  }
+
+  async updateAccount(id, request) {
+  
   }
 
   async getAccountSettings(id) {

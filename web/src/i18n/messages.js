@@ -54,8 +54,7 @@ const messages = {
       navbar: {
         home: 'Home',
         recipes: 'Recipes',
-        account: 'Account',
-        settings: 'Settings',
+        account: 'Account & Settings',
         logout: 'Logout'
       },
       footer: 'Footer',
