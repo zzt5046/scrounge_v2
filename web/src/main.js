@@ -2,8 +2,8 @@ import { createApp } from 'vue'
 import router from './router'
 import axios from 'axios'
 import './assets/css/main.css'
-import 'bootstrap/dist/css/bootstrap.css'
-import bootstrap from 'bootstrap/dist/js/bootstrap'
+import 'bootstrap/dist/css/bootstrap.css';
+import * as bootstrap from 'bootstrap'
 import App from '@/App.vue'
 import i18n from '@/i18n/i18n'
 
