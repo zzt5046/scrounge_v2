@@ -26,7 +26,6 @@ import { store } from '../../../store'
                     { name: 'home', title: this.$t('dashboard.navbar.home') },
                     { name: 'recipes', title: this.$t('dashboard.navbar.recipes') },
                     { name: 'account', title: this.$t('dashboard.navbar.account') },
-                    { name: 'settings', title: this.$t('dashboard.navbar.settings') },
                     { name: 'logout', title: this.$t('dashboard.navbar.logout') },
                 ]
             };

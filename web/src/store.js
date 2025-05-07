@@ -2,9 +2,15 @@ import { reactive } from 'vue'
 
 export const store = reactive({
 
+  // User data
   activeAccountId: null,
   setActiveAccountId(accountId) {
     this.activeAccountId = accountId
+  },
+
+  activeAccountUsername: null,
+  setActiveAccountUsername(username) {
+    this.activeAccountUsername = username
   },
 
   activeAccountSettings: null,
@@ -12,13 +18,14 @@ export const store = reactive({
     this.activeAccountSettings = settings
   },
 
-  currentDashboardView: null,
-  setCurrentDashboardView(view) {
-    this.currentDashboardView = view
-  },
-
   measurementUnits: {},
   setMeasurementUnits(units) {
     this.measurementUnits = units
+  },
+
+  // Dashboard data
+  currentDashboardView: null,
+  setCurrentDashboardView(view) {
+    this.currentDashboardView = view
   },
 })

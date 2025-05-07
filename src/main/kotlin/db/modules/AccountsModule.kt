@@ -27,13 +27,6 @@ fun Application.accountsModule(db: MongoDatabase){
             val loginResponse = accountService.authenticate(request)
             when(loginResponse.status){
                 AccountLoginStatus.SUCCESS -> {
-                    //val accountResponse = loginResponse.accountId?.let { accountService.findAccount(it) }
-//                    val session = loginResponse.accountId?.let {
-//                        UserSession(
-//                            accountId = it,
-//                        )
-//                    }
-//                    call.sessions.set(session)
                     call.respond(HttpStatusCode.OK, loginResponse, TypeInfo(AccountLoginResponse::class))
                 }
                 AccountLoginStatus.FAILURE -> {

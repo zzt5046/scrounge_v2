@@ -36,12 +36,14 @@ class AccountService(database: MongoDatabase) {
         return if (status == AccountLoginStatus.SUCCESS){
             AccountLoginResponse(
                 accountId = accountId,
+                userName = account!!.userName,
                 status = AccountLoginStatus.SUCCESS,
                 settings = account!!.settings
             )
         }else{
             AccountLoginResponse(
                 accountId = null,
+                userName = null,
                 status = AccountLoginStatus.FAILURE,
                 settings = null
             )

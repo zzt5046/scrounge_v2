@@ -2,6 +2,7 @@
 @import "home/home.css";
 @import "dashboard/dashboard.css";
 @import "dashboard/recipes.css";
+@import "dashboard/account.css";
 
 /*This file should contain themes that propagate the entire domainofapplication*/
 /*Ex: Action button themes, input sizes, etc.*/
