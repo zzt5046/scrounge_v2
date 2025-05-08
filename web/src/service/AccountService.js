@@ -26,11 +26,6 @@ export class AccountService {
     await api.post('accounts/logout')
   }
 
-  // async cookieLogin() {
-  //   const loginResponse = await api.post('accounts/login/cookie')
-  //   return loginResponse
-  // }
-
   async register(request) {
     try {
       return await api.post('accounts', request)
@@ -51,7 +46,12 @@ export class AccountService {
   }
 
   async updateAccount(id, request) {
-  
+    try {
+      return await api.put(`accounts/${id}`, request)
+    } catch (e) {
+      console.error(e)
+      return e
+    }
   }
 
   async getAccountSettings(id) {

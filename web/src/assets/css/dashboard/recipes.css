@@ -1,12 +1,3 @@
-.recipes-panel {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    height: 100%;
-    padding: 2rem;
-
-}
-
 .recipe-list,
 .recipe-search {
     display: flex;

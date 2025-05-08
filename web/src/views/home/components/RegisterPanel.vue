@@ -80,6 +80,7 @@ import SelectInput from '@/components/core/input/SelectInput.vue'
 import TextInput from '@/components/core/input/TextInput.vue'
 import { accountService } from '@/service/.service-registry'
 import FormsMixin from '../../../mixins/FormsMixin.vue'
+import { store } from '../../../store'
 
 export default {
   name: 'RegisterPanel',
@@ -92,22 +93,11 @@ export default {
       email: null,
       password: null,
       confirmPassword: null,
-      questions: [],
+      questions: store.securityQuestions,
       securityQuestion: null,
       securityAnswer: null,
       errorText: null,
     }
-  },
-
-  created() {
-    accountService.getSecurityQuestions().then((response) => {
-      this.questions = response.map((question) => {
-        return {
-          id: question.id,
-          name: question.question
-        }
-      })
-    })
   },
 
   methods: {

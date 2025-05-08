@@ -113,3 +113,7 @@
   background: var(--vt-c-flame) !important;
   border-color: var(--vt-c-zblack);
 }
+
+.blur {
+  filter: blur(10px);
+}

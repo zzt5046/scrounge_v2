@@ -18,6 +18,11 @@ export const store = reactive({
     this.activeAccountSettings = settings
   },
 
+  securityQuestions: [],
+  setSecurityQuestions(questions) {
+    this.securityQuestions = questions
+  },
+
   measurementUnits: {},
   setMeasurementUnits(units) {
     this.measurementUnits = units

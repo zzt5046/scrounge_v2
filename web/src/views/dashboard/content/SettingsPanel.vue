@@ -42,7 +42,6 @@ export default {
     async loadSettings() {
       const settings = await accountService.getAccountSettings(this.accountId)
       this.settings = settings
-      console.log(this.settings)
     },
 
     async saveSettings() {

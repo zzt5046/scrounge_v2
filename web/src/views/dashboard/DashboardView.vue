@@ -2,7 +2,7 @@
   <div class="dashboard-container">
 
     <header class="dashboard-header" :value="activeSectionTitle">
-      <DashboardHeader :account="account" :title="activeSectionTitle"/>
+      <DashboardHeader :title="activeSectionTitle"/>
     </header>
 
     <aside class="dashboard-navbar">
@@ -13,6 +13,7 @@
     <main class="dashboard-main">
       <HomePanel v-show="showHomeSection"/>
       <RecipesPanel :account="account" v-show="showRecipeSection"/>
+      <AccountPanel :account="account" v-show="showAccountSection"/>
     </main>
     
     <footer class="dashboard-footer">
@@ -28,6 +29,7 @@ import DashboardNavbar from './components/DashboardNavbar.vue';
 import AccountSettings from './content/SettingsPanel.vue';
 import HomePanel from './content/HomePanel.vue';
 import RecipesPanel from './content/recipes/RecipesPanel.vue';
+import AccountPanel from './content/account/AccountPanel.vue';
   export default {
     name: 'DashboardView',
     components: {
@@ -36,6 +38,7 @@ import RecipesPanel from './content/recipes/RecipesPanel.vue';
       DashboardNavbar,
       HomePanel,
       RecipesPanel,
+      AccountPanel,
     },
 
     data() {
@@ -65,9 +68,6 @@ import RecipesPanel from './content/recipes/RecipesPanel.vue';
       },
       showRecipeSection() {
         return this.activeSectionTitle === this.$t('dashboard.navbar.recipes')
-      },
-      showSettingsSection() {
-        return this.activeSectionTitle === this.$t('dashboard.navbar.settings')
       },
       showAccountSection() {
         return this.activeSectionTitle === this.$t('dashboard.navbar.account')

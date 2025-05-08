@@ -12,7 +12,10 @@ const messages = {
       emailAddress: 'Email Address',
       phoneNumber: 'Phone Number',
       securityQuestion: 'Security Question',
-      securityAnswer: 'Security Question Answer'
+      selectNewSecurityQuestion: 'Select a new security question',
+      securityAnswer: 'Security Question Answer',
+      confirmSecurityAnswer: 'Confirm Answer',
+      newSecurityAnswer: 'New Answer',
     },
     actions: {
       login: 'Login',
@@ -20,6 +23,21 @@ const messages = {
       register: 'Register',
       save: 'Save',
       submit: 'Submit',
+      edit: 'Edit',
+      update: 'Update',
+      view: 'View',
+      search: 'Search',
+      clear: 'Clear',
+      filter: 'Filter',
+      sort: 'Sort',
+      refresh: 'Refresh',
+      load_more: 'Load More',
+      load_less: 'Load Less',
+      load: 'Load',
+      upload: 'Upload',
+      download: 'Download',
+      print: 'Print',
+      share: 'Share',
       cancel: 'Cancel',
       back: 'Back',
       confirm: 'Confirm',
@@ -32,6 +50,8 @@ const messages = {
       done: 'Done',
       move_up: 'Move Up',
       move_down: 'Move Down',
+      show: 'Show',
+      hide: 'Hide',
     },
     home: {
       login: {
@@ -109,6 +129,17 @@ const messages = {
         error: 'An error has occurred. Please try again later.'
       },
     },
+    account: {
+      information: {
+        header: 'Account Information',
+      },
+      settings: {
+        header: 'Account Settings',
+        theme: 'Theme',
+        units: 'Units',
+      },
+
+    }
   }
 }
 

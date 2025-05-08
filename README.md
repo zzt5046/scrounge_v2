@@ -1,4 +1,6 @@
-# scrounge-ktor
+# scrounge
+
+An application centered around recipe management and meal planning.
 
 This project was created using the [Ktor Project Generator](https://start.ktor.io).
 

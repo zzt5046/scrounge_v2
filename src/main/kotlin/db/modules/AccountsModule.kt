@@ -3,7 +3,6 @@ package zjt.projects.db.modules
 import com.mongodb.client.MongoDatabase
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -13,11 +12,12 @@ import zjt.projects.config.UserSession
 import zjt.projects.db.operations.AccountService
 import zjt.projects.models.account.*
 import zjt.projects.models.error.ScroungeError
-import zjt.projects.db.services.SessionService
 
 fun Application.accountsModule(db: MongoDatabase){
     val accountService = AccountService(db)
-    //val sessionService = SessionService(db)
+
+    val targetAccountPath = "/accounts/{id}"
+    val noIdFound = "No ID found"
 
     routing {
         //Auth account (login)
@@ -67,8 +67,8 @@ fun Application.accountsModule(db: MongoDatabase){
         }
 
         // Get account by id
-        get("/accounts/{id}") {
-            val id = call.parameters["id"] ?: throw IllegalArgumentException("No ID found")
+        get(targetAccountPath) {
+            val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
             accountService.findAccount(id)?.let { account ->
                 call.respond(account)
             } ?: call.respond(HttpStatusCode.NotFound)
@@ -83,24 +83,24 @@ fun Application.accountsModule(db: MongoDatabase){
         }
 
         // Get account settings
-        get("/accounts/{id}/settings") {
+        get("$targetAccountPath/settings") {
             try{
-                val id = call.parameters["id"] ?: throw IllegalArgumentException("No ID found")
+                val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
                 call.respond(accountService.getAccountSettings(id))
             }catch(e: Exception){
                 call.respond(AccountResponse(
                     userName = null,
                     settings = null,
                     emailAddress = null,
-                    errors = listOf(ScroungeError(400, "No ID Found")),
+                    errors = listOf(ScroungeError(400, noIdFound)),
                     favoriteRecipes = null,
                 ))
             }
         }
 
         // Update account
-        put("/accounts/{id}") {
-            val id = call.parameters["id"] ?: throw IllegalArgumentException("No ID found")
+        put(targetAccountPath) {
+            val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
             val account = call.receive<Account>()
             accountService.update(id, account)?.let {
                 call.respond(HttpStatusCode.OK)
@@ -108,8 +108,8 @@ fun Application.accountsModule(db: MongoDatabase){
         }
 
         // Delete account
-        delete("/accounts/{id}") {
-            val id = call.parameters["id"] ?: throw IllegalArgumentException("No ID found")
+        delete(targetAccountPath) {
+            val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
             accountService.delete(id)?.let {
                 call.respond(HttpStatusCode.OK)
             } ?: call.respond(HttpStatusCode.NotFound)

@@ -28,10 +28,9 @@
 </template>
 
 <script>
-import { accountService, recipeService } from '@/service/.service-registry'
+import { accountService } from '@/service/.service-registry'
 import TextInput from '@/components/core/input/TextInput.vue'
 import FormsMixin from '../../../mixins/FormsMixin.vue'
-import { store } from '../../../store.js'
 
 export default {
   name: 'LoginPanel',
@@ -47,22 +46,9 @@ export default {
     }
   },
 
-  // created(){
-  //   this.cookieLogin()
-  // },
-
   methods: {
 
-    //auth silently in the background and skip login if there's a session cookie
-    // async cookieLogin() {
-    //   const cookieLoginResponse = await accountService.cookieLogin()
-    //   if(cookieLoginResponse.message === "cookie-auth"){
-    //       this.$router.push('/dashboard')
-    //   }
-    // },
-
     async login() {
-
       this.errorText = null
 
       const secretHash = await this.hashStrings(this.password).then((hashed) => {
