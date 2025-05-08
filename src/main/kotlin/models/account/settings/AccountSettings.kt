@@ -1,10 +1,17 @@
-package zjt.projects.models.account
+package zjt.projects.models.account.settings
 
 data class AccountSettings(
     private val settings: Map<AccountSetting, String>
 ){
     fun value() = settings
 }
+
+fun getAllSettings(): Map<AccountSetting, List<String>> =
+    mapOf(
+        AccountSetting.LANGUAGE to Language.entries.map { it.name },
+        AccountSetting.MEASUREMENT_SYSTEM to MeasurementSystem.entries.map { it.name },
+        AccountSetting.THEME to Theme.entries.map { it.name }
+    )
 
 fun defaultAccountSettings(): Map<AccountSetting, String> =
     mapOf(

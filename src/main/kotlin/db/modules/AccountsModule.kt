@@ -11,6 +11,7 @@ import io.ktor.util.reflect.*
 import zjt.projects.config.UserSession
 import zjt.projects.db.operations.AccountService
 import zjt.projects.models.account.*
+import zjt.projects.models.account.settings.getAllSettings
 import zjt.projects.models.error.ScroungeError
 
 fun Application.accountsModule(db: MongoDatabase){
@@ -80,6 +81,11 @@ fun Application.accountsModule(db: MongoDatabase){
             accountService.findAccountByUsername(userName)?.let { account ->
                 call.respond(account)
             } ?: call.respond(HttpStatusCode.NotFound)
+        }
+
+        //get all possible settings
+        get("/accounts/settings") {
+            call.respond(getAllSettings())
         }
 
         // Get account settings

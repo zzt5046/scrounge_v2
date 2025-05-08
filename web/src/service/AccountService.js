@@ -63,6 +63,15 @@ export class AccountService {
     }
   }
 
+  async getAllAccountSettings() {
+    try {
+      return await api.get(`accounts/settings`)
+    } catch (e) {
+      console.error(e)
+      return e
+    }
+  }
+
   async getSecurityQuestions() {
     try {
       return await api.get('security-questions')

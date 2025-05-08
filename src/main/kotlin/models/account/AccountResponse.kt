@@ -1,5 +1,6 @@
 package zjt.projects.models.account
 
+import zjt.projects.models.account.settings.AccountSetting
 import zjt.projects.models.error.ScroungeError
 
 data class AccountResponse (

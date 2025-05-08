@@ -135,8 +135,25 @@ const messages = {
       },
       settings: {
         header: 'Account Settings',
-        theme: 'Theme',
-        units: 'Units',
+        language: {
+          header: 'Language',
+          placeholder: 'Select a language',
+          english: 'English',
+          spanish: 'Español',
+        },
+        measurement_system: {
+          header: 'Measurement System',
+          placeholder: 'Select a measurement system',
+          metric: 'Metric',
+          imperial: 'Imperial',
+        },
+        theme: {
+          header: 'Theme',
+          placeholder: 'Select a theme',
+          light: 'Light',
+          toasted: 'Toasted',
+          dark: 'Dark',
+        },
       },
 
     }

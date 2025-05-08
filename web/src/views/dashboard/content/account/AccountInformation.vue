@@ -3,8 +3,13 @@
 
         <div class="account-information-header">
             <h2>{{ $t('account.information.header') }}</h2>
-            <button v-if="!editMode" class="btn btn-primary" @click="editMode = true">{{ $t('actions.edit') }}</button>
-            <button v-else class="btn btn-primary" @click="updateAccount">{{ $t('actions.save') }}</button>
+            <div v-if="editMode" class="account-information-actions">
+                <button class="btn btn-primary" @click="editMode = false">{{ $t('actions.cancel') }}</button>
+                <button class="btn btn-primary margin-left" @click="updateAccount">{{ $t('actions.save') }}</button>
+            </div>
+            <div v-else class="account-information-actions">
+                <button class="btn btn-primary" @click="editMode = true">{{ $t('actions.edit') }}</button>
+            </div>
         </div>
 
         <div class="account-information-content" id="account-information">
@@ -25,16 +30,19 @@
             <div v-if="editMode" class="account-information-item">
                 <div class="security-answer-header">
                     <h6 id="security-answer-header">{{ $t('fields.newSecurityAnswer') }}</h6>
-                    <a v-if="!securityAnswerShown" href="#" @click="showSecurityAnswer">{{ $t('actions.show') }}</a>
-                    <a v-else href="#" @click="hideSecurityAnswer">{{ $t('actions.hide') }}</a>
+                    <a v-if="!securityAnswerShown" class="show-hide" href="#" @click="showSecurityAnswer">{{
+                        $t('actions.show') }}</a>
+                    <a v-else href="#" class="show-hide" @click="hideSecurityAnswer">{{ $t('actions.hide') }}</a>
                 </div>
 
-                <TextInput v-if="!securityAnswerShown" id="account-securityAnswer-password" v-model="securityAnswer" class="mb-1" type="password" />
+                <TextInput v-if="!securityAnswerShown" id="account-securityAnswer-password" v-model="securityAnswer"
+                    class="mb-1" type="password" />
                 <TextInput v-else id="account-securityAnswer-text" v-model="securityAnswer" class="mb-1" type="text" />
 
                 <h6>{{ $t('fields.confirmSecurityAnswer') }}</h6>
 
-                <TextInput v-if="!securityAnswerShown" id="account-securityAnswerConfirm-password" v-model="securityAnswerConfirm" type="password" />
+                <TextInput v-if="!securityAnswerShown" id="account-securityAnswerConfirm-password"
+                    v-model="securityAnswerConfirm" type="password" />
                 <TextInput v-else id="account-securityAnswerConfirm-text" v-model="securityAnswerConfirm" type="text" />
 
             </div>
@@ -45,8 +53,38 @@
             <h2>{{ $t('account.settings.header') }}</h2>
         </div>
 
-        <div class="account-information-content" id="account-settings">
+        <div v-if="editMode" class="account-information-content" id="account-settings-edit">
+            <div class="account-information-item">
+                <h6>{{ $t('account.settings.language.header') }}</h6>
+                <SelectInput id="account-settings-language" :options="settings.languageOptions"
+                    :placeholder="$t('account.settings.language.placeholder')" v-model="newLanguage" />
+            </div>
+            <div class="account-information-item">
+                <h6>{{ $t('account.settings.measurement_system.header') }}</h6>
+                <SelectInput id="account-settings-measurement_system" :options="settings.measurementSystemOptions"
+                    :placeholder="$t('account.settings.measurement_system.placeholder')"
+                    v-model="newMeasurementSystem" />
+            </div>
+            <div class="account-information-item">
+                <h6>{{ $t('account.settings.theme.header') }}</h6>
+                <SelectInput id="account-settings-theme-header" :options="settings.themeOptions"
+                    :placeholder="$t('account.settings.theme.placeholder')" v-model="newTheme" />
+            </div>
+        </div>
 
+        <div v-else class="account-information-content" id="account-settings-view">
+            <div class="account-information-item">
+                <h6>{{ $t('account.settings.language.header') }}</h6>
+                <span> {{ settings.language }} </span>
+            </div>
+            <div class="account-information-item">
+                <h6>{{ $t('account.settings.measurement_system.header') }}</h6>
+                <span> {{ settings.measurement_system }} </span>
+            </div>
+            <div class="account-information-item">
+                <h6>{{ $t('account.settings.theme.header') }}</h6>
+                <span> {{ settings.theme }} </span>
+            </div>
         </div>
 
     </div>
@@ -69,17 +107,29 @@ export default {
             account: null,
             editMode: false,
             questions: store.securityQuestions,
-            accountSettings: {},
             emailAddress: null,
             securityQuestion: null,
-            securityAnswerShown: false,
             securityAnswer: null,
             securityAnswerConfirm: null,
+            securityAnswerShown: false,
+
+            settings: {
+                language: null,
+                newLanguage: null,
+                languageOptions: [],
+                measurement_system: null,
+                newMeasurementSystem: null,
+                measurementSystemOptions: [],
+                theme: null,
+                newTheme: null,
+                themeOptions: [],
+            },
         };
     },
 
     created() {
         this.loadAccount();
+        this.loadSettingsOptions();
     },
 
     methods: {
@@ -88,6 +138,9 @@ export default {
             if (account) {
                 this.account = account;
                 this.emailAddress = account.emailAddress;
+                // account.settings.forEach((setting) => {
+                //     this.accountSettings.push(setting);
+                // });
             } else {
                 console.error('Account not found with ID: ' + store.activeAccountId);
             }
@@ -96,6 +149,34 @@ export default {
         updateAccount() {
             // Save the account information
             this.editMode = false;
+        },
+
+        async loadSettingsOptions() {
+            const settings = store.allAccountSettings;
+
+            settings['LANGUAGE'].forEach((option) => {
+                let messageKey = 'account.settings.language.' + option.toLowerCase();
+                this.settings.languageOptions.push({
+                    id: option,
+                    name: this.$t(messageKey),
+                });
+            });
+
+            settings['MEASUREMENT_SYSTEM'].forEach((option) => {
+                let messageKey = 'account.settings.measurement_system.' + option.toLowerCase();
+                this.settings.measurementSystemOptions.push({
+                    id: option,
+                    name: this.$t(messageKey),
+                });
+            });
+
+            settings['THEME'].forEach((option) => {
+                let messageKey = 'account.settings.theme.' + option.toLowerCase();
+                this.settings.themeOptions.push({
+                    id: option,
+                    name: this.$t(messageKey),
+                });
+            });
         },
 
         showSecurityAnswer() {
@@ -110,5 +191,12 @@ export default {
 <style scoped>
     #security-answer-header {
         margin-right: 1rem;
+    }
+    .margin-left {
+        margin-left: 1rem;
+    }
+    .show-hide {
+        cursor: pointer;
+        font-size: 0.8rem;
     }
 </style>

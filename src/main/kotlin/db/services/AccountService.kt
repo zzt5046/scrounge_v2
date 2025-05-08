@@ -11,6 +11,7 @@ import org.bson.types.ObjectId
 import zjt.projects.models.account.*
 import zjt.projects.models.account.Account.Companion.toAccountResponse
 import zjt.projects.db.services.SessionService
+import zjt.projects.models.account.settings.*
 
 class AccountService(database: MongoDatabase) {
     private var collection: MongoCollection<Document>
@@ -104,10 +105,10 @@ class AccountService(database: MongoDatabase) {
     suspend fun findAccountByUsername(userName: String): AccountResponse? =
         readByUsername(userName).toAccountResponse()
 
-    fun getAccountSettings(accountId: String): AccountSettingsResponse =
-        defaultAccountSettings().toResponse()
-
-
+    suspend fun getAccountSettings(accountId: String): AccountSettingsResponse {
+        val account = findAccount(accountId)
+        return account?.settings?.toResponse() ?: defaultAccountSettings().toResponse()
+    }
 
     // UPDATE
     // ------------------------------------------

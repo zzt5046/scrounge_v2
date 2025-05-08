@@ -1,6 +1,7 @@
 package zjt.projects.models.account
 
 import kotlinx.serialization.Serializable
+import zjt.projects.models.account.settings.AccountSetting
 
 @Serializable
 data class Account(

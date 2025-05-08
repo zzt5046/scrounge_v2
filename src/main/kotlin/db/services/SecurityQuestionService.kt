@@ -1,4 +1,4 @@
-package zjt.projects.db.schema
+package db.services
 
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase

@@ -17,6 +17,12 @@
     padding: 1rem;
 }
 
+.account-information-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .account-information-content {
     display: flex;
     flex-direction: column;
