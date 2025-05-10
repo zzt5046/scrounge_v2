@@ -36,7 +36,7 @@ export default {
     @change="$emit('update:modelValue', $event.target.value)"
     v-bind="$attrs"
   >
-    <option disabled selected value>{{ placeholder }}</option>
+    <option disabled value>{{ placeholder }}</option>
     <option v-for="option in options" :key="option.id" :value="option.id">{{ option.name }}</option>
   </select>
 </template>

@@ -74,7 +74,7 @@ const messages = {
       navbar: {
         home: 'Home',
         recipes: 'Recipes',
-        account: 'Account & Settings',
+        account: 'Settings',
         logout: 'Logout'
       },
       footer: 'Footer',
@@ -137,18 +137,21 @@ const messages = {
         header: 'Account Settings',
         language: {
           header: 'Language',
+          tooltip: 'Change the language of the application (Not yet implemented)',
           placeholder: 'Select a language',
           english: 'English',
           spanish: 'Español',
         },
         measurement_system: {
           header: 'Measurement System',
+          tooltip: 'Change the measurement system of the application (Automatic recipe conversions not yet implemented)',
           placeholder: 'Select a measurement system',
           metric: 'Metric',
           imperial: 'Imperial',
         },
         theme: {
           header: 'Theme',
+          tooltip: 'Change the theme of the application (Not yet implemented)',
           placeholder: 'Select a theme',
           light: 'Light',
           toasted: 'Toasted',

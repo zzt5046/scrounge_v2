@@ -8,8 +8,10 @@ import App from '@/App.vue'
 import i18n from '@/i18n/i18n'
 import loadStaticData from './static-data';
 
-await loadStaticData()
-
-const app = createApp(App).use(router, axios, bootstrap)
-app.use(i18n)
-app.mount('#app')
+await loadStaticData().then(() => {
+    const app = createApp(App).use(router, axios, bootstrap)
+    app.use(i18n)
+    app.mount('#app')
+}).catch((error) => {
+    console.error('Error loading static data:', error);
+});

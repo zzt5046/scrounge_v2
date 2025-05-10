@@ -53,53 +53,54 @@
             <h2>{{ $t('account.settings.header') }}</h2>
         </div>
 
-        <div v-if="editMode" class="account-information-content" id="account-settings-edit">
-            <div class="account-information-item">
-                <h6>{{ $t('account.settings.language.header') }}</h6>
-                <SelectInput id="account-settings-language" :options="settings.languageOptions"
+        <div class="account-settings-content" id="account-settings-edit">
+            <div class="account-settings-item">
+                <div class="account-settings-item-header">
+                    <h6>{{ $t('account.settings.language.header') }}</h6>
+                    <InfoIcon :title="$t('account.settings.language.tooltip')" />
+                </div>
+                <SelectInput v-if="editMode" id="account-settings-language" :options="settings.languageOptions"
                     :placeholder="$t('account.settings.language.placeholder')" v-model="newLanguage" />
+                <span v-else> {{ settings.language }} </span>
+                </div>
+                <div class="account-settings-item">
+                    <div class="account-settings-item-header">
+                        <h6>{{ $t('account.settings.measurement_system.header') }}</h6>
+                        <InfoIcon :title="$t('account.settings.measurement_system.tooltip')" />
+                    </div>
+                    <SelectInput v-if="editMode" id="account-settings-measurement_system"
+                        :options="settings.measurementSystemOptions"
+                        :placeholder="$t('account.settings.measurement_system.placeholder')"
+                        v-model="newMeasurementSystem" />
+                    <span v-else> {{ settings.measurement_system }} </span>
+                </div>
+                <div class="account-settings-item">
+                    <div class="account-settings-item-header">
+                        <h6>{{ $t('account.settings.theme.header') }}</h6>
+                        <InfoIcon :title="$t('account.settings.theme.tooltip')" />
+                    </div>
+                    <SelectInput v-if="editMode" id="account-settings-theme-header" :options="settings.themeOptions"
+                        :placeholder="$t('account.settings.theme.placeholder')" v-model="newTheme" />
+                    <span v-else> {{ settings.theme }} </span>
+                </div>
             </div>
-            <div class="account-information-item">
-                <h6>{{ $t('account.settings.measurement_system.header') }}</h6>
-                <SelectInput id="account-settings-measurement_system" :options="settings.measurementSystemOptions"
-                    :placeholder="$t('account.settings.measurement_system.placeholder')"
-                    v-model="newMeasurementSystem" />
-            </div>
-            <div class="account-information-item">
-                <h6>{{ $t('account.settings.theme.header') }}</h6>
-                <SelectInput id="account-settings-theme-header" :options="settings.themeOptions"
-                    :placeholder="$t('account.settings.theme.placeholder')" v-model="newTheme" />
-            </div>
-        </div>
 
-        <div v-else class="account-information-content" id="account-settings-view">
-            <div class="account-information-item">
-                <h6>{{ $t('account.settings.language.header') }}</h6>
-                <span> {{ settings.language }} </span>
-            </div>
-            <div class="account-information-item">
-                <h6>{{ $t('account.settings.measurement_system.header') }}</h6>
-                <span> {{ settings.measurement_system }} </span>
-            </div>
-            <div class="account-information-item">
-                <h6>{{ $t('account.settings.theme.header') }}</h6>
-                <span> {{ settings.theme }} </span>
-            </div>
         </div>
-
-    </div>
 </template>
 <script>
 import TextInput from '../../../../components/core/input/TextInput.vue';
 import SelectInput from '../../../../components/core/input/SelectInput.vue';
+import InfoIcon from '../../../../components/core/icon/InfoIcon.vue';
+import FormsMixin from '../../../../mixins/FormsMixin.vue';
 import { accountService } from '@/service/.service-registry';
 import { store } from '../../../../store';
 export default {
     name: 'AccountInformation',
-
+    mixins: [FormsMixin],
     components: {
         TextInput,
         SelectInput,
+        InfoIcon
     },
 
     data() {
@@ -138,22 +139,42 @@ export default {
             if (account) {
                 this.account = account;
                 this.emailAddress = account.emailAddress;
-                // account.settings.forEach((setting) => {
-                //     this.accountSettings.push(setting);
-                // });
+                this.securityQuestion = account.securityQuestion;
+                this.loadCurrentSettings();
             } else {
                 console.error('Account not found with ID: ' + store.activeAccountId);
             }
         },
 
-        updateAccount() {
+        async updateAccount() {
             // Save the account information
-            this.editMode = false;
+
+            const answerHash = await this.hashStrings(this.securityAnswer).then((hashed) => {
+                return hashed
+            })
+
+            const account = {
+                emailAddress: this.emailAddress,
+                securityQuestion: this.securityQuestion,
+                securityAnswer: encodeURI(answerHash),
+                settings: {
+                    LANGUAGE: this.newLanguage,
+                    MEASUREMENT_SYSTEM: this.newMeasurementSystem,
+                    THEME: this.newTheme,
+                },
+            }
+
+            accountService.updateAccount(store.activeAccountId, account).then(() => {
+                this.loadAccount();
+                this.editMode = false;
+            }).catch((error) => {
+                console.error('Error updating account:', error);
+            });
         },
 
+        //load all options for the select inputs
         async loadSettingsOptions() {
             const settings = store.allAccountSettings;
-
             settings['LANGUAGE'].forEach((option) => {
                 let messageKey = 'account.settings.language.' + option.toLowerCase();
                 this.settings.languageOptions.push({
@@ -179,6 +200,22 @@ export default {
             });
         },
 
+        //load the current settings for the account
+        loadCurrentSettings() {
+            this.settings.language = this.getSettingLabel('LANGUAGE');
+            this.settings.measurement_system = this.getSettingLabel('MEASUREMENT_SYSTEM');
+            this.settings.theme = this.getSettingLabel('THEME');
+            this.newLanguage = this.account.settings['LANGUAGE'];
+            this.newMeasurementSystem = this.account.settings['MEASUREMENT_SYSTEM'];
+            this.newTheme = this.account.settings['THEME'];
+        },
+
+        getSettingLabel(setting) {
+            const messageKeyPrefix = 'account.settings.';
+            const value = this.account.settings[setting];
+            return this.$t(messageKeyPrefix + setting.toLowerCase() + '.' + value.toLowerCase());
+        },
+
         showSecurityAnswer() {
             this.securityAnswerShown = true;
         },
@@ -198,5 +235,10 @@ export default {
     .show-hide {
         cursor: pointer;
         font-size: 0.8rem;
+    }
+    .info-icon {
+        width: 1.1rem;
+        height: 1.1rem;
+        margin-left: 0.5rem;
     }
 </style>
