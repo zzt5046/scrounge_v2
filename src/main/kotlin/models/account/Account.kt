@@ -21,6 +21,7 @@ data class Account(
                 AccountResponse(
                     userName = userName,
                     emailAddress = emailAddress,
+                    securityQuestionId = securityQuestionId,
                     settings = settings,
                     favoriteRecipes = favoriteRecipes
                 )

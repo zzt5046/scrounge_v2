@@ -99,6 +99,9 @@ class AccountService(database: MongoDatabase) {
     suspend fun accountExists(accountId: String): Boolean =
         read(accountId) != null
 
+    suspend fun findFullAccount(accountId: String): Account? =
+        read(accountId)
+
     suspend fun findAccount(accountId: String): AccountResponse? =
         read(accountId).toAccountResponse()
 

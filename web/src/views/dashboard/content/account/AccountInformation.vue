@@ -60,8 +60,8 @@
                     <InfoIcon :title="$t('account.settings.language.tooltip')" />
                 </div>
                 <SelectInput v-if="editMode" id="account-settings-language" :options="settings.languageOptions"
-                    :placeholder="$t('account.settings.language.placeholder')" v-model="newLanguage" />
-                <span v-else> {{ settings.language }} </span>
+                    :placeholder="$t('account.settings.language.placeholder')" v-model="settings.language" />
+                <span v-else> {{ languageLabel }} </span>
                 </div>
                 <div class="account-settings-item">
                     <div class="account-settings-item-header">
@@ -71,8 +71,8 @@
                     <SelectInput v-if="editMode" id="account-settings-measurement_system"
                         :options="settings.measurementSystemOptions"
                         :placeholder="$t('account.settings.measurement_system.placeholder')"
-                        v-model="newMeasurementSystem" />
-                    <span v-else> {{ settings.measurement_system }} </span>
+                        v-model="settings.measurement_system" />
+                    <span v-else> {{ measurementSystemLabel }} </span>
                 </div>
                 <div class="account-settings-item">
                     <div class="account-settings-item-header">
@@ -80,8 +80,8 @@
                         <InfoIcon :title="$t('account.settings.theme.tooltip')" />
                     </div>
                     <SelectInput v-if="editMode" id="account-settings-theme-header" :options="settings.themeOptions"
-                        :placeholder="$t('account.settings.theme.placeholder')" v-model="newTheme" />
-                    <span v-else> {{ settings.theme }} </span>
+                        :placeholder="$t('account.settings.theme.placeholder')" v-model="settings.theme" />
+                    <span v-else> {{ themeLabel }} </span>
                 </div>
             </div>
 
@@ -116,20 +116,20 @@ export default {
 
             settings: {
                 language: null,
-                newLanguage: null,
                 languageOptions: [],
                 measurement_system: null,
-                newMeasurementSystem: null,
                 measurementSystemOptions: [],
                 theme: null,
-                newTheme: null,
                 themeOptions: [],
             },
+            languageLabel: null,
+            measurementSystemLabel: null,
+            themeLabel: null,
         };
     },
 
-    created() {
-        this.loadAccount();
+    async created() {
+        await this.loadAccount();
         this.loadSettingsOptions();
     },
 
@@ -139,34 +139,45 @@ export default {
             if (account) {
                 this.account = account;
                 this.emailAddress = account.emailAddress;
-                this.securityQuestion = account.securityQuestion;
-                this.loadCurrentSettings();
+                this.securityQuestion = account.securityQuestionId;
+                this.loadSettings();
             } else {
                 console.error('Account not found with ID: ' + store.activeAccountId);
             }
         },
 
+        async loadSettings(){
+            this.settings.language = this.account.settings['LANGUAGE'];
+            this.settings.measurement_system = this.account.settings['MEASUREMENT_SYSTEM'];
+            this.settings.theme = this.account.settings['THEME'];
+            this.languageLabel = this.$t('account.settings.language.' + this.settings.language.toLowerCase());
+            this.measurementSystemLabel = this.$t('account.settings.measurement_system.' + this.settings.measurement_system.toLowerCase());
+            this.themeLabel = this.$t('account.settings.theme.' + this.settings.theme.toLowerCase());
+        },
+
         async updateAccount() {
-            // Save the account information
 
             const answerHash = await this.hashStrings(this.securityAnswer).then((hashed) => {
                 return hashed
             })
 
-            const account = {
+            const accountUpdateRequest = {
+                userName: this.account.userName,
                 emailAddress: this.emailAddress,
-                securityQuestion: this.securityQuestion,
-                securityAnswer: encodeURI(answerHash),
+                securityQuestionId: this.securityQuestion,
+                securityQuestionAnswer: encodeURI(answerHash),
                 settings: {
-                    LANGUAGE: this.newLanguage,
-                    MEASUREMENT_SYSTEM: this.newMeasurementSystem,
-                    THEME: this.newTheme,
+                    LANGUAGE: this.settings.language,
+                    MEASUREMENT_SYSTEM: this.settings.measurement_system,
+                    THEME: this.settings.theme,
                 },
             }
 
-            accountService.updateAccount(store.activeAccountId, account).then(() => {
+            accountService.updateAccount(store.activeAccountId, accountUpdateRequest).then(() => {
                 this.loadAccount();
                 this.editMode = false;
+                this.securityAnswer = null;
+                this.securityAnswerConfirm = null;
             }).catch((error) => {
                 console.error('Error updating account:', error);
             });
@@ -198,22 +209,6 @@ export default {
                     name: this.$t(messageKey),
                 });
             });
-        },
-
-        //load the current settings for the account
-        loadCurrentSettings() {
-            this.settings.language = this.getSettingLabel('LANGUAGE');
-            this.settings.measurement_system = this.getSettingLabel('MEASUREMENT_SYSTEM');
-            this.settings.theme = this.getSettingLabel('THEME');
-            this.newLanguage = this.account.settings['LANGUAGE'];
-            this.newMeasurementSystem = this.account.settings['MEASUREMENT_SYSTEM'];
-            this.newTheme = this.account.settings['THEME'];
-        },
-
-        getSettingLabel(setting) {
-            const messageKeyPrefix = 'account.settings.';
-            const value = this.account.settings[setting];
-            return this.$t(messageKeyPrefix + setting.toLowerCase() + '.' + value.toLowerCase());
         },
 
         showSecurityAnswer() {

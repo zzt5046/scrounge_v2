@@ -23,7 +23,7 @@ export class AccountService {
 
   async logout() {
     store.setActiveAccountId(null)
-    await api.post('accounts/logout')
+    //await api.post('accounts/logout')
   }
 
   async register(request) {

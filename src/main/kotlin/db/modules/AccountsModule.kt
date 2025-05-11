@@ -11,6 +11,7 @@ import io.ktor.util.reflect.*
 import zjt.projects.config.UserSession
 import zjt.projects.db.operations.AccountService
 import zjt.projects.models.account.*
+import zjt.projects.models.account.settings.defaultAccountSettings
 import zjt.projects.models.account.settings.getAllSettings
 import zjt.projects.models.error.ScroungeError
 
@@ -97,6 +98,7 @@ fun Application.accountsModule(db: MongoDatabase){
                 call.respond(AccountResponse(
                     userName = null,
                     settings = null,
+                    securityQuestionId = null,
                     emailAddress = null,
                     errors = listOf(ScroungeError(400, noIdFound)),
                     favoriteRecipes = null,
@@ -106,9 +108,22 @@ fun Application.accountsModule(db: MongoDatabase){
 
         // Update account
         put(targetAccountPath) {
+            val request = call.receive<AccountUpdateRequest>()
             val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
-            val account = call.receive<Account>()
-            accountService.update(id, account)?.let {
+
+            val account = accountService.findFullAccount(accountId = id)
+            checkNotNull(account)
+
+            val updatedAccount = account.copy(
+                userName = request.userName ?: account.userName,
+                emailAddress = request.emailAddress ?: account.emailAddress,
+                securityQuestionId = request.securityQuestionId ?: account.securityQuestionId,
+                securityQuestionAnswer = request.securityQuestionAnswer ?: account.securityQuestionAnswer,
+                settings = request.settings ?: account.settings,
+                favoriteRecipes = request.favoriteRecipes ?: account.favoriteRecipes
+            )
+
+            accountService.update(id, updatedAccount)?.let {
                 call.respond(HttpStatusCode.OK)
             } ?: call.respond(HttpStatusCode.NotFound)
         }
