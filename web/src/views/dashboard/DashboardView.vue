@@ -26,14 +26,12 @@ import { accountService } from '@/service/.service-registry'
 import { store } from '../../store.js'
 import DashboardHeader from './components/DashboardHeader.vue';
 import DashboardNavbar from './components/DashboardNavbar.vue';
-import AccountSettings from './content/SettingsPanel.vue';
 import HomePanel from './content/HomePanel.vue';
 import RecipesPanel from './content/recipes/RecipesPanel.vue';
 import AccountPanel from './content/account/AccountPanel.vue';
   export default {
     name: 'DashboardView',
     components: {
-      AccountSettings,
       DashboardHeader,
       DashboardNavbar,
       HomePanel,

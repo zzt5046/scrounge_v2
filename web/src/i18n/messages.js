@@ -67,6 +67,7 @@ const messages = {
         header: 'Create your Account',
         nameTaken: 'Sorry, that username is not available.',
         success: 'Account created successfully. Please login to continue.',
+        error: 'Error while creating account. Please try again later.',
       },
     },
     dashboard: {
@@ -157,6 +158,10 @@ const messages = {
           toasted: 'Toasted',
           dark: 'Dark',
         },
+      },
+      update: {
+        success: 'Account updated successfully.',
+        error: 'An error has occurred. Please try again later.'
       },
 
     }

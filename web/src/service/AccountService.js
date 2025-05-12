@@ -4,21 +4,16 @@ import { store } from '../store'
 
 export class AccountService {
   async login(request) {
-    try {
-      const loginResponse = await api.post('accounts/login', request)
-      if (loginResponse && loginResponse.status === 'SUCCESS') {
-        store.setActiveAccountId(loginResponse.accountId)
-        store.setActiveAccountSettings(loginResponse.settings)
-        store.setActiveAccountUsername(loginResponse.userName)
+    const loginResponse = await api.post('accounts/login', request)
+    if (loginResponse && loginResponse.status === 'SUCCESS') {
+      store.setActiveAccountId(loginResponse.accountId)
+      store.setActiveAccountSettings(loginResponse.settings)
+      store.setActiveAccountUsername(loginResponse.userName)
 
-        const units = await recipeService.getMeasurementUnits(loginResponse.settings.MEASUREMENT_SYSTEM)
-        store.setMeasurementUnits(units)
-      }
-      return loginResponse
-    } catch (e) {
-      console.error(e)
-      return e
+      const units = await recipeService.getMeasurementUnits(loginResponse.settings.MEASUREMENT_SYSTEM)
+      store.setMeasurementUnits(units)
     }
+    return loginResponse
   }
 
   async logout() {
@@ -27,57 +22,27 @@ export class AccountService {
   }
 
   async register(request) {
-    try {
-      return await api.post('accounts', request)
-    } catch (e) {
-      console.error(e)
-      return e
-    }
+    return await api.post('accounts', request)
   }
 
   //AccountResponse
   async getAccount(id) {
-    try {
-      return await api.get(`accounts/${id}`)
-    } catch (e) {
-      console.error(e)
-      return e
-    }
+    return await api.get(`accounts/${id}`)
   }
 
   async updateAccount(id, request) {
-    try {
-      return await api.put(`accounts/${id}`, request)
-    } catch (e) {
-      console.error(e)
-      return e
-    }
+    return await api.put(`accounts/${id}`, request)
   }
 
   async getAccountSettings(id) {
-    try {
-      return await api.get(`accounts/${id}/settings`)
-    } catch (e) {
-      console.error(e)
-      return e
-    }
+    return await api.get(`accounts/${id}/settings`)
   }
 
   async getAllAccountSettings() {
-    try {
-      return await api.get(`accounts/settings`)
-    } catch (e) {
-      console.error(e)
-      return e
-    }
+    return await api.get(`accounts/settings`)
   }
 
   async getSecurityQuestions() {
-    try {
-      return await api.get('security-questions')
-    } catch (e) {
-      console.error(e)
-      return e
-    }
+    return await api.get('security-questions')
   }
 }

@@ -16,22 +16,22 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
+}
 
-  .home-logo {
+.home-logo {
     display: flex;
     width: 20rem;
     height: auto;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 3rem;
-  }
+}
 
-  .panel {
+.panel {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: auto;
-  }
+}
 
 /*----------------------LOGIN--------------------------*/
 
@@ -85,18 +85,23 @@
 /*----------------------COMMON-------------------------*/
 
 .error-text {
+    margin-top: 1rem;
+    text-align: center;
+    cursor: pointer;
     color: red;
 }
 
 .action-section {
     margin-top: 1rem;
 }
+
 .button-section {
     margin-top: 1rem;
     display: flex;
     align-items: flex-start;
     flex-wrap: nowrap;
 }
+
 .button-section * {
     width: 40%;
     margin-right: auto;

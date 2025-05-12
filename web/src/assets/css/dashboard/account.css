@@ -55,3 +55,18 @@
     flex-direction: row;
     justify-content: flex-start;
 }
+
+.account-update-success,
+.account-update-error {
+    cursor: pointer;
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+}
+
+.account-update-success {
+    color: green;
+}
+
+.account-update-error {
+    color: red;
+}

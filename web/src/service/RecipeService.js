@@ -2,65 +2,30 @@ import { api } from '@/service/.service-registry'
 
 export class RecipeService {
     getMeasurementUnits(system) {
-        try {
-            return api.get(`recipes/units/${system}`)
-        } catch (e) {
-            console.error(e)
-            return e
-        }
+        return api.get(`recipes/units/${system}`)
     }
 
     async getPublicRecipes() {
-        try {
-            return await api.get('recipes')
-        } catch (e) {
-            console.error(e)
-            return e
-        }
+        return await api.get('recipes')
     }
 
     async getRecipe(id) {
-        try {
-            return await api.get(`recipes/${id}`)
-        } catch (e) {
-            console.error(e)
-            return e
-        }
+        return await api.get(`recipes/${id}`)
     }
 
     async getAccountRecipes(accountId) {
-        try {
-            return await api.get(`recipes/all/${accountId}`)
-        } catch (e) {
-            console.error(e)
-            return e
-        }
+        return await api.get(`recipes/all/${accountId}`)
     }
 
     async createRecipe(recipe) {
-        try {
-            return await api.post('recipes', recipe)
-        } catch (e) {
-            console.error(e)
-            return e
-        }
+        return await api.post('recipes', recipe)
     }
 
     async updateRecipe(recipeId, newRecipe) {
-        try {
-            return await api.put(`recipes/${recipeId}`, newRecipe)
-        } catch (e) {
-            console.error(e)
-            return e
-        }
+        return await api.put(`recipes/${recipeId}`, newRecipe)
     }
 
     async deleteRecipe(recipeId) {
-        try {
-            return await api.delete(`recipes/${recipeId}`)
-        } catch (e) {
-            console.error(e)
-            return e
-        }
+        return await api.delete(`recipes/${recipeId}`)
     }
 }

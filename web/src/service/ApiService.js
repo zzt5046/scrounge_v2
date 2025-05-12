@@ -10,48 +10,24 @@ const config = {
 
 export class ApiService {
   async get(path) {
-    const fullPath = `${baseUrl}/${path}`
-    try {
-      const result = await axios.get(fullPath, config)
-      return result.data
-    } catch (e) {
-      console.log('Error during GET to: ' + path)
-      console.error(e)
-      return e
-    }
+    const result = await axios.get(this.getPath(path), config)
+    return result.data
   }
 
   async post(path, request) {
-    const fullPath = `${baseUrl}/${path}`
-    try {
-      const result = await axios.post(fullPath, request, config)
-      return result.data
-    } catch (e) {
-      console.log('Error during POST to: ' + path)
-      console.error(e)
-      return e
-    }
+    const result = await axios.post(this.getPath(path), request, config)
+    return result.data
   }
 
   async put(path, request) {
-    const fullPath = `${baseUrl}/${path}`
-    try {
-      await axios.put(fullPath, request, config)
-    } catch (e) {
-      console.log('Error during PUT to: ' + path)
-      console.error(e)
-      return e
-    }
+    await axios.put(this.getPath(path), request, config)
   }
 
   async delete(path, request) {
-    const fullPath = `${baseUrl}/${path}`
-    try {
-      await axios.delete(fullPath, request, config)
-    } catch (e) {
-      console.log('Error during DELETE to: ' + path)
-      console.error(e)
-      return e
-    }
+    await axios.delete(this.getPath(path), request, config)
+  }
+
+  getPath(path) {
+    return `${baseUrl}/${path}`
   }
 }

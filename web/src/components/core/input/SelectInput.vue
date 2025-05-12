@@ -32,7 +32,7 @@ export default {
 
   methods: {
     autoselect(option) {
-      return option.id == this.modelValue
+      return (option.id == this.modelValue)
     }
   },
 }
@@ -44,6 +44,7 @@ export default {
     :id=id
     class="form-select"
     @change="this.$emit('update:modelValue', $event.target.value)"
+    :value="modelValue"
     v-bind="$attrs"
   >
     <option disabled value>{{ placeholder }}</option>

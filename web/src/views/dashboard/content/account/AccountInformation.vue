@@ -4,11 +4,11 @@
         <div class="account-information-header">
             <h2>{{ $t('account.information.header') }}</h2>
             <div v-if="editMode" class="account-information-actions">
-                <button class="btn btn-primary" @click="editMode = false">{{ $t('actions.cancel') }}</button>
+                <button class="btn btn-primary" @click="disableEditMode">{{ $t('actions.cancel') }}</button>
                 <button class="btn btn-primary margin-left" @click="updateAccount">{{ $t('actions.save') }}</button>
             </div>
             <div v-else class="account-information-actions">
-                <button class="btn btn-primary" @click="editMode = true">{{ $t('actions.edit') }}</button>
+                <button class="btn btn-primary" @click="enableEditMode">{{ $t('actions.edit') }}</button>
             </div>
         </div>
 
@@ -62,30 +62,36 @@
                 <SelectInput v-if="editMode" id="account-settings-language" :options="settings.languageOptions"
                     :placeholder="$t('account.settings.language.placeholder')" v-model="settings.language" />
                 <span v-else> {{ languageLabel }} </span>
-                </div>
-                <div class="account-settings-item">
-                    <div class="account-settings-item-header">
-                        <h6>{{ $t('account.settings.measurement_system.header') }}</h6>
-                        <InfoIcon :title="$t('account.settings.measurement_system.tooltip')" />
-                    </div>
-                    <SelectInput v-if="editMode" id="account-settings-measurement_system"
-                        :options="settings.measurementSystemOptions"
-                        :placeholder="$t('account.settings.measurement_system.placeholder')"
-                        v-model="settings.measurement_system" />
-                    <span v-else> {{ measurementSystemLabel }} </span>
-                </div>
-                <div class="account-settings-item">
-                    <div class="account-settings-item-header">
-                        <h6>{{ $t('account.settings.theme.header') }}</h6>
-                        <InfoIcon :title="$t('account.settings.theme.tooltip')" />
-                    </div>
-                    <SelectInput v-if="editMode" id="account-settings-theme-header" :options="settings.themeOptions"
-                        :placeholder="$t('account.settings.theme.placeholder')" v-model="settings.theme" />
-                    <span v-else> {{ themeLabel }} </span>
-                </div>
             </div>
-
+            <div class="account-settings-item">
+                <div class="account-settings-item-header">
+                    <h6>{{ $t('account.settings.measurement_system.header') }}</h6>
+                    <InfoIcon :title="$t('account.settings.measurement_system.tooltip')" />
+                </div>
+                <SelectInput v-if="editMode" id="account-settings-measurement_system"
+                    :options="settings.measurementSystemOptions"
+                    :placeholder="$t('account.settings.measurement_system.placeholder')"
+                    v-model="settings.measurement_system" />
+                <span v-else> {{ measurementSystemLabel }} </span>
+            </div>
+            <div class="account-settings-item">
+                <div class="account-settings-item-header">
+                    <h6>{{ $t('account.settings.theme.header') }}</h6>
+                    <InfoIcon :title="$t('account.settings.theme.tooltip')" />
+                </div>
+                <SelectInput v-if="editMode" id="account-settings-theme-header" :options="settings.themeOptions"
+                    :placeholder="$t('account.settings.theme.placeholder')" v-model="settings.theme" />
+                <span v-else> {{ themeLabel }} </span>
+            </div>
         </div>
+
+        <div v-if="successText" class="account-update-success">
+            <span @click="clearInfoText"> {{ successText }} </span>
+        </div>
+        <div v-if="errorText" class="account-update-error">
+            <span @click="clearInfoText"> {{ errorText }} </span>
+        </div>
+    </div>
 </template>
 <script>
 import TextInput from '../../../../components/core/input/TextInput.vue';
@@ -125,6 +131,9 @@ export default {
             languageLabel: null,
             measurementSystemLabel: null,
             themeLabel: null,
+
+            successText: null,
+            errorText: null,
         };
     },
 
@@ -173,14 +182,19 @@ export default {
                 },
             }
 
-            accountService.updateAccount(store.activeAccountId, accountUpdateRequest).then(() => {
-                this.loadAccount();
-                this.editMode = false;
-                this.securityAnswer = null;
-                this.securityAnswerConfirm = null;
-            }).catch((error) => {
+            try{
+                accountService.updateAccount(store.activeAccountId, accountUpdateRequest).then(() => {
+                    this.loadAccount();
+                    this.editMode = false;
+                    this.securityAnswer = null;
+                    this.securityAnswerConfirm = null;
+                    this.successText = this.$t('account.update.success');
+                })
+            }catch (error) {
                 console.error('Error updating account:', error);
-            });
+                this.errorText = this.$t('account.update.error');
+                return;
+            }
         },
 
         //load all options for the select inputs
@@ -216,6 +230,17 @@ export default {
         },
         hideSecurityAnswer() {
             this.securityAnswerShown = false;
+        },
+        enableEditMode() {
+            this.clearInfoText();
+            this.editMode = true;
+        },
+        disableEditMode() {
+            this.editMode = false;
+        },
+        clearInfoText() {
+            this.successText = null;
+            this.errorText = null;
         },
     },
 };

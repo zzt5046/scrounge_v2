@@ -70,6 +70,9 @@
             {{ $t('actions.back') }}
           </button>
         </div>
+        <div class="error-text" v-if="errorText">
+          <span @click="errorText = null">{{ errorText }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -127,15 +130,10 @@ export default {
 
       try{
         const registerResponse = await accountService.register(request)
-
-        if(registerResponse?.status === 500){
-          this.errorText = this.$t('errors.registerError')
-          return
-        }else{
-          this.$emit('registerSuccess')
-        }
+        this.$emit('registerSuccess')
       }catch(e){
-        console.log(e)
+        console.error('Register error:', e)
+        this.errorText = this.$t('home.register.error')
       }
     }
   }

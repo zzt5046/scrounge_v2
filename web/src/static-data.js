@@ -10,20 +10,32 @@ export default async function loadStaticData() {
 // Fetch security questions
 async function loadSecurityQuestions() {
     let questions = []
-    await accountService.getSecurityQuestions().then((response) => {
-        response.forEach((question) => {
-            questions.push({
-                id: question.id,
-                name: question.question
-            })
+    try {
+        await accountService.getSecurityQuestions().then((response) => {
+            if (response) {
+                response.forEach((question) => {
+                    questions.push({
+                        id: question.id,
+                        name: question.question
+                    })
+                })
+            }
         })
-    })
-    store.setSecurityQuestions(questions)
+        store.setSecurityQuestions(questions)
+    } catch (error) {
+        console.error('Error loading security questions:', error);
+    }
 }
 
 // Fetch all possible account settings 
 async function loadAllAccountSettings() {
-    await accountService.getAllAccountSettings().then((response) => {
-        store.setAllAccountSettings(response)
-    })
+    try {
+        await accountService.getAllAccountSettings().then((response) => {
+            if (response) {
+                store.setAllAccountSettings(response)
+            } 
+        })
+    } catch (error) {
+        console.error('Error loading account settings:', error);
+    }
 }
