@@ -11,9 +11,7 @@ import io.ktor.util.reflect.*
 import zjt.projects.config.UserSession
 import zjt.projects.db.operations.AccountService
 import zjt.projects.models.account.*
-import zjt.projects.models.account.settings.defaultAccountSettings
 import zjt.projects.models.account.settings.getAllSettings
-import zjt.projects.models.error.ScroungeError
 
 fun Application.accountsModule(db: MongoDatabase){
     val accountService = AccountService(db)
@@ -24,36 +22,33 @@ fun Application.accountsModule(db: MongoDatabase){
     routing {
         //Auth account (login)
         post("/accounts/login") {
-            val request = call.receive<AccountLoginRequest>()
+            try {
+                val request = call.receive<AccountLoginRequest>()
 
-            val loginResponse = accountService.authenticate(request)
-            when(loginResponse.status){
-                AccountLoginStatus.SUCCESS -> {
-                    call.respond(HttpStatusCode.OK, loginResponse, TypeInfo(AccountLoginResponse::class))
+                val loginResponse = accountService.authenticate(request)
+                when(loginResponse.status){
+                    AccountLoginStatus.SUCCESS -> {
+                        call.respond(HttpStatusCode.OK, loginResponse, TypeInfo(AccountLoginResponse::class))
+                    }
+                    AccountLoginStatus.FAILURE -> {
+                        call.respond(
+                            HttpStatusCode.Unauthorized,
+                            AccountResponse.Unauthorized,
+                            TypeInfo(AccountResponse::class)
+                        )
+                    }
+                    AccountLoginStatus.UNKNOWN -> {
+                        call.respond(
+                            HttpStatusCode.Unauthorized,
+                            AccountResponse.ServerError,
+                            TypeInfo(AccountResponse::class)
+                        )
+                    }
                 }
-                AccountLoginStatus.FAILURE -> {
-                    call.respond(
-                        HttpStatusCode.Unauthorized,
-                        AccountResponse.Unauthorized,
-                        TypeInfo(AccountResponse::class)
-                    )
-                }
-                AccountLoginStatus.UNKNOWN -> {
-                    call.respond(
-                        HttpStatusCode.Unauthorized,
-                        AccountResponse.ServerError,
-                        TypeInfo(AccountResponse::class)
-                    )
-                }
-            }
-        }
-
-        post("/accounts/login/cookie") {
-            //if there is already a session cookie, let em in
-            if(call.sessions.get<UserSession>() != null){
-                call.respond(HttpStatusCode.OK, "cookie-auth")
-            }else{
-                call.respond(HttpStatusCode.Unauthorized, "No Cookie")
+            }catch (e: NullPointerException){
+                call.respond(HttpStatusCode.BadRequest)
+            }catch (e: Exception){
+                call.respond(HttpStatusCode.InternalServerError)
             }
         }
 
@@ -63,25 +58,39 @@ fun Application.accountsModule(db: MongoDatabase){
 
         // Create account
         post("/accounts") {
-            val request = call.receive<AccountCreateRequest>()
-            val id = accountService.create(request)
-            call.respond(HttpStatusCode.Created, id)
+            try{
+                val request = call.receive<AccountCreateRequest>()
+                val id = accountService.create(request)
+                call.respond(HttpStatusCode.Created, id)
+            }catch (e: NullPointerException){
+                call.respond(HttpStatusCode.BadRequest)
+            }catch (e: Exception){
+                call.respond(HttpStatusCode.InternalServerError)
+            }
         }
 
         // Get account by id
         get(targetAccountPath) {
-            val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
-            accountService.findAccount(id)?.let { account ->
-                call.respond(account)
-            } ?: call.respond(HttpStatusCode.NotFound)
+            try {
+                val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
+                accountService.findAccount(id)?.let { account ->
+                    call.respond(account)
+                } ?: call.respond(HttpStatusCode.NotFound)
+            }catch (e: IllegalArgumentException){
+                call.respond(HttpStatusCode.BadRequest)
+            }
         }
 
         // Get account by userName
         get("/accounts/{username}") {
-            val userName = call.parameters["userName"] ?: throw IllegalArgumentException("No userName found")
-            accountService.findAccountByUsername(userName)?.let { account ->
-                call.respond(account)
-            } ?: call.respond(HttpStatusCode.NotFound)
+            try {
+                val userName = call.parameters["userName"] ?: throw IllegalArgumentException("No userName found")
+                accountService.findAccountByUsername(userName)?.let { account ->
+                    call.respond(account)
+                } ?: call.respond(HttpStatusCode.NotFound)
+            }catch (e: IllegalArgumentException){
+                call.respond(HttpStatusCode.BadRequest)
+            }
         }
 
         //get all possible settings
@@ -91,49 +100,56 @@ fun Application.accountsModule(db: MongoDatabase){
 
         // Get account settings
         get("$targetAccountPath/settings") {
-            try{
+            try {
                 val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
                 call.respond(accountService.getAccountSettings(id))
+            }catch(e: IllegalArgumentException){
+                call.respond(HttpStatusCode.BadRequest)
             }catch(e: Exception){
-                call.respond(AccountResponse(
-                    userName = null,
-                    settings = null,
-                    securityQuestionId = null,
-                    emailAddress = null,
-                    errors = listOf(ScroungeError(400, noIdFound)),
-                    favoriteRecipes = null,
-                ))
+                call.respond(HttpStatusCode.InternalServerError)
             }
         }
 
         // Update account
         put(targetAccountPath) {
-            val request = call.receive<AccountUpdateRequest>()
-            val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
+            try{
+                val request = call.receive<AccountUpdateRequest>()
+                val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
 
-            val account = accountService.findFullAccount(accountId = id)
-            checkNotNull(account)
+                val account = accountService.findFullAccount(accountId = id)
+                checkNotNull(account)
 
-            val updatedAccount = account.copy(
-                userName = request.userName ?: account.userName,
-                emailAddress = request.emailAddress ?: account.emailAddress,
-                securityQuestionId = request.securityQuestionId ?: account.securityQuestionId,
-                securityQuestionAnswer = request.securityQuestionAnswer ?: account.securityQuestionAnswer,
-                settings = request.settings ?: account.settings,
-                favoriteRecipes = request.favoriteRecipes ?: account.favoriteRecipes
-            )
+                val updatedAccount = account.copy(
+                    userName = request.userName ?: account.userName,
+                    emailAddress = request.emailAddress ?: account.emailAddress,
+                    securityQuestionId = request.securityQuestionId ?: account.securityQuestionId,
+                    securityQuestionAnswer = request.securityQuestionAnswer ?: account.securityQuestionAnswer,
+                    settings = request.settings ?: account.settings,
+                    favoriteRecipes = request.favoriteRecipes ?: account.favoriteRecipes
+                )
 
-            accountService.update(id, updatedAccount)?.let {
-                call.respond(HttpStatusCode.OK)
-            } ?: call.respond(HttpStatusCode.NotFound)
+                accountService.update(id, updatedAccount)?.let {
+                    call.respond(HttpStatusCode.OK)
+                } ?: call.respond(HttpStatusCode.NotFound)
+            }catch (e: NullPointerException){
+                call.respond(HttpStatusCode.BadRequest)
+            }catch (e: IllegalArgumentException){
+                call.respond(HttpStatusCode.BadRequest)
+            }catch (e: IllegalStateException){
+                call.respond(HttpStatusCode.NotFound)
+            }
         }
 
         // Delete account
         delete(targetAccountPath) {
-            val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
-            accountService.delete(id)?.let {
-                call.respond(HttpStatusCode.OK)
-            } ?: call.respond(HttpStatusCode.NotFound)
+            try {
+                val id = call.parameters["id"] ?: throw IllegalArgumentException(noIdFound)
+                accountService.delete(id)?.let {
+                    call.respond(HttpStatusCode.OK)
+                } ?: call.respond(HttpStatusCode.NotFound)
+            }catch (e: IllegalArgumentException){
+                call.respond(HttpStatusCode.BadRequest)
+            }
         }
     }
 }
