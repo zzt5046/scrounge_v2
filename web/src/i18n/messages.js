@@ -98,6 +98,7 @@ const messages = {
       notes: 'Notes',
       add_notes: 'Add notes here.',
       no_notes: 'No notes found.',
+      public: 'Public Recipe',
       make_public: 'Make this recipe public?',
       make_public_desc: 'This will allow other users to see this recipe.',
       actions: {

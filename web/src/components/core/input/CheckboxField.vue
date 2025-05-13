@@ -19,32 +19,19 @@ export default {
     },
   },
 
-  data() {
-    return {
-      value: null
-    }
-  },
-
   methods: {
     toggle() {
-      this.value = !this.value
-      this.$emit('update:modelValue', this.value)
+      this.$emit('update:modelValue', !this.modelValue)
     },
   },
 }
 </script>
 
 <template>
-    <input
-        :id="id"
-        type="checkbox"
-        class="checkbox-input"
-        @change="toggle"
-        v-bind="$attrs"
-    />
-    <span class="checkbox-input-label" :for="id" @click="toggle">
-        {{ label }}
-    </span>
+  <input :id="id" type="checkbox" class="checkbox-input" @click="toggle" v-bind="$attrs" :checked="modelValue" />
+  <label class="checkbox-input-label" :for="id">
+    {{ label }}
+  </label>
 </template>
 
 <style scoped>

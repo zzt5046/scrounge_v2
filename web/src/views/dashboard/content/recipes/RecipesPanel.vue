@@ -29,6 +29,7 @@
             @edit-recipe="editSelectedRecipe" 
             @delete-recipe="deleteRecipe"
             @save-recipe="loadRecipes"
+            @update-recipe="loadRecipes"
             @favorite-recipe="favoriteRecipe"
             @cancel-inspect="showDefaultView" 
         />
@@ -130,6 +131,10 @@ import { recipeService } from '@/service/.service-registry'
                     id: recipeData.recipeId,
                     recipe: recipeData.recipe,
                 })
+                //make sure to update the selected recipe so changes can propogate down to recipe view
+                if(recipeData.recipeId == this.selectedRecipe?.id){
+                    this.selectedRecipe = recipeData
+                }
             })
         },
 
