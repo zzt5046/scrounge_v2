@@ -36,14 +36,7 @@ export default {
 
 <template>
   <label v-if="label" :for="id" class="form-label">{{ label }}</label>
-  <input
-    :id="id"
-    class="form-control"
-    type="text"
-    :placeholder="placeholder"
-    :value="modelValue"
-    @input="$emit('update:modelValue', $event.target.value)"
-    v-bind="$attrs"
-  />
-  <span v-if="error" class="error-text">{{ error }}}</span>
+  <input :id="id" class="form-control" type="text" :placeholder="placeholder" :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)" @keyup.enter="$emit('enter')" v-bind="$attrs" />
+  <span v-if="error" class="error-text">{{ error }}</span>
 </template>

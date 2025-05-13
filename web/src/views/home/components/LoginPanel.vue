@@ -8,8 +8,8 @@
         <a href="#" @click="gotoRegister"> {{ $t('home.login.misc.registerDisclaimer2') }} </a>
       </div>
       <p>
-        <TextInput id="login-username" :label="$t('fields.username')" v-model="username" />
-        <TextInput id="login-password" :label="$t('fields.password')" v-model="password" type="password" />
+        <TextInput id="login-username" :label="$t('fields.username')" v-model="username" @enter="login"/>
+        <TextInput id="login-password" :label="$t('fields.password')" v-model="password" type="password" @enter="login" />
       </p>
       <div>
         <div class="button-section flex-box">
@@ -60,17 +60,20 @@ export default {
         credentials: encodeURI(secretHash)
       }
 
-      const loginResponse = await accountService.login(request)
-        .then((response) => {
-          return response
-        })
-
-      if(loginResponse.accountId != null){
-        this.$router.push('/dashboard')
-      }else if(loginResponse.status == 401){
-        this.errorText = this.$t('home.login.failed')
-      } else {
-        this.errorText = this.$t('home.login.error')
+      try{
+        const loginResponse = await accountService.login(request)
+          .then((response) => {
+            return response
+          })
+        if (loginResponse.accountId != null) {
+          this.$router.push('/dashboard')
+        }
+      }catch (error) {
+        if (error.status == 401) {
+          this.errorText = this.$t('home.login.failed')
+        } else {
+          this.errorText = this.$t('home.login.error')
+        }
       }
     },
 
