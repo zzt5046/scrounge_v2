@@ -1,7 +1,7 @@
 <template>
     <div class="container">
       <div class="register-success-panel panel">
-        <p>
+        <p class="center">
           {{ $t('home.register.success') }}
         </p>
         <div>
@@ -27,4 +27,9 @@
     }
   }
   </script>
+  <style scoped>
+  .center {
+    text-align: center;
+  }
+  </style>
   
