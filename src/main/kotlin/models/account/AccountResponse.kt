@@ -8,8 +8,7 @@ data class AccountResponse (
     val emailAddress: String?,
     val securityQuestionId: String?,
     val settings: Map<AccountSetting, String>?,
-    val favoriteRecipes: List<String>?,
-    val errors: List<ScroungeError>? = listOf()
+    val favoriteRecipes: List<String>?
 ){
     companion object {
         val Unauthorized = AccountResponse(

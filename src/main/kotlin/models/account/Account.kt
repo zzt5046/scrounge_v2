@@ -6,7 +6,8 @@ import zjt.projects.models.account.settings.AccountSetting
 @Serializable
 data class Account(
     val userName: String,
-    val credentials: String,
+    val password: String,
+    val salt: String,
     val emailAddress: String?,
     val securityQuestionId: String,
     val securityQuestionAnswer: String,

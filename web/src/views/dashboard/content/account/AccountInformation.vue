@@ -166,15 +166,11 @@ export default {
 
         async updateAccount() {
 
-            const answerHash = await this.hashStrings(this.securityAnswer).then((hashed) => {
-                return hashed
-            })
-
             const accountUpdateRequest = {
                 userName: this.account.userName,
                 emailAddress: this.emailAddress,
                 securityQuestionId: this.securityQuestion,
-                securityQuestionAnswer: encodeURI(answerHash),
+                securityQuestionAnswer: this.securityAnswer,
                 settings: {
                     LANGUAGE: this.settings.language,
                     MEASUREMENT_SYSTEM: this.settings.measurement_system,

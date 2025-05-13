@@ -12,6 +12,8 @@ import zjt.projects.models.account.*
 import zjt.projects.models.account.Account.Companion.toAccountResponse
 import zjt.projects.db.services.SessionService
 import zjt.projects.models.account.settings.*
+import zjt.projects.util.crypto.generateSalt
+import zjt.projects.util.crypto.sha256
 
 class AccountService(database: MongoDatabase) {
     private var collection: MongoCollection<Document>
@@ -24,30 +26,26 @@ class AccountService(database: MongoDatabase) {
 
     // Account Login / Logout
     // -----------------------------------------------------------------------------------------------------------
-    suspend fun authenticate(request: AccountLoginRequest): AccountLoginResponse {
-        var account: Account? = null
-        var status = AccountLoginStatus.FAILURE
-        var accountId = ""
-        readDocument(null, userName = request.userName)?.let {
-            status = if (it["credentials"] == request.credentials) AccountLoginStatus.SUCCESS else AccountLoginStatus.FAILURE
-            accountId = it["_id"].toString()
-            account = it.toAccount()
-        }
+    fun authenticate(request: AccountLoginRequest): AccountLoginResponse {
 
-        return if (status == AccountLoginStatus.SUCCESS){
-            AccountLoginResponse(
-                accountId = accountId,
-                userName = account!!.userName,
-                status = AccountLoginStatus.SUCCESS,
-                settings = account!!.settings
-            )
+        val accountDoc = readDocument(accountId = null, userName = request.userName)
+        return if(accountDoc != null){
+            val accountId = accountDoc["_id"].toString()
+            val account = accountDoc.toAccount()
+            val salt = account.salt
+
+            if (accountDoc["password"] == (salt + request.password).sha256()){
+                AccountLoginResponse(
+                    accountId = accountId,
+                    userName = account.userName,
+                    status = AccountLoginStatus.SUCCESS,
+                    settings = account.settings
+                )
+            }else{
+                loginFailedResponse
+            }
         }else{
-            AccountLoginResponse(
-                accountId = null,
-                userName = null,
-                status = AccountLoginStatus.FAILURE,
-                settings = null
-            )
+            loginFailedResponse
         }
     }
 
@@ -63,12 +61,14 @@ class AccountService(database: MongoDatabase) {
     // CREATE
     // ------------------------------------------
     suspend fun create(request: AccountCreateRequest): String = withContext(Dispatchers.IO) {
+        val salt = generateSalt()
         val account = Account(
             userName = request.userName,
-            credentials = request.credentials,
+            password = (salt + request.password).sha256(),
+            salt = salt,
             emailAddress = request.emailAddress,
             securityQuestionId = request.securityQuestionId,
-            securityQuestionAnswer = request.securityQuestionAnswer,
+            securityQuestionAnswer = (salt + request.securityQuestionAnswer).sha256(),
             settings = defaultAccountSettings(),
         )
         val doc = account.toDocument()
@@ -138,6 +138,12 @@ class AccountService(database: MongoDatabase) {
         private val json = Json { ignoreUnknownKeys = true }
         fun Document.toAccount(): Account = json.decodeFromString(this.toJson())
         fun Account.toDocument(): Document = Document.parse(Json.encodeToString(this))
+        val loginFailedResponse = AccountLoginResponse(
+            accountId = null,
+            userName = null,
+            status = AccountLoginStatus.FAILURE,
+            settings = null
+        )
     }
 }
 

@@ -110,22 +110,12 @@ export default {
 
     async register() {
 
-      //Hash creds
-      const secretHash = await this.hashStrings(this.password).then((hashed) => {
-        return hashed
-      })
-
-      //Hash security question answer
-      const answerHash = await this.hashStrings(this.securityAnswer).then((hashed) => {
-        return hashed
-      })
-
       const request = {
           userName: this.username,
-          credentials: encodeURI(secretHash),
+          password: this.password,
           emailAddress: this.email,
           securityQuestionId: this.securityQuestion,
-          securityQuestionAnswer: encodeURI(answerHash)
+          securityQuestionAnswer: this.securityAnswer,
       }
 
       try{

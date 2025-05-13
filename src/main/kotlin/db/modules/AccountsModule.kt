@@ -12,6 +12,7 @@ import zjt.projects.config.UserSession
 import zjt.projects.db.operations.AccountService
 import zjt.projects.models.account.*
 import zjt.projects.models.account.settings.getAllSettings
+import zjt.projects.util.crypto.sha256
 
 fun Application.accountsModule(db: MongoDatabase){
     val accountService = AccountService(db)
@@ -52,10 +53,6 @@ fun Application.accountsModule(db: MongoDatabase){
             }
         }
 
-        post("/accounts/logout"){
-            call.sessions.clear<UserSession>()
-        }
-
         // Create account
         post("/accounts") {
             try{
@@ -67,6 +64,11 @@ fun Application.accountsModule(db: MongoDatabase){
             }catch (e: Exception){
                 call.respond(HttpStatusCode.InternalServerError)
             }
+        }
+
+        // Logout
+        post("/accounts/logout"){
+            call.sessions.clear<UserSession>()
         }
 
         // Get account by id
@@ -119,11 +121,17 @@ fun Application.accountsModule(db: MongoDatabase){
                 val account = accountService.findFullAccount(accountId = id)
                 checkNotNull(account)
 
+                val securityQuestionAnswer = if (!request.securityQuestionAnswer.isNullOrEmpty()){
+                    (account.salt + request.securityQuestionAnswer).sha256()
+                }else{
+                    account.securityQuestionAnswer
+                }
+
                 val updatedAccount = account.copy(
                     userName = request.userName ?: account.userName,
                     emailAddress = request.emailAddress ?: account.emailAddress,
                     securityQuestionId = request.securityQuestionId ?: account.securityQuestionId,
-                    securityQuestionAnswer = request.securityQuestionAnswer ?: account.securityQuestionAnswer,
+                    securityQuestionAnswer = securityQuestionAnswer,
                     settings = request.settings ?: account.settings,
                     favoriteRecipes = request.favoriteRecipes ?: account.favoriteRecipes
                 )
