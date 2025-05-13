@@ -203,6 +203,7 @@
     color: green;
     font-weight: bold;
     margin-top: 1rem;
+    margin-left: 1rem;
 }
 
 .recipe-update-error,

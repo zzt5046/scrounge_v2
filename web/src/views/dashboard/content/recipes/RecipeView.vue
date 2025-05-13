@@ -5,12 +5,14 @@
         </div>
         <div v-if="userOwnsRecipe" class="recipe-inspect-actions">
             <button class="btn btn-primary" @click="showEditView">{{ $t('recipe.actions.edit') }}</button>
-            <button class="btn btn-primary" @click="$emit('delete-recipe', recipeData.id)">{{ $t('recipe.actions.delete') }}</button>
+            <button class="btn btn-primary" @click="$emit('delete-recipe', recipeData.id)">{{
+                $t('recipe.actions.delete') }}</button>
             <button class="btn btn-primary" @click="$emit('cancel-inspect')">{{ $t('actions.back') }}</button>
         </div>
         <div v-else class="recipe-inspect-actions">
-            <button class="btn btn-primary" @click="$emit('favorite-recipe', recipeData.id)">{{ $t('recipe.actions.save') }}</button>
-            <button class="btn btn-primary" @click="$emit('back')">{{ $t('actions.back') }}</button>
+            <button class="btn btn-primary" @click="$emit('favorite-recipe', recipeData.id)">{{
+                $t('recipe.actions.save') }}</button>
+            <button class="btn btn-primary" @click="$emit('cancel-inspect')">{{ $t('actions.back') }}</button>
         </div>
 
         <div class="recipe-inspect-content">
@@ -23,7 +25,8 @@
             <div>
                 <ul>
                     <li v-for="(ingredient, index) in recipe.ingredients" :key="index">
-                        {{ ingredient.measurement.quantity }} {{ getUnitName(ingredient.measurement.measurementUnit) }} {{ ingredient.name }}
+                        {{ ingredient.measurement.quantity }} {{ getUnitName(ingredient.measurement.measurementUnit) }}
+                        {{ ingredient.name }}
                     </li>
                 </ul>
             </div>
@@ -43,6 +46,13 @@
             <p>
                 {{ recipe.notes }}
             </p>
+
+            <h5>{{ $t('recipe.public') }}: 
+                <span
+                    :class="{ 'green': recipe.public == true, 'red': recipe.public == false }">
+                    {{ uppercase(recipe.public) }}
+                </span>
+            </h5>
         </div>
     </div>
 
@@ -54,10 +64,11 @@
                 <h3>{{ $t('recipe.information') }}</h3>
 
                 <h5>{{ $t('recipe.name') }}</h5>
-                <TextInput id="edit-recipe-recipeName" v-model="editRecipe.name"/>
+                <TextInput id="edit-recipe-recipeName" v-model="editRecipe.name" />
 
                 <h5>{{ $t('recipe.description') }}</h5>
-                <textarea  id="edit-recipe-recipeDesc" rows="5" cols="60" :placeholder="$t('recipe.add_description')" v-model="editRecipe.description"></textarea>
+                <textarea id="edit-recipe-recipeDesc" rows="5" cols="60" :placeholder="$t('recipe.add_description')"
+                    v-model="editRecipe.description"></textarea>
             </div>
 
             <div class="recipe-ingredients-edit">
@@ -67,46 +78,34 @@
                     <ul>
                         <li v-for="(ingredient, index) in editRecipe.ingredients" :key="index">
                             <div class="recipe-edit-list-element">
-                                <span>{{ ingredient.measurement.quantity }} {{ getUnitName(ingredient.measurement.measurementUnit) }} {{ ingredient.name }}</span>
+                                <span>{{ ingredient.measurement.quantity }} {{
+                                    getUnitName(ingredient.measurement.measurementUnit) }} {{ ingredient.name }}</span>
                                 <div class="recipe-list-element-icons">
-                                    <img
-                                    v-if="index > 0"
-                                    src="../../../../assets/icon/up-arrow.png"
-                                    class="up-arrow-icon"
-                                    :title="$t('actions.move_up')"
-                                    @click="moveIngredientUp(index)"
-                                    />
+                                    <img v-if="index > 0" src="../../../../assets/icon/up-arrow.png"
+                                        class="up-arrow-icon" :title="$t('actions.move_up')"
+                                        @click="moveIngredientUp(index)" />
 
-                                    <img
-                                    v-if="index < this.editRecipe.ingredients.length - 1"
-                                    src="../../../../assets/icon/down-arrow.png"
-                                    class="down-arrow-icon"
-                                    :title="$t('actions.move_down')"
-                                    @click="moveIngredientDown(index)"
-                                    />
+                                    <img v-if="index < this.editRecipe.ingredients.length - 1"
+                                        src="../../../../assets/icon/down-arrow.png" class="down-arrow-icon"
+                                        :title="$t('actions.move_down')" @click="moveIngredientDown(index)" />
 
-                                    <img
-                                    src="../../../../assets/icon/x-icon.png"
-                                    class="remove-item-icon"
-                                    :title="$t('actions.remove')"
-                                    @click="removeIngredient(index)"
-                                    />
+                                    <img src="../../../../assets/icon/x-icon.png" class="remove-item-icon"
+                                        :title="$t('actions.remove')" @click="removeIngredient(index)" />
                                 </div>
                             </div>
                         </li>
                     </ul>
                     <div class="recipe-edit-list-add">
-                        <TextInput id="edit-recipe-newIngredientQuantity" :placeholder="$t('recipe.ingredient.quantity')" v-model="newIngredient.quantity"/>
+                        <TextInput id="edit-recipe-newIngredientQuantity"
+                            :placeholder="$t('recipe.ingredient.quantity')" v-model="newIngredient.quantity" />
 
-                        <SelectInput
-                            id="edit-recipe-newIngredientUnit"
-                            :placeholder="$t('recipe.ingredient.unit')"
-                            :options="units"
-                            v-model="newIngredient.unit"
-                        />
-                        
-                        <TextInput id="edit-recipe-newIngredientName" :placeholder="$t('recipe.ingredient.name')" v-model="newIngredient.name"/>
-                        <button class="btn btn-primary" @click="addIngredient">{{ $t('recipe.ingredient.add') }}</button>
+                        <SelectInput id="edit-recipe-newIngredientUnit" :placeholder="$t('recipe.ingredient.unit')"
+                            :options="units" v-model="newIngredient.unit" />
+
+                        <TextInput id="edit-recipe-newIngredientName" :placeholder="$t('recipe.ingredient.name')"
+                            v-model="newIngredient.name" />
+                        <button class="btn btn-primary" @click="addIngredient">{{ $t('recipe.ingredient.add')
+                            }}</button>
                     </div>
                 </div>
             </div>
@@ -119,47 +118,38 @@
                             <div class="recipe-edit-list-element">
                                 <span>{{ direction }}</span>
                                 <div class="recipe-list-element-icons">
-                                    <img
-                                    v-if="index > 0"
-                                    src="../../../../assets/icon/up-arrow.png"
-                                    class="up-arrow-icon"
-                                    :title="$t('actions.move_up')"
-                                    @click="moveDirectionUp(index)"
-                                    />
+                                    <img v-if="index > 0" src="../../../../assets/icon/up-arrow.png"
+                                        class="up-arrow-icon" :title="$t('actions.move_up')"
+                                        @click="moveDirectionUp(index)" />
 
-                                    <img
-                                    v-if="index < this.editRecipe.directions.length - 1"
-                                    src="../../../../assets/icon/down-arrow.png"
-                                    class="down-arrow-icon"
-                                    :title="$t('actions.move_down')"
-                                    @click="moveDirectionDown(index)"
-                                    />
+                                    <img v-if="index < this.editRecipe.directions.length - 1"
+                                        src="../../../../assets/icon/down-arrow.png" class="down-arrow-icon"
+                                        :title="$t('actions.move_down')" @click="moveDirectionDown(index)" />
 
-                                    <img
-                                    src="../../../../assets/icon/x-icon.png"
-                                    class="remove-item-icon"
-                                    :title="$t('actions.remove')"
-                                    @click="removeDirection(index)"
-                                    />
+                                    <img src="../../../../assets/icon/x-icon.png" class="remove-item-icon"
+                                        :title="$t('actions.remove')" @click="removeDirection(index)" />
                                 </div>
                             </div>
                         </li>
                     </ol>
                 </div>
                 <div class="recipe-edit-list-add">
-                    <TextInput id="edit-recipe-newDirection" :placeholder="$t('recipe.add_direction')" v-model="newDirection"/>
+                    <TextInput id="edit-recipe-newDirection" :placeholder="$t('recipe.add_direction')"
+                        v-model="newDirection" />
                     <button class="btn btn-primary" @click="addDirection">{{ $t('recipe.direction.add') }}</button>
                 </div>
             </div>
             <div class="recipe-notes-edit">
                 <h3>{{ $t('recipe.notes') }}</h3>
-                <textarea id="edit-recipe-notes" v-model="editRecipe.notes" rows="10" cols="100" :placeholder="$t('recipe.add_notes')"></textarea>
+                <textarea id="edit-recipe-notes" v-model="editRecipe.notes" rows="10" cols="100"
+                    :placeholder="$t('recipe.add_notes')"></textarea>
             </div>
             <div class="recipe-public-edit">
-                <CheckboxField id="recipe-public-checkbox-edit" :label="$t('recipe.make_public')" v-model="recipe.public"/>
+                <CheckboxField id="recipe-public-checkbox-edit" :label="$t('recipe.make_public')"
+                    v-model="editRecipe.public" />
             </div>
             <div class="recipe-edit-actions">
-                <button class="btn btn-primary" @click="saveRecipe">{{ $t('actions.save') }}</button>
+                <button class="btn btn-primary" @click="updateRecipe">{{ $t('actions.save') }}</button>
                 <button class="btn btn-primary" @click="cancelEditRecipe">{{ $t('actions.cancel') }}</button>
             </div>
             <div class="recipe-update-error" v-if="errorMessage">
@@ -199,7 +189,7 @@ export default {
             recipe: null,
             editRecipe: {
                 accountId: null,
-                public: false,
+                public: null,
                 name: null,
                 description: null,
                 ingredients: [],
@@ -228,6 +218,16 @@ export default {
                 .map(([id, name]) => {
                     return { name, id }
                 });
+        },
+    },
+
+    watch: {
+        recipeData: {
+            handler(newValue) {
+                //sync data when recipeData changes upstream
+                this.syncRecipe()
+            },
+            deep: true,
         },
     },
 
@@ -323,17 +323,31 @@ export default {
             }
         },
 
-        async saveRecipe() {
+        async updateRecipe() {
             recipeService.updateRecipe(this.recipeData.id, this.editRecipe).then(() => {
-                this.recipe = this.editRecipe
+                this.$emit('update-recipe')
+                this.syncRecipe()
                 this.successMessage = this.$t('recipe.update.success')
                 this.editMode = false
-                this.$emit('recipe-updated', this.editRecipe)
             }).catch((error) => {
                 console.error('Error updating recipe:', error)
                 this.errorMessage = this.$t('recipe.update.error')
             })
         },
+
+        uppercase(value) {
+            return value?.toString().toUpperCase()
+        },
     },
 }
 </script>
+<style scoped>
+    .green {
+        color: green;
+        font-weight: bold;
+    }
+    .red {
+        color: red;
+        font-weight: bold;
+    }
+</style>
