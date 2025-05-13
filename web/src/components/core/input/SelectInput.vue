@@ -24,6 +24,16 @@ export default {
       type: String,
       default: 'Select an option'
     },
+    modelValue: {
+      type: String,
+      default: null
+    }
+  },
+
+  methods: {
+    autoselect(option) {
+      return (option.id == this.modelValue)
+    }
   },
 }
 </script>
@@ -33,11 +43,12 @@ export default {
   <select
     :id=id
     class="form-select"
-    @change="$emit('update:modelValue', $event.target.value)"
+    @change="this.$emit('update:modelValue', $event.target.value)"
+    :value="modelValue"
     v-bind="$attrs"
   >
-    <option disabled selected value>{{ placeholder }}</option>
-    <option v-for="option in options" :key="option.id" :value="option.id">{{ option.name }}</option>
+    <option disabled value>{{ placeholder }}</option>
+    <option v-for="option in options" :key="option.id" :value="option.id" :selected="autoselect(option)">{{ option.name }}</option>
   </select>
 </template>
 

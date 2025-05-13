@@ -12,7 +12,10 @@ const messages = {
       emailAddress: 'Email Address',
       phoneNumber: 'Phone Number',
       securityQuestion: 'Security Question',
-      securityAnswer: 'Security Question Answer'
+      selectNewSecurityQuestion: 'Select a new security question',
+      securityAnswer: 'Security Question Answer',
+      confirmSecurityAnswer: 'Confirm Answer',
+      newSecurityAnswer: 'New Answer',
     },
     actions: {
       login: 'Login',
@@ -20,6 +23,21 @@ const messages = {
       register: 'Register',
       save: 'Save',
       submit: 'Submit',
+      edit: 'Edit',
+      update: 'Update',
+      view: 'View',
+      search: 'Search',
+      clear: 'Clear',
+      filter: 'Filter',
+      sort: 'Sort',
+      refresh: 'Refresh',
+      load_more: 'Load More',
+      load_less: 'Load Less',
+      load: 'Load',
+      upload: 'Upload',
+      download: 'Download',
+      print: 'Print',
+      share: 'Share',
       cancel: 'Cancel',
       back: 'Back',
       confirm: 'Confirm',
@@ -32,6 +50,8 @@ const messages = {
       done: 'Done',
       move_up: 'Move Up',
       move_down: 'Move Down',
+      show: 'Show',
+      hide: 'Hide',
     },
     home: {
       login: {
@@ -47,6 +67,7 @@ const messages = {
         header: 'Create your Account',
         nameTaken: 'Sorry, that username is not available.',
         success: 'Account created successfully. Please login to continue.',
+        error: 'Error while creating account. Please try again later.',
       },
     },
     dashboard: {
@@ -54,8 +75,7 @@ const messages = {
       navbar: {
         home: 'Home',
         recipes: 'Recipes',
-        account: 'Account',
-        settings: 'Settings',
+        account: 'Settings',
         logout: 'Logout'
       },
       footer: 'Footer',
@@ -110,6 +130,41 @@ const messages = {
         error: 'An error has occurred. Please try again later.'
       },
     },
+    account: {
+      information: {
+        header: 'Account Information',
+      },
+      settings: {
+        header: 'Account Settings',
+        language: {
+          header: 'Language',
+          tooltip: 'Change the language of the application (Not yet implemented)',
+          placeholder: 'Select a language',
+          english: 'English',
+          spanish: 'Español',
+        },
+        measurement_system: {
+          header: 'Measurement System',
+          tooltip: 'Change the measurement system of the application (Automatic recipe conversions not yet implemented)',
+          placeholder: 'Select a measurement system',
+          metric: 'Metric',
+          imperial: 'Imperial',
+        },
+        theme: {
+          header: 'Theme',
+          tooltip: 'Change the theme of the application (Not yet implemented)',
+          placeholder: 'Select a theme',
+          light: 'Light',
+          toasted: 'Toasted',
+          dark: 'Dark',
+        },
+      },
+      update: {
+        success: 'Account updated successfully.',
+        error: 'An error has occurred. Please try again later.'
+      },
+
+    }
   }
 }
 

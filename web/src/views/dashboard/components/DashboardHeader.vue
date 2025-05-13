@@ -9,10 +9,6 @@
 export default {
     name: 'DashboardHeader',
     props: {
-        account: {
-            type: Object,
-            required: true
-        },
         title: {
             type: String,
             required: true

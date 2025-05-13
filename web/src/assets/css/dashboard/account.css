@@ -1,0 +1,72 @@
+.account-information {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+    height: auto;
+    width: 40%;
+    border-radius: 1rem;
+    border: 2px solid #7a7a7a;
+    background-color: white;
+    box-shadow: 0em 0em 1.2em 0.36em rgba(0, 0, 0, 0.075);
+}
+
+.account-information-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.account-information-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.account-information-content {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    max-width: 70%;
+}
+
+.security-answer-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.account-settings-content {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    max-width: 35%;
+}
+
+.account-information-item,
+.account-settings-item {
+    margin-bottom: 1.25rem;
+}
+
+.account-settings-item-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.account-update-success,
+.account-update-error {
+    cursor: pointer;
+    margin-left: 1rem;
+    margin-top: 0.5rem;
+}
+
+.account-update-success {
+    color: green;
+}
+
+.account-update-error {
+    color: red;
+}

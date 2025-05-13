@@ -1,7 +1,7 @@
 package zjt.projects.models.recipe
 
 import kotlinx.serialization.Serializable
-import zjt.projects.models.account.MeasurementSystem
+import zjt.projects.models.account.settings.MeasurementSystem
 
 @Serializable
 enum class MeasurementUnit(val label: String, val system: MeasurementSystem?) {

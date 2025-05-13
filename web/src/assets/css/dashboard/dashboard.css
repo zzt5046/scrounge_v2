@@ -37,6 +37,15 @@
     background-color: #f5f5f5;
 }
 
+.recipes-panel,
+.account-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 100%;
+    padding: 2rem;
+}
+
 /* NAVBAR -------------------------------------------*/
 .dashboard-navbar {
     position: relative;

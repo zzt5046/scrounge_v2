@@ -70,6 +70,9 @@
             {{ $t('actions.back') }}
           </button>
         </div>
+        <div class="error-text" v-if="errorText">
+          <span @click="errorText = null">{{ errorText }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -80,6 +83,7 @@ import SelectInput from '@/components/core/input/SelectInput.vue'
 import TextInput from '@/components/core/input/TextInput.vue'
 import { accountService } from '@/service/.service-registry'
 import FormsMixin from '../../../mixins/FormsMixin.vue'
+import { store } from '../../../store'
 
 export default {
   name: 'RegisterPanel',
@@ -92,22 +96,11 @@ export default {
       email: null,
       password: null,
       confirmPassword: null,
-      questions: [],
+      questions: store.securityQuestions,
       securityQuestion: null,
       securityAnswer: null,
       errorText: null,
     }
-  },
-
-  created() {
-    accountService.getSecurityQuestions().then((response) => {
-      this.questions = response.map((question) => {
-        return {
-          id: question.id,
-          name: question.question
-        }
-      })
-    })
   },
 
   methods: {
@@ -137,15 +130,10 @@ export default {
 
       try{
         const registerResponse = await accountService.register(request)
-
-        if(registerResponse?.status === 500){
-          this.errorText = this.$t('errors.registerError')
-          return
-        }else{
-          this.$emit('registerSuccess')
-        }
+        this.$emit('registerSuccess')
       }catch(e){
-        console.log(e)
+        console.error('Register error:', e)
+        this.errorText = this.$t('home.register.error')
       }
     }
   }
