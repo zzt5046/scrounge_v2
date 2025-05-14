@@ -18,14 +18,12 @@ export class AccountService {
 
   async logout() {
     store.setActiveAccountId(null)
-    //await api.post('accounts/logout')
   }
 
   async register(request) {
     return await api.post('accounts', request)
   }
 
-  //AccountResponse
   async getAccount(id) {
     return await api.get(`accounts/${id}`)
   }

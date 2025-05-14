@@ -10,10 +10,5 @@ export default {
     components: {
         AccountInformation
     },
-    data() {
-        return {
-
-        };
-    },
 };
 </script>

@@ -121,6 +121,13 @@
     color: black;
 }
 
+.navbar-icon {
+    margin-right: 1rem;
+    margin-top: 0.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
 /* END NAVBAR ---------------------------------------*/
 
 .dashboard-content {

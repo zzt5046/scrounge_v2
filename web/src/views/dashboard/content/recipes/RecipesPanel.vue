@@ -42,6 +42,8 @@ import RecipeCreateView from './RecipeCreateView.vue'
 import RecipeView from './RecipeView.vue'
 import RecipeSearch from './RecipeSearch.vue'
 import { store } from '../../../../store'
+import { dashboardState } from '../../dashboardState.js'
+import { watch } from 'vue'
 import { recipeService } from '@/service/.service-registry'
 
 
@@ -75,6 +77,15 @@ import { recipeService } from '@/service/.service-registry'
 
     created(){
         this.loadRecipes()
+    },
+
+    mounted(){
+        watch(
+            () => dashboardState.activeSection,
+            (newVal, oldVal) => {
+                this.showDefaultView()
+            }
+        )
     },
 
     computed: {
