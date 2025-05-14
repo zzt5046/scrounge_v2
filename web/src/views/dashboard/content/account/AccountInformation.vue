@@ -100,6 +100,8 @@ import InfoIcon from '../../../../components/core/icon/InfoIcon.vue';
 import FormsMixin from '../../../../mixins/FormsMixin.vue';
 import { accountService } from '@/service/.service-registry';
 import { store } from '../../../../store';
+import { dashboardState, DASHBOARD_SETTINGS } from '../../dashboardState.js';
+import { watch } from 'vue';
 export default {
     name: 'AccountInformation',
     mixins: [FormsMixin],
@@ -140,6 +142,19 @@ export default {
     async created() {
         await this.loadAccount();
         this.loadSettingsOptions();
+    },
+
+    mounted() {
+        watch(
+            () => dashboardState.activeSection,
+            (newVal, oldVal) => {
+                this.clearInfoText();
+                this.disableEditMode();
+                if(newVal == DASHBOARD_SETTINGS){
+                    this.loadAccount();
+                }
+            }
+        )
     },
 
     methods: {

@@ -6,14 +6,14 @@
     </header>
 
     <aside class="dashboard-navbar">
-      <DashboardNavbar @change-title="changeTitle" @logout="logout"/>
+      <DashboardNavbar @change-section="changeNavbarSection" @logout="logout"/>
       <button type="button" id="navbar-resize" @click="navbarToggle"><strong>&#9776;</strong></button>
     </aside>
 
     <main class="dashboard-main">
       <HomePanel v-show="showHomeSection"/>
       <RecipesPanel :account="account" v-show="showRecipeSection"/>
-      <AccountPanel :account="account" v-show="showAccountSection"/>
+      <AccountPanel :account="account" v-show="showSettingsSection"/>
     </main>
     
     <footer class="dashboard-footer">
@@ -24,6 +24,8 @@
 <script>
 import { accountService } from '@/service/.service-registry'
 import { store } from '../../store.js'
+import { dashboardState } from './dashboardState.js'
+import { DASHBOARD_HOME, DASHBOARD_RECIPES, DASHBOARD_SETTINGS, DASHBOARD_LOGOUT } from './dashboardState.js'
 import DashboardHeader from './components/DashboardHeader.vue';
 import DashboardNavbar from './components/DashboardNavbar.vue';
 import HomePanel from './content/HomePanel.vue';
@@ -62,13 +64,13 @@ import AccountPanel from './content/account/AccountPanel.vue';
 
     computed: {
       showHomeSection() {
-        return this.activeSectionTitle === this.$t('dashboard.navbar.home')
+        return dashboardState.activeSection == DASHBOARD_HOME
       },
       showRecipeSection() {
-        return this.activeSectionTitle === this.$t('dashboard.navbar.recipes')
+        return dashboardState.activeSection == DASHBOARD_RECIPES
       },
-      showAccountSection() {
-        return this.activeSectionTitle === this.$t('dashboard.navbar.account')
+      showSettingsSection() {
+        return dashboardState.activeSection == DASHBOARD_SETTINGS
       },
     },
 
@@ -82,8 +84,13 @@ import AccountPanel from './content/account/AccountPanel.vue';
         this.account = account
       },
 
-      changeTitle(title) {
-        this.activeSectionTitle = title
+      changeNavbarSection(sectionId) {
+        if(sectionId == DASHBOARD_LOGOUT) {
+          this.logout()
+        } else {
+          const labelKey = dashboardState.getLabelKey(sectionId);
+          this.activeSectionTitle = this.$t(labelKey);
+        }
       },
 
       logout() {
