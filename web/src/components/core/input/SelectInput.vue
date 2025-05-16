@@ -1,3 +1,19 @@
+<template>
+  <div>
+    <label v-if="label" for="selectInput" class="form-label">{{ label }}</label>
+    <span v-if="required" class="required-mark">*</span>
+    <select :id=id :class="{ 'form-select': true, 'input-error': error }"
+      @change="this.$emit('update:modelValue', $event.target.value)" :value="modelValue" v-bind="$attrs">
+
+      <option disabled value>{{ placeholder }}</option>
+      <option v-for="option in options" :key="option.id" :value="option.id" :selected="autoselect(option)">
+        {{ option.name }}
+      </option>
+    </select>
+    <span v-if="error" class="input-error-text">{{ errorMessage }}</span>
+  </div>
+</template>
+
 <script>
 export default {
   name: 'SelectInput',
@@ -13,6 +29,10 @@ export default {
       type: String,
       required: true
     },
+    required: {
+      type: Boolean,
+      default: false
+    },
     options: {
       type: Array,
       required: true
@@ -23,6 +43,14 @@ export default {
     placeholder: {
       type: String,
       default: 'Select an option'
+    },
+    error: {
+      type: Boolean,
+      default: false
+    },
+    errorMessage: {
+      type: String,
+      default: null
     },
     modelValue: {
       type: String,
@@ -37,19 +65,3 @@ export default {
   },
 }
 </script>
-
-<template>
-  <label v-if="label" for="selectInput" class="form-label">{{ label }}</label>
-  <select
-    :id=id
-    class="form-select"
-    @change="this.$emit('update:modelValue', $event.target.value)"
-    :value="modelValue"
-    v-bind="$attrs"
-  >
-    <option disabled value>{{ placeholder }}</option>
-    <option v-for="option in options" :key="option.id" :value="option.id" :selected="autoselect(option)">{{ option.name }}</option>
-  </select>
-</template>
-
-<style scoped></style>

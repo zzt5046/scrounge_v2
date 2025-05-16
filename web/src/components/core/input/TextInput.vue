@@ -1,3 +1,14 @@
+<template>
+  <div class="input">
+    <label v-if="label" :for="id" class="form-label">{{ label }}</label>
+    <span v-if="required" class="required-mark">*</span>
+    <input :id="id" :class="{ 'form-control': true, 'input-error': error }" type="text" :placeholder="placeholder"
+      :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" @keyup.enter="$emit('enter')"
+      v-bind="$attrs" />
+    <span v-if="error" class="input-error-text">{{ errorMessage }}</span>
+  </div>
+</template>
+
 <script>
 export default {
   name: 'TextInput',
@@ -5,7 +16,6 @@ export default {
   data() {
     return {
       value: null,
-      errorMessage: null
     }
   },
 
@@ -13,6 +23,10 @@ export default {
     id: {
       type: String,
       required: true
+    },
+    required: {
+      type: Boolean,
+      default: false
     },
     modelValue: {
       type: String,
@@ -28,15 +42,19 @@ export default {
       default: ''
     },
     error: {
-      type: String
+      type: Boolean,
+      default: false
+    },
+    errorMessage: {
+      type: String,
+      default: null
     }
   }
 }
 </script>
-
-<template>
-  <label v-if="label" :for="id" class="form-label">{{ label }}</label>
-  <input :id="id" class="form-control" type="text" :placeholder="placeholder" :value="modelValue"
-    @input="$emit('update:modelValue', $event.target.value)" @keyup.enter="$emit('enter')" v-bind="$attrs" />
-  <span v-if="error" class="error-text">{{ error }}</span>
-</template>
+<style scoped>
+.input {
+  width: 100%;
+  border-radius: 0.25rem;
+}
+</style>
