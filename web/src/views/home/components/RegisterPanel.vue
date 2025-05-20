@@ -12,11 +12,11 @@
           :error="error(v$, 'username')" :errorMessage="errorMessage(v$, 'username')" required />
 
         <TextInput id="register-password" :label="$t('fields.password')" type="password" v-model="password"
-          :error="error(v$, 'password')" :errorMessage="errorMessage(v$, 'password')" required />
+          :error="error(v$, 'password')" :errorMessage="errorMessage(v$, 'password')" @change="v$.reset" required />
 
         <TextInput id="register-confirmPassword" :label="$t('fields.confirmPassword')" type="password"
           v-model="confirmPassword" :error="error(v$, 'confirmPassword')"
-          :errorMessage="errorMessage(v$, 'confirmPassword')" required />
+          :errorMessage="errorMessage(v$, 'confirmPassword')" @change="v$.reset" required />
 
         <TextInput id="register-email" :label="$t('fields.emailAddress')" type="email" v-model="email"
           :error="error(v$, 'email')" :errorMessage="errorMessage(v$, 'email')" />
@@ -47,10 +47,10 @@
 import SelectInput from '@/components/core/input/SelectInput.vue'
 import TextInput from '@/components/core/input/TextInput.vue'
 import { accountService } from '@/service/.service-registry'
-import FormsMixin from '../../../mixins/FormsMixin.vue'
+import FormsMixin from '../../../mixins/FormsMixin'
 import { store } from '../../../store'
 import useVuelidate from '@vuelidate/core'
-import { validations } from '@/validations'
+import { getValidations } from '@/validations'
 import RequiredNote from '../../../components/core/input/RequiredNote.vue'
 
 export default {
@@ -73,7 +73,10 @@ export default {
   },
 
   validations() {
-    return validations[this.$options.name]
+    return getValidations(
+      this.$options.name,
+      {password: this.password}
+    )
   },
 
   methods: {

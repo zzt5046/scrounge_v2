@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="home-container"> -->
   <div>
     <div class="login-panel panel form">
       <div class="login-header">
@@ -17,7 +16,7 @@
           :error="error(v$, 'password')" :errorMessage="errorMessage(v$, 'password')" required />
       </p>
       <div>
-        <div class=" button-section flex-box">
+        <div class="button-section flex-box">
           <button id="login-button" class="btn btn-primary" @click="validateAndSubmit">
             {{ $t('actions.login') }}
           </button>
@@ -35,9 +34,9 @@
 <script>
 import { accountService } from '@/service/.service-registry'
 import TextInput from '@/components/core/input/TextInput.vue'
-import FormsMixin from '../../../mixins/FormsMixin.vue'
+import FormsMixin from '@/mixins/FormsMixin.js'
 import useVuelidate from '@vuelidate/core'
-import { validations } from '@/validations'
+import { getValidations } from '@/validations'
 import RequiredNote from '../../../components/core/input/RequiredNote.vue'
 
 export default {
@@ -47,7 +46,7 @@ export default {
 
   data() {
     return {
-      v$: useVuelidate(),
+      v$: useVuelidate({$scope: false}),
       username: null,
       password: null,
       loginResponse: null,
@@ -56,7 +55,7 @@ export default {
   },
 
   validations() {
-    return validations[this.$options.name]
+    return getValidations(this.$options.name)
   },
 
   methods: {

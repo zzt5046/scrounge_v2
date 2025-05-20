@@ -1,11 +1,16 @@
 <template>
   <div class="input">
-    <label v-if="label" :for="id" class="form-label">{{ label }}</label>
-    <span v-if="required" class="required-mark">*</span>
+    <div class="input-label">
+      <label v-if="label && !boldLabel" :for="id" class="form-label">{{ label }}</label>
+      <h5 v-if="label && boldLabel" class="form-label">{{ label }}</h5>
+      <span v-if="required" class="required-mark">*</span>
+    </div>
     <input :id="id" :class="{ 'form-control': true, 'input-error': error }" type="text" :placeholder="placeholder"
       :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" @keyup.enter="$emit('enter')"
       v-bind="$attrs" />
-    <span v-if="error" class="input-error-text">{{ errorMessage }}</span>
+      <div class="error-height">
+        <span class="input-error-text">{{ errorMessage }}</span>
+      </div>
   </div>
 </template>
 
@@ -37,6 +42,10 @@ export default {
       type: String,
       default: ''
     },
+    boldLabel: {
+      type: Boolean,
+      default: false
+    },
     placeholder: {
       type: String,
       default: ''
@@ -53,8 +62,13 @@ export default {
 }
 </script>
 <style scoped>
-.input {
-  width: 100%;
-  border-radius: 0.25rem;
-}
+  .input {
+    width: 100%;
+    border-radius: 0.25rem;
+  }
+  
+  /* try to pad the input and error so nothing jumps around */
+  .error-height {
+    height: 0.5rem;
+  }
 </style>
