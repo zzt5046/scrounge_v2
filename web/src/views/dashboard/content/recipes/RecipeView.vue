@@ -97,7 +97,7 @@
                     <div class="recipe-edit-list-add seventy">
                         <div class="recipe-edit-list-ingredient-inputs">
                             <TextInput id="edit-recipe-newIngredientQuantity" class="newIngredientQuantity"
-                                :placeholder="$t('recipe.ingredient.quantity')" v-model="newIngredient.quantity" />
+                                :placeholder="$t('recipe.ingredient.quantity')" v-model="newIngredient.quantity" :error="quantityError" :errorMessage="quantityErrorMessage" />
 
                             <SelectInput id="edit-recipe-newIngredientUnit" class="newIngredientUnit" :placeholder="$t('recipe.ingredient.unit')"
                                 :options="units" v-model="newIngredient.unit" />
@@ -105,7 +105,7 @@
                             <TextInput id="edit-recipe-newIngredientName" class="newIngredientName" :placeholder="$t('recipe.ingredient.name')"
                                 v-model="newIngredient.name" />
                         </div>
-                        <button class="btn btn-primary" @click="addIngredient">{{ $t('recipe.ingredient.add')
+                        <button class="btn btn-primary" @click="addIngredient" :disabled="!newIngredientValid">{{ $t('recipe.ingredient.add')
                             }}</button>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
                 <div class="recipe-edit-list-add seventy">
                     <TextInput id="edit-recipe-newDirection" class="newDirection" :placeholder="$t('recipe.add_direction')"
                         v-model="newDirection" />
-                    <button class="btn btn-primary" @click="addDirection">{{ $t('recipe.direction.add') }}</button>
+                    <button class="btn btn-primary" @click="addDirection" :disabled="!newDirectionValid">{{ $t('recipe.direction.add') }}</button>
                 </div>
             </div>
             <div class="recipe-notes-edit">
@@ -166,6 +166,8 @@ import CheckboxField from '../../../../components/core/input/CheckboxField.vue'
 import TextAreaField from '../../../../components/core/input/TextAreaField.vue'
 import { store } from '../../../../store'
 import { recipeService } from '@/service/.service-registry'
+import useVuelidate from '@vuelidate/core'
+import { validationMessages } from '../../../../validations'
 
 export default {
     name: 'RecipeView',
@@ -188,6 +190,7 @@ export default {
 
     data() {
         return {
+            v$: useVuelidate(),
             recipe: null,
             editRecipe: {
                 accountId: null,
@@ -204,12 +207,25 @@ export default {
                 unit: null,
                 name: null,
             },
+            quantityError: false,
+            quantityErrorMessage: null,
             newDirection: null,
             successMessage: null,
             errorMessage: null,
         }
     },  
     
+    validations() {
+        return {
+            editRecipe: {
+                name: { required: true },
+                description: { required: true },
+                ingredients: { required: true },
+                directions: { required: true },
+            }
+        }
+    },
+
     computed: {
         userOwnsRecipe() {
             if(!this.recipe) return false
@@ -221,6 +237,12 @@ export default {
                     return { name, id }
                 });
         },
+        newIngredientValid() {
+            return this.newIngredient.quantity && this.newIngredient.unit && this.newIngredient.name && !this.quantityError
+        },
+        newDirectionValid() {
+            return this.newDirection
+        },
     },
 
     watch: {
@@ -231,6 +253,19 @@ export default {
             },
             deep: true,
         },
+
+        'newIngredient.quantity': {
+            handler(newValue) {
+                const isNotNumber = isNaN(newValue) || isNaN(parseFloat(newValue))
+                if(isNotNumber && newValue != null){
+                    this.quantityError = true
+                    this.quantityErrorMessage = validationMessages.nonNumber
+                }else{
+                    this.quantityError = false
+                    this.quantityErrorMessage = null
+                }
+            },
+        }
     },
 
     methods: {
@@ -245,20 +280,18 @@ export default {
 
         // Ingredients --------------------------------------------------
         addIngredient() {
-            if (this.newIngredient.quantity && this.newIngredient.unit && this.newIngredient.name) {
-                this.editRecipe.ingredients.push({
-                    measurement: {
-                        quantity: this.newIngredient.quantity,
-                        measurementUnit: this.newIngredient.unit,
-                    },
-                    name: this.newIngredient.name,
-                })
+            this.editRecipe.ingredients.push({
+                measurement: {
+                    quantity: this.newIngredient.quantity,
+                    measurementUnit: this.newIngredient.unit,
+                },
+                name: this.newIngredient.name,
+            })
 
-                this.newIngredient = {
-                    quantity: null,
-                    unit: null,
-                    name: null,
-                }
+            this.newIngredient = {
+                quantity: null,
+                unit: null,
+                name: null,
             }
         },
         moveIngredientUp(index) {

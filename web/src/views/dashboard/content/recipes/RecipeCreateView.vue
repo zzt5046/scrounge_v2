@@ -47,7 +47,8 @@
                 </ul>
                 <div class="recipe-create-list-add">
                     <div class="recipe-create-list-ingredient-inputs">
-                        <TextInput id="create-recipe-newIngredientQuantity" class="newIngredientQuantity" :placeholder="$t('recipe.ingredient.quantity')" v-model="newIngredient.quantity"/>
+                        <TextInput id="create-recipe-newIngredientQuantity" class="newIngredientQuantity" :placeholder="$t('recipe.ingredient.quantity')" v-model="newIngredient.quantity"
+                        :error="quantityError" :errorMessage="quantityErrorMessage"/>
 
                         <SelectInput
                             id="create-recipe-newIngredientUnit"
@@ -130,6 +131,7 @@ import TextAreaField from '@/components/core/input/TextAreaField.vue'
 import { recipeService } from '@/service/.service-registry'
 import { store } from '../../../../store'
 import RequiredNote from '../../../../components/core/input/RequiredNote.vue'
+import { validationMessages } from '../../../../validations.js'
 
 export default {
     name: 'RecipeCreateView',
@@ -153,6 +155,8 @@ export default {
                 unit: null,
                 name: null,
             },
+            quantityError: false,
+            quantityErrorMessage: null,
             ingredientAdded: false,
             newDirection: null,
             directionAdded: false,
@@ -166,10 +170,25 @@ export default {
         return getValidations(this.$options.name)
     },
 
+    watch: {
+        'newIngredient.quantity': {
+            handler(newValue) {
+                const isNotNumber = isNaN(newValue) || isNaN(parseFloat(newValue))
+                if(isNotNumber && newValue != null){
+                    this.quantityError = true
+                    this.quantityErrorMessage = validationMessages.nonNumber
+                }else{
+                    this.quantityError = false
+                    this.quantityErrorMessage = null
+                }
+            },
+        }
+    },
+
     computed: {
 
         newIngredientValid() {
-            return this.newIngredient.quantity && this.newIngredient.unit && this.newIngredient.name
+            return this.newIngredient.quantity && this.newIngredient.unit && this.newIngredient.name && !this.quantityError
         },
         newDirectionValid() {
             return this.newDirection
@@ -229,6 +248,8 @@ export default {
                     name: null,
                 }
             }
+            this.quantityError = false,
+            this.quantityErrorMessage = null
         },
         moveIngredientUp(index) {
             const temp = this.recipe.ingredients[index]

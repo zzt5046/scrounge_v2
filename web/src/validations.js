@@ -17,6 +17,7 @@ export const validationMessages = {
   email: 'Please enter a valid email address.',
   'password-minLength': 'Password must be at least 6 characters long.',
   'confirmPassword-sameAs': 'Must match the password.',
+  nonNumber: 'Must be a number.',
 }
 
 //custom validators
