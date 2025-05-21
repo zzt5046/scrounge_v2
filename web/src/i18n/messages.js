@@ -58,13 +58,13 @@ const messages = {
         header: 'LOGIN',
         misc: {
           registerDisclaimer1: "Don't have an account?",
-          registerDisclaimer2: 'Sign Up'
+          registerDisclaimer2: 'SIGN UP'
         },
         failed: 'Username or password is incorrect.',
         error: 'An error has occurred. Please try again later.'
       },
       register: {
-        header: 'Create your Account',
+        header: 'SIGN UP',
         nameTaken: 'Sorry, that username is not available.',
         success: 'Account created successfully. Please login to continue.',
         error: 'Error while creating account. Please try again later.',
@@ -165,7 +165,15 @@ const messages = {
         error: 'An error has occurred. Please try again later.'
       },
 
-    }
+    },
+    validations: {
+      required_note: 'Indicates a required field',
+      required: 'This field is required',
+      minLength: 'This field must be at least {min} characters long',
+      maxLength: 'This field must be at most {max} characters long',
+      email: 'Please enter a valid email address',
+      passwordStrength: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+    },
   }
 }
 

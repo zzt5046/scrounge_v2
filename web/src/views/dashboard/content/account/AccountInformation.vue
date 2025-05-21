@@ -97,7 +97,7 @@
 import TextInput from '../../../../components/core/input/TextInput.vue';
 import SelectInput from '../../../../components/core/input/SelectInput.vue';
 import InfoIcon from '../../../../components/core/icon/InfoIcon.vue';
-import FormsMixin from '../../../../mixins/FormsMixin.vue';
+import FormsMixin from '../../../../mixins/FormsMixin';
 import { accountService } from '@/service/.service-registry';
 import { store } from '../../../../store';
 import { dashboardState, DASHBOARD_SETTINGS } from '../../dashboardState.js';

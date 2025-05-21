@@ -37,10 +37,11 @@
 
 .login-panel {
     width: 30rem;
-    height: 23rem;
+    max-height: 26rem;
 }
 
-.login-header {
+.login-header,
+.register-header {
     font-family: 'jost-regular';
     text-align: center;
     font-style: normal;
@@ -61,12 +62,7 @@
 
 .register-panel {
     width: 30rem;
-    height: 45rem;
-}
-
-.register-header {
-    display: flex;
-    justify-content: space-between;
+    max-height: 55rem;
 }
 
 .register-success-panel {
@@ -96,7 +92,7 @@
 }
 
 .button-section {
-    margin-top: 1rem;
+    margin-top: 2.25rem;
     display: flex;
     align-items: flex-start;
     flex-wrap: nowrap;
