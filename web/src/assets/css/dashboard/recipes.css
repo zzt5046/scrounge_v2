@@ -172,7 +172,8 @@
 
 .recipe-edit-list-element span,
 .recipe-create-list-element span {
-    max-width: 60%;
+    max-width: 75% !important;
+    text-wrap: wrap;
 }
 
 #edit-recipe-recipeName,

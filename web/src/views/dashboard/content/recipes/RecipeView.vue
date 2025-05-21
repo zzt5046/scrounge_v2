@@ -67,8 +67,7 @@
                 <TextInput id="edit-recipe-recipeName" v-model="editRecipe.name" />
 
                 <h5>{{ $t('recipe.description') }}</h5>
-                <textarea id="edit-recipe-recipeDesc" rows="5" cols="60" :placeholder="$t('recipe.add_description')"
-                    v-model="editRecipe.description"></textarea>
+                <TextAreaField id="edit-recipe-recipeDesc" rows="5" cols="60" :placeholder="$t('recipe.add_description')" v-model="editRecipe.description"/>
             </div>
 
             <div class="recipe-ingredients-edit">
@@ -95,15 +94,17 @@
                             </div>
                         </li>
                     </ul>
-                    <div class="recipe-edit-list-add">
-                        <TextInput id="edit-recipe-newIngredientQuantity"
-                            :placeholder="$t('recipe.ingredient.quantity')" v-model="newIngredient.quantity" />
+                    <div class="recipe-edit-list-add seventy">
+                        <div class="recipe-edit-list-ingredient-inputs">
+                            <TextInput id="edit-recipe-newIngredientQuantity" class="newIngredientQuantity"
+                                :placeholder="$t('recipe.ingredient.quantity')" v-model="newIngredient.quantity" />
 
-                        <SelectInput id="edit-recipe-newIngredientUnit" :placeholder="$t('recipe.ingredient.unit')"
-                            :options="units" v-model="newIngredient.unit" />
+                            <SelectInput id="edit-recipe-newIngredientUnit" class="newIngredientUnit" :placeholder="$t('recipe.ingredient.unit')"
+                                :options="units" v-model="newIngredient.unit" />
 
-                        <TextInput id="edit-recipe-newIngredientName" :placeholder="$t('recipe.ingredient.name')"
-                            v-model="newIngredient.name" />
+                            <TextInput id="edit-recipe-newIngredientName" class="newIngredientName" :placeholder="$t('recipe.ingredient.name')"
+                                v-model="newIngredient.name" />
+                        </div>
                         <button class="btn btn-primary" @click="addIngredient">{{ $t('recipe.ingredient.add')
                             }}</button>
                     </div>
@@ -115,7 +116,7 @@
                 <div v-else>
                     <ol>
                         <li v-for="(direction, index) in editRecipe.directions" :key="index">
-                            <div class="recipe-edit-list-element">
+                            <div class="recipe-edit-list-element seventy">
                                 <span>{{ direction }}</span>
                                 <div class="recipe-list-element-icons">
                                     <img v-if="index > 0" src="../../../../assets/icon/up-arrow.png"
@@ -133,16 +134,15 @@
                         </li>
                     </ol>
                 </div>
-                <div class="recipe-edit-list-add">
-                    <TextInput id="edit-recipe-newDirection" :placeholder="$t('recipe.add_direction')"
+                <div class="recipe-edit-list-add seventy">
+                    <TextInput id="edit-recipe-newDirection" class="newDirection" :placeholder="$t('recipe.add_direction')"
                         v-model="newDirection" />
                     <button class="btn btn-primary" @click="addDirection">{{ $t('recipe.direction.add') }}</button>
                 </div>
             </div>
             <div class="recipe-notes-edit">
                 <h3>{{ $t('recipe.notes') }}</h3>
-                <textarea id="edit-recipe-notes" v-model="editRecipe.notes" rows="10" cols="100"
-                    :placeholder="$t('recipe.add_notes')"></textarea>
+                <TextAreaField id="edit-recipe-notes" rows="10" cols="100" :placeholder="$t('recipe.add_notes')" v-model="editRecipe.notes"/>
             </div>
             <div class="recipe-public-edit">
                 <CheckboxField id="recipe-public-checkbox-edit" :label="$t('recipe.make_public')"
@@ -163,6 +163,7 @@
 import TextInput from '../../../../components/core/input/TextInput.vue'
 import SelectInput from '../../../../components/core/input/SelectInput.vue'
 import CheckboxField from '../../../../components/core/input/CheckboxField.vue'
+import TextAreaField from '../../../../components/core/input/TextAreaField.vue'
 import { store } from '../../../../store'
 import { recipeService } from '@/service/.service-registry'
 
@@ -171,7 +172,8 @@ export default {
     components: {
         TextInput,
         SelectInput,
-        CheckboxField
+        CheckboxField,
+        TextAreaField
     },
     props: {
         recipeData: {
@@ -349,5 +351,40 @@ export default {
     .red {
         color: red;
         font-weight: bold;
+    }
+    .input {
+        margin-bottom: 1rem !important;
+    }
+
+    .newIngredientQuantity {
+        width: 25%;
+    }
+    .newIngredientUnit {
+        width: 20%;
+    }
+    .newIngredientName {
+        width: 55%;
+    }
+    .newDirection {
+        width: 80%;
+    }
+
+    .newIngredientQuantity,
+    .newIngredientUnit,
+    .newIngredientName,
+    .newDirection {
+        margin-right: 1rem !important
+    }
+
+    .recipe-edit-list-ingredient-inputs {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        max-width: 100% !important;
+    }
+
+    .seventy {
+        width: 70%;
     }
 </style>
