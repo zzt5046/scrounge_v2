@@ -33,21 +33,16 @@ function hasElements(value) {
 
 export function getValidations(componentName, args = {}) {
 
-  const passwordMinLength = minLength(6)
-
   const validations = {
     LoginPanel: {
       username: { required },
-      password: {
-        required,
-        minLength: passwordMinLength
-      }
+      password: { required }
     },
     RegisterPanel: {
       username: { required },
       password: {
         required,
-        minLength: passwordMinLength,
+        minLength: minLength(6),
       },
       email: { email },
       confirmPassword: {
