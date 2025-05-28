@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class Recipe (
     val accountId: String,
     val public: Boolean,
+    val author: String,
     val name: String,
     val description: String?,
     val ingredients: List<Ingredient> = listOf(),

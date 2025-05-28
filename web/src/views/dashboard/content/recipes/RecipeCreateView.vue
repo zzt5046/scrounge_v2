@@ -144,6 +144,7 @@ export default {
             recipe: {
                 accountId: store.activeAccountId,
                 public: false,
+                author: store.activeAccount.userName,
                 name: null,
                 description: null,
                 ingredients: [],

@@ -123,7 +123,7 @@ const messages = {
         add: '+ Add',
       },
       inspect: {
-        submitted: 'Submitted by:',
+        submitted_by: 'Submitted by:',
       },
       create: {
         header: 'Create Recipe',
