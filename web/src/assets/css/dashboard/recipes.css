@@ -72,6 +72,15 @@
     padding: 0 1rem 0 1rem;
 }
 
+.recipe-author {
+    margin-bottom: 1rem;
+}
+
+.recipe-author-link {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .recipe-list-content {
     margin-top: 0.5rem;
 }

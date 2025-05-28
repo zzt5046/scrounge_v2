@@ -16,6 +16,10 @@
 
         <div class="recipe-inspect-content">
             <h2>{{ recipe.name }}</h2>
+            <h6 class="recipe-author"> 
+                {{ $t('recipe.inspect.submitted_by') }} 
+                <span class="recipe-author-link" @click="$emit('inspect-author', recipe.author)">{{ recipe.author }}</span>
+            </h6>
             <p v-if="!recipe.author?.length === 0">{{ $t('recipe.inspect.submitted') }} {{ recipe.author }}</p>
             <p>{{ recipe.description }}</p>
 
@@ -357,6 +361,7 @@ export default {
                 accountId: this.recipe.accountId,
                 name: this.recipe.name,
                 public: this.recipe.public,
+                author: store.activeAccount.userName,
                 description: this.recipe.description,
                 ingredients: this.recipe.ingredients.map((ingredient) => {
                     return {
