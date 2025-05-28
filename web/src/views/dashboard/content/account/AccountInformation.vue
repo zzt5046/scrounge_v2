@@ -182,10 +182,6 @@ export default {
         async updateAccount() {
 
             const accountUpdateRequest = {
-                userName: this.account.userName,
-                emailAddress: this.emailAddress,
-                securityQuestionId: this.securityQuestion,
-                securityQuestionAnswer: this.securityAnswer,
                 settings: {
                     LANGUAGE: this.settings.language,
                     MEASUREMENT_SYSTEM: this.settings.measurement_system,

@@ -83,7 +83,9 @@ const messages = {
     recipe: {
       list: {
         header: 'My Recipes',
+        header_fav: 'Favorite Recipes',
         no_recipes: 'No recipes found. Add a recipe to see it listed here!',
+        no_recipes_fav: 'No recipes found. Favorite a recipe to see it listed here!',
         deleted: 'Deleted recipe: ',
       },
       information: 'Information',
@@ -104,8 +106,10 @@ const messages = {
       actions: {
         add: '+ Add Recipe',
         edit: 'Edit Recipe',
+        show_favorites: 'Show Favorites',
         save: 'Save Recipe',
-        favorite: 'Favorite Recipe',
+        favorite: 'Favorite',
+        unfavorite: 'Remove Favorite',
         delete: 'Delete Recipe',
         cancel: 'Cancel'
       },

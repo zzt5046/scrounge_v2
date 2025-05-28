@@ -3,15 +3,14 @@
         <div class="recipe-update-success" v-if="successMessage">
             <p @click="successMessage = null">{{ successMessage }}</p>
         </div>
-        <div v-if="userOwnsRecipe" class="recipe-inspect-actions">
-            <button class="btn btn-primary" @click="showEditView">{{ $t('recipe.actions.edit') }}</button>
-            <button class="btn btn-primary" @click="$emit('delete-recipe', recipeData.id)">{{
-                $t('recipe.actions.delete') }}</button>
-            <button class="btn btn-primary" @click="$emit('cancel-inspect')">{{ $t('actions.back') }}</button>
-        </div>
-        <div v-else class="recipe-inspect-actions">
-            <button class="btn btn-primary" @click="$emit('favorite-recipe', recipeData.id)">{{
-                $t('recipe.actions.save') }}</button>
+        <div class="recipe-inspect-actions">
+            <button v-show="userOwnsRecipe" class="btn btn-primary" @click="showEditView">{{ $t('recipe.actions.edit') }}</button>
+            <button v-show="userOwnsRecipe" class="btn btn-primary" @click="$emit('delete-recipe', recipeData.id)">
+                {{ $t('recipe.actions.delete') }}
+            </button>
+            <button :class="{'btn btn-primary': true, 'favorites-button-show': isFavoriteRecipe, 'favorites-button-hide': !isFavoriteRecipe, }" @click="favoriteRecipe">
+                {{ favoriteButtonLabel }}
+            </button>
             <button class="btn btn-primary" @click="$emit('cancel-inspect')">{{ $t('actions.back') }}</button>
         </div>
 
@@ -165,7 +164,7 @@ import SelectInput from '../../../../components/core/input/SelectInput.vue'
 import CheckboxField from '../../../../components/core/input/CheckboxField.vue'
 import TextAreaField from '../../../../components/core/input/TextAreaField.vue'
 import { store } from '../../../../store'
-import { recipeService } from '@/service/.service-registry'
+import { recipeService, accountService } from '@/service/.service-registry'
 import useVuelidate from '@vuelidate/core'
 import { validationMessages } from '../../../../validations'
 
@@ -181,11 +180,23 @@ export default {
         recipeData: {
             type: Object,
             required: true,
+        },
+        favorite: {
+            type: Boolean,
+            default: false
         }
     },
 
-    mounted() {
+    created() {
         this.syncRecipe()
+    },
+
+    mounted(){
+        if(this.isFavoriteRecipe){
+            this.favoriteButtonLabel = this.$t('recipe.actions.unfavorite')
+        }else{
+            this.favoriteButtonLabel = this.$t('recipe.actions.favorite')
+        }
     },
 
     data() {
@@ -212,6 +223,8 @@ export default {
             newDirection: null,
             successMessage: null,
             errorMessage: null,
+
+            favoriteButtonLabel: null,
         }
     },  
     
@@ -242,6 +255,9 @@ export default {
         },
         newDirectionValid() {
             return this.newDirection
+        },
+        isFavoriteRecipe() {
+            return store.activeAccount.favoriteRecipes.includes(this.recipeData.id)
         },
     },
 
@@ -372,6 +388,34 @@ export default {
 
         uppercase(value) {
             return value?.toString().toUpperCase()
+        },
+
+        async favoriteRecipe(){
+            var favorites = store.activeAccount.favoriteRecipes
+            var addingFavorite = false
+
+            if(favorites.includes(this.recipeData.id)){
+                //if the recipe is already in the favorites, the user is trying to remove it
+                favorites = favorites.filter((it) => it !== this.recipeData.id)
+                addingFavorite = false
+            }else{
+                favorites.push(this.recipeData.id)
+                addingFavorite = true
+            }
+
+            try{
+                await accountService.updateAccount(store.activeAccountId, { favoriteRecipes: favorites })
+                this.$emit('favorite-recipe')
+
+                if(addingFavorite){
+                    this.favoriteButtonLabel = this.$t('recipe.actions.unfavorite')
+                }else{
+                    this.favoriteButtonLabel = this.$t('recipe.actions.favorite')
+                }
+            }catch (error) {
+                console.error('Error adding favorite recipe:', error);
+                return;
+            }
         },
     },
 }

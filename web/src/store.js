@@ -8,6 +8,12 @@ export const store = reactive({
     this.activeAccountId = accountId
   },
 
+  // Account of the user that is currently logged in
+  activeAccount: null,
+  setActiveAccount(account) {
+    this.activeAccount = account
+  },
+
   // Account username of the user that is currently logged in
   activeAccountUsername: null,
   setActiveAccountUsername(username) {

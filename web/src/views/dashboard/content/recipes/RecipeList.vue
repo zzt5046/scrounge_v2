@@ -1,11 +1,20 @@
 <template>
     <div class="recipe-list" v-if="recipes">
         <div class="recipe-list-header">
-            <h2>{{ $t('recipe.list.header') }}</h2>
+            <h2 v-if="showFavorites">{{ $t('recipe.list.header_fav') }}</h2>
+            <h2 v-else>{{ $t('recipe.list.header') }}</h2>
             <p class="recipe-list-info" v-if="info" @click="this.$emit('clear-info')">{{ info }}</p>
-            <button id="add-recipe-button" class="btn btn-primary" @click="$emit('add-recipe')">
-                {{ $t('recipe.actions.add') }}
-            </button>
+            <div id="recipe-list-header-actions">
+                <button id="show-favorite-recipes-button" 
+                    :class="{ 'btn btn-primary': true, 'favorites-button-show': showFavorites, 'favorites-button-hide': !showFavorites }" 
+                    @click="toggleFavorites">
+                    
+                    {{ $t('recipe.actions.show_favorites') }}
+                </button>
+                <button id="add-recipe-button" class="btn btn-primary" :disabled="showFavorites" @click="$emit('add-recipe')">
+                    {{ $t('recipe.actions.add') }}
+                </button>
+            </div>
         </div>
         <div class="recipe-list-content" v-if="recipes.length > 0">
             <RecipeCard
@@ -17,7 +26,8 @@
             />
         </div>
         <div class="recipe-list-content" v-else>
-            <p>{{ $t('recipe.list.no_recipes') }}</p>
+            <p v-if="showFavorites">{{ $t('recipe.list.no_recipes_fav') }}</p>
+            <p v-else>{{ $t('recipe.list.no_recipes') }}</p>
         </div>
     </div>
 </template>
@@ -45,6 +55,7 @@ export default {
     data(){
         return {
             accountRecipes: [],
+            showFavorites: false,
             info: null,
         }
     },
@@ -62,6 +73,21 @@ export default {
         selectRecipe(recipeData){
             this.$emit('select-recipe', toRaw(recipeData))
         },
+
+        toggleFavorites(){
+            this.showFavorites = !this.showFavorites
+            if(this.showFavorites){
+                this.$emit('show-favorites')
+            }else{
+                this.$emit('hide-favorites')
+            }
+        }
     },
 }
 </script>
+<style scoped>
+    .favorites-button-hide,
+    .favorites-button-show {
+        margin-right: 1rem;
+    }
+</style>

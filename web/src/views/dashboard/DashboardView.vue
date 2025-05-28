@@ -12,7 +12,7 @@
 
     <main class="dashboard-main">
       <HomePanel v-show="showHomeSection"/>
-      <RecipesPanel :account="account" v-show="showRecipeSection"/>
+      <RecipesPanel :account="account" v-show="showRecipeSection" @refresh-account="loadAccount"/>
       <AccountPanel :account="account" v-show="showSettingsSection"/>
     </main>
     
@@ -78,10 +78,8 @@ import AccountPanel from './content/account/AccountPanel.vue';
       async loadAccount() {
         //TODO finish implementing session management to resolve account
         const account = await accountService.getAccount(store.activeAccountId)
-        .then((response) => {
-          return response
-        })
         this.account = account
+        store.setActiveAccount(account)
       },
 
       changeNavbarSection(sectionId) {
