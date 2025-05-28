@@ -3,6 +3,7 @@ package zjt.projects.db.modules
 import com.mongodb.client.MongoDatabase
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -142,6 +143,8 @@ fun Application.accountsModule(db: MongoDatabase){
             }catch (e: NullPointerException){
                 call.respond(HttpStatusCode.BadRequest)
             }catch (e: IllegalArgumentException){
+                call.respond(HttpStatusCode.BadRequest)
+            }catch (e: BadRequestException){
                 call.respond(HttpStatusCode.BadRequest)
             }catch (e: IllegalStateException){
                 call.respond(HttpStatusCode.NotFound)

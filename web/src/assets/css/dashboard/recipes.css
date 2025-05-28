@@ -33,6 +33,12 @@
     padding: 1rem;
 }
 
+.recipe-list-header-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .recipe-inspect-actions,
 .recipe-edit-actions,
 .recipe-create-actions {

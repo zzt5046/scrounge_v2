@@ -4,7 +4,7 @@
             <h2>Search Recipes</h2>
         </div>
         <div class="recipe-search-content">
-            <TextInput id="recipe-search-input" v-model="searchQuery" placeholder="Search recipes..." @input="filterRecipeSearch"/>
+            <TextInput id="recipe-search-input" v-model="searchQuery" placeholder="Search recipes..." type="search" @input="filterRecipeSearch"/>
             <RecipeCard
                 class="recipe-card"
                 v-for="recipeData in searchRecipes"

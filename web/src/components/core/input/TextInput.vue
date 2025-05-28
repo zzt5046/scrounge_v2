@@ -5,7 +5,7 @@
       <h5 v-if="label && boldLabel" class="form-label">{{ label }}</h5>
       <span v-if="required" class="required-mark">*</span>
     </div>
-    <input :id="id" :class="{ 'form-control': true, 'input-error': error }" type="text" :placeholder="placeholder"
+    <input :id="id" :class="{ 'form-control': true, 'input-error': error }" :type="type" :placeholder="placeholder"
       :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" @keyup.enter="$emit('enter')"
       v-bind="$attrs" />
       <div class="error-height">
@@ -32,6 +32,13 @@ export default {
     required: {
       type: Boolean,
       default: false
+    },
+    type: {
+      type: String,
+      default: 'text',
+      validator: (value) => {
+        return ['search', 'text'].includes(value);
+      }
     },
     modelValue: {
       type: String,

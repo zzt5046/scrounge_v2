@@ -4,11 +4,13 @@
         <!-- Default view -->
         <RecipeList 
             v-show="showDefault" 
-            :recipes="accountRecipes"
+            :recipes="featuredRecipes"
             :infoMessage="recipeListInfo"
             @clear-info="recipeListInfo = null"
             @select-recipe="selectRecipe" 
             @add-recipe="showRecipeCreateView"
+            @show-favorites="showFavoriteRecipes"
+            @hide-favorites="showAccountRecipes"
         />
         <RecipeSearch 
             v-show="showDefault" 
@@ -25,12 +27,12 @@
         <RecipeView 
             v-show="inspectView"
             v-if="selectedRecipe"
-            :recipeData="selectedRecipe"  
+            :recipeData="selectedRecipe"
             @edit-recipe="editSelectedRecipe" 
             @delete-recipe="deleteRecipe"
             @save-recipe="loadRecipes"
             @update-recipe="loadRecipes"
-            @favorite-recipe="favoriteRecipe"
+            @favorite-recipe="$emit('refresh-account')"
             @cancel-inspect="showDefaultView" 
         />
     </div>
@@ -65,7 +67,10 @@ import { recipeService } from '@/service/.service-registry'
 
     data(){
         return {
+            featuredRecipes: [],
             accountRecipes: [],
+            favoriteRecipes: [],
+            displayFavoriteRecipes: false,
             showDefault: true,
             createRecipe: false,
             inspectRecipe: false,
@@ -75,8 +80,9 @@ import { recipeService } from '@/service/.service-registry'
         }
     },
 
-    created(){
-        this.loadRecipes()
+    async created(){
+        // make sure we're showing account recipes after creating
+        await this.showAccountRecipes()
     },
 
     mounted(){
@@ -84,9 +90,11 @@ import { recipeService } from '@/service/.service-registry'
             () => dashboardState.activeSection,
             (newVal, oldVal) => {
                 this.showDefaultView()
-            }
+            },
         )
     },
+
+    
 
     computed: {
         defaultView(){
@@ -113,7 +121,7 @@ import { recipeService } from '@/service/.service-registry'
             this.createRecipe = false
             this.inspectRecipe = false
             this.editRecipe = false
-            this.loadRecipes()
+            this.showAccountRecipes()
         },
         showRecipeCreateView(){
             this.showDefault = false
@@ -142,11 +150,41 @@ import { recipeService } from '@/service/.service-registry'
                     id: recipeData.recipeId,
                     recipe: recipeData.recipe,
                 })
+                // make sure to update the selected recipe so changes can propogate down to recipe view
+                if(recipeData.recipeId == this.selectedRecipe?.id){
+                    this.selectedRecipe = recipeData
+                }
+            })
+        },
+
+        async loadFavoriteRecipes(){
+            const favoriteRecipes = await recipeService.getFavoriteRecipes(store.activeAccountId)
+            this.favoriteRecipes = []
+            favoriteRecipes.recipes?.forEach(recipeData => {
+                this.favoriteRecipes.push({
+                    id: recipeData.recipeId,
+                    recipe: recipeData.recipe,
+                })
                 //make sure to update the selected recipe so changes can propogate down to recipe view
                 if(recipeData.recipeId == this.selectedRecipe?.id){
                     this.selectedRecipe = recipeData
                 }
             })
+        },
+
+        async showFavoriteRecipes(){
+            await this.loadFavoriteRecipes()
+            this.featuredRecipes = this.favoriteRecipes
+        },
+
+        async showAccountRecipes(){
+            await this.loadRecipes()
+            this.featuredRecipes = this.accountRecipes
+        },
+
+        async reloadAllRecipes(){
+            await this.loadRecipes()
+            await this.loadFavoriteRecipes()
         },
 
         selectRecipe(recipeData){

@@ -7,6 +7,9 @@ export class AccountService {
     const loginResponse = await api.post('accounts/login', request)
     if (loginResponse && loginResponse.status === 'SUCCESS') {
       store.setActiveAccountId(loginResponse.accountId)
+      const account = await this.getAccount(loginResponse.accountId)
+      store.setActiveAccount(account)
+
       store.setActiveAccountSettings(loginResponse.settings)
       store.setActiveAccountUsername(loginResponse.userName)
 
@@ -14,6 +17,11 @@ export class AccountService {
       store.setMeasurementUnits(units)
     }
     return loginResponse
+  }
+
+  async refreshActiveAccount(){
+    const account = await this.getAccount(store.activeAccountId)
+    store.setActiveAccount(account)
   }
 
   async logout() {

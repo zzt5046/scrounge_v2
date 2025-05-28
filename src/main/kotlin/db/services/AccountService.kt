@@ -70,6 +70,7 @@ class AccountService(database: MongoDatabase) {
             securityQuestionId = request.securityQuestionId,
             securityQuestionAnswer = (salt + request.securityQuestionAnswer).sha256(),
             settings = defaultAccountSettings(),
+            favoriteRecipes = mutableSetOf()
         )
         val doc = account.toDocument()
         collection.insertOne(doc)
@@ -118,14 +119,6 @@ class AccountService(database: MongoDatabase) {
     suspend fun update(id: String, account: Account): Document? = withContext(Dispatchers.IO) {
         collection.findOneAndReplace(Filters.eq("_id", ObjectId(id)), account.toDocument())
     }
-
-    suspend fun updateAccountSettings(id: String, accountSettings: AccountSettings): Document? = withContext(Dispatchers.IO) {
-        val account = read(id)?.copy(
-            settings = accountSettings.value()
-        )
-        account?.toDocument()?.let { collection.findOneAndReplace(Filters.eq("_id", ObjectId(id)), it) }
-    }
-
 
     // DELETE
     // ------------------------------------------

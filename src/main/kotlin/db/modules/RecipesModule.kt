@@ -8,11 +8,13 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import zjt.projects.db.operations.AccountService
 import zjt.projects.models.account.settings.MeasurementSystem
 import zjt.projects.models.recipe.getMeasurementUnits
 
 fun Application.recipesModule(db: MongoDatabase){
     val recipeService = RecipeService(db)
+    val accountService = AccountService(db)
 
     val targetRecipePath = "/recipes/{id}"
     val noIdFound = "No ID found"
@@ -44,6 +46,13 @@ fun Application.recipesModule(db: MongoDatabase){
         get("/recipes/all/{accountId}") {
             val accountId = call.parameters["accountId"] ?: throw IllegalArgumentException(noIdFound)
             call.respond(recipeService.getRecipesByAccountId(accountId))
+        }
+
+        // Get favorite recipes by accountId
+        get("/recipes/favorite/{accountId}") {
+            val accountId = call.parameters["accountId"] ?: throw IllegalArgumentException(noIdFound)
+            val account = checkNotNull(accountService.findAccount(accountId))
+            call.respond(recipeService.getRecipesByIds(account.favoriteRecipes))
         }
 
         //get measurement units

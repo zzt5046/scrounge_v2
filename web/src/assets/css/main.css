@@ -34,6 +34,7 @@
   --vt-c-flame: #D36135;
   --vt-c-aparagus: #7FB069;
   --vt-c-vanilla: #ECE4B7;
+  --vt-c-yellow-gold: #E8C900;
   --vt-c-fawn: #E6AA68;
   --vt-c-zblack: #02020B;
 }
@@ -109,10 +110,23 @@
   margin-top: 1rem;
 }
 
+/* buttons */
 .btn-primary {
-  background: var(--vt-c-flame) !important;
-  border-color: var(--vt-c-zblack);
+  background: var(--vt-c-fawn) !important;
+  color: black !important;
+  border-color: transparent !important;
+  font-weight: bold;
 }
+
+.favorites-button-hide {
+  background: var(--vt-c-vanilla) !important;
+}
+
+.favorites-button-show {
+  background: var(--vt-c-yellow-gold) !important;
+}
+
+/* end buttons */
 
 .blur {
   filter: blur(10px);

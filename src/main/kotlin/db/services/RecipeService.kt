@@ -38,6 +38,9 @@ class RecipeService(database: MongoDatabase) {
     fun getRecipeById(id: String): Recipe? =
         collection.find(Filters.eq("_id", ObjectId(id))).first()?.toRecipe()
 
+    fun getRecipesByIds(ids: Set<String>): RecipesResponse =
+        collection.find(Filters.`in`("_id", ids.map { ObjectId(it) })).toRecipesResponse()
+
     fun getRecipesByAccountId(id: String): RecipesResponse =
         collection.find(Filters.eq("accountId", id)).toRecipesResponse()
 
@@ -65,5 +68,6 @@ class RecipeService(database: MongoDatabase) {
             }
             return RecipesResponse(recipeResponses)
         }
+
     }
 }

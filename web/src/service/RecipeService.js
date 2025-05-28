@@ -17,6 +17,10 @@ export class RecipeService {
         return await api.get(`recipes/all/${accountId}`)
     }
 
+    async getFavoriteRecipes(accountId) {
+        return await api.get(`recipes/favorite/${accountId}`)
+    }
+
     async createRecipe(recipe) {
         return await api.post('recipes', recipe)
     }
