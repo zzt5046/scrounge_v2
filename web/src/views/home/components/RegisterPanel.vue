@@ -75,7 +75,10 @@ export default {
   validations() {
     return getValidations(
       this.$options.name,
-      {password: this.password}
+      {
+        userName: this.username,
+        password: this.password
+      }
     )
   },
 

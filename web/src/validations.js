@@ -1,4 +1,5 @@
-import { required, email, sameAs, minLength } from '@vuelidate/validators'
+import { required, email, sameAs, minLength, helpers } from '@vuelidate/validators'
+import { accountService } from '@/service/.service-registry'
 
 export function hasError(v$, fieldName) {
   return v$.$errors.some(error => (error.$propertyPath == fieldName))
@@ -18,9 +19,17 @@ export const validationMessages = {
   'password-minLength': 'Password must be at least 6 characters long.',
   'confirmPassword-sameAs': 'Must match the password.',
   nonNumber: 'Must be a number.',
+  'username-isUnique': 'User already exists.'
 }
 
 //custom validators
+
+const usernameNotTaken = helpers.withAsync(async (value) => {
+  if (!value) return false
+  const exists = await accountService.exists(value)
+  return !exists  // return true only if user does NOT exist
+})
+
 function hasElements(value) {
   if (Array.isArray(value)) {
     return value.length > 0
@@ -40,7 +49,10 @@ export function getValidations(componentName, args = {}) {
       password: { required }
     },
     RegisterPanel: {
-      username: { required },
+      username: {
+        required,
+        isUnique: usernameNotTaken
+      },
       password: {
         required,
         minLength: minLength(6),
