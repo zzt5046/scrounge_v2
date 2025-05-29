@@ -85,7 +85,7 @@ fun Application.accountsModule(db: MongoDatabase){
         }
 
         // Get account by userName
-        get("/accounts/{username}") {
+        get("/accounts/user/{userName}") {
             try {
                 val userName = call.parameters["userName"] ?: throw IllegalArgumentException("No userName found")
                 accountService.findAccountByUsername(userName)?.let { account ->

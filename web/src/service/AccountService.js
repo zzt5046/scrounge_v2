@@ -19,7 +19,7 @@ export class AccountService {
     return loginResponse
   }
 
-  async refreshActiveAccount(){
+  async refreshActiveAccount() {
     const account = await this.getAccount(store.activeAccountId)
     store.setActiveAccount(account)
   }
@@ -30,6 +30,15 @@ export class AccountService {
 
   async register(request) {
     return await api.post('accounts', request)
+  }
+
+  async exists(userName) {
+    try {
+      await api.get(`accounts/user/${userName}`)
+      return true
+    } catch {
+      return false
+    }
   }
 
   async getAccount(id) {
