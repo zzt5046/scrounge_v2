@@ -28,7 +28,7 @@ import { dashboardState } from './dashboardState.js'
 import { DASHBOARD_HOME, DASHBOARD_RECIPES, DASHBOARD_SETTINGS, DASHBOARD_LOGOUT } from './dashboardState.js'
 import DashboardHeader from './components/DashboardHeader.vue';
 import DashboardNavbar from './components/DashboardNavbar.vue';
-import HomePanel from './content/HomePanel.vue';
+import HomePanel from './content/home/HomePanel.vue';
 import RecipesPanel from './content/recipes/RecipesPanel.vue';
 import AccountPanel from './content/account/AccountPanel.vue';
   export default {

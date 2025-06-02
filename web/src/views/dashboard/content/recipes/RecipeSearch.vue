@@ -19,7 +19,7 @@
 <script>
 import { recipeService } from '@/service/.service-registry'
 import { store } from '../../../../store'
-import RecipeCard from './RecipeCard.vue'
+import RecipeCard from '../cards/RecipeCard.vue'
 import TextInput from '@/components/core/input/TextInput.vue'
 
 export default {
