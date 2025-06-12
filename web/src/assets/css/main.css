@@ -1,8 +1,9 @@
 @import "fonts.css";
-@import "home/home.css";
+@import "splash/home.css";
 @import "dashboard/dashboard.css";
 @import "dashboard/recipes.css";
 @import "dashboard/account.css";
+@import "dashboard/home.css";
 
 /*This file should contain themes that propagate the entire domainofapplication*/
 /*Ex: Action button themes, input sizes, etc.*/
@@ -114,7 +115,7 @@
 .btn-primary {
   background: var(--vt-c-fawn) !important;
   color: black !important;
-  border-color: transparent !important;
+  border-color: black !important;
   font-weight: bold;
 }
 

@@ -11,12 +11,14 @@ import io.ktor.server.sessions.*
 import io.ktor.util.reflect.*
 import zjt.projects.config.UserSession
 import zjt.projects.db.operations.AccountService
+import zjt.projects.db.services.InventoryService
 import zjt.projects.models.account.*
 import zjt.projects.models.account.settings.getAllSettings
 import zjt.projects.util.crypto.sha256
 
 fun Application.accountsModule(db: MongoDatabase){
     val accountService = AccountService(db)
+    val inventoryService = InventoryService(db)
 
     val targetAccountPath = "/accounts/{id}"
     val noIdFound = "No ID found"
@@ -59,6 +61,7 @@ fun Application.accountsModule(db: MongoDatabase){
             try{
                 val request = call.receive<AccountCreateRequest>()
                 val id = accountService.create(request)
+                inventoryService.create(id)
                 call.respond(HttpStatusCode.Created, id)
             }catch (e: NullPointerException){
                 call.respond(HttpStatusCode.BadRequest)

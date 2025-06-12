@@ -11,9 +11,9 @@
     </aside>
 
     <main class="dashboard-main">
-      <HomePanel v-show="showHomeSection"/>
-      <RecipesPanel :account="account" v-show="showRecipeSection" @refresh-account="loadAccount"/>
-      <AccountPanel :account="account" v-show="showSettingsSection"/>
+      <HomePanel v-if="showHomeSection"/>
+      <RecipesPanel :account="account" v-else-if="showRecipeSection" @refresh-account="loadAccount"/>
+      <AccountPanel :account="account" v-else-if="showSettingsSection"/>
     </main>
     
     <footer class="dashboard-footer">

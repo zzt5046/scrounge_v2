@@ -80,6 +80,17 @@ const messages = {
       },
       footer: 'Footer',
     },
+    'home-content': {
+      'welcome-label': 'Welcome Home!',
+      welcome: 'This is your personal dashboard where you can manage your inventory, view stats, and access other features.',
+      'inventory-items-label': 'Inventory Items',
+      'recipes-stored-label': "Recipes Created",
+      'recipes-favorited-label': "Recipes Favorited",
+      inventory: {
+        header: 'My Inventory',
+        'no-items': 'No items found in inventory.'
+      },
+    },
     recipe: {
       list: {
         header: 'My Recipes',
