@@ -7,7 +7,7 @@ data class AccountResponse (
     val emailAddress: String?,
     val securityQuestionId: String?,
     val settings: Map<AccountSetting, String>?,
-    val favoriteRecipes: Set<String> = mutableSetOf()
+    val favoriteRecipes: Set<String> = mutableSetOf(),
 ){
     companion object {
         val Unauthorized = AccountResponse(

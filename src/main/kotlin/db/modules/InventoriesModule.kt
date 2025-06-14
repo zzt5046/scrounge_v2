@@ -1,17 +1,16 @@
 package zjt.projects.db.modules
 
-import com.mongodb.client.MongoDatabase
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import zjt.projects.db.services.InventoryService
+import zjt.projects.AppContext
 import zjt.projects.models.inventory.InventoryUpdateRequest
 
-fun Application.inventoriesModule(db: MongoDatabase){
-    val inventoryService = InventoryService(db)
+fun Application.inventoriesModule(){
+    val inventoryService = AppContext.inventoryService
 
     val targetInventoryPath = "/inventories/{accountId}"
     val noIdFound = "No Account ID found"
@@ -40,7 +39,7 @@ fun Application.inventoriesModule(db: MongoDatabase){
                 )
 
                 inventoryService.updateByAccountId(accountId, updatedInventory)?.let {
-                    call.respond(HttpStatusCode.OK)
+                    call.respond(HttpStatusCode.OK, updatedInventory.ingredients)
                 } ?: call.respond(HttpStatusCode.NotFound)
             }catch (e: Exception){
                 when(e){

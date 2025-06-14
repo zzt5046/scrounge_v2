@@ -53,7 +53,7 @@ const messages = {
       show: 'Show',
       hide: 'Hide',
     },
-    home: {
+    splash: {
       login: {
         header: 'LOGIN',
         misc: {
@@ -80,7 +80,7 @@ const messages = {
       },
       footer: 'Footer',
     },
-    'home-content': {
+    home: {
       'welcome-label': 'Welcome Home!',
       welcome: 'This is your personal dashboard where you can manage your inventory, view stats, and access other features.',
       'inventory-items-label': 'Inventory Items',
@@ -88,7 +88,11 @@ const messages = {
       'recipes-favorited-label': "Recipes Favorited",
       inventory: {
         header: 'My Inventory',
-        'no-items': 'No items found in inventory.'
+        'no-items': 'No items found.',
+        actions: {
+          add: 'Add Item',
+          refresh: 'Refresh',
+        }
       },
     },
     recipe: {

@@ -5,8 +5,8 @@
             <img src="../../../../assets/icon/x-icon.png" v-if="closable"
                 class="remove-item-icon" :title="$t('actions.remove')" @click="closed = true" />
         </div>
-        <div class="home-card-content">
-            <h1 v-if="type === 'stat'" class="stat" :id="statId">{{ statNum }}</h1>
+        <div class="home-card-content" v-if="!loading">
+            <h1 v-if="type === 'stat'" class="stat" :id="statId">{{ displayStatValue }}</h1>
             <span v-else> {{ body }} </span>
         </div>
     </div>
@@ -37,6 +37,11 @@ export default {
             required: false,
             default: 0,
         },
+        loading: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
         closable: {
             type: Boolean,
             required: false,
@@ -47,6 +52,8 @@ export default {
     data() {
         return {
             closed: false,
+            targetStatValue: this.statNum,
+            displayStatValue: 0,
         };
     },
 
@@ -58,24 +65,31 @@ export default {
     },
 
     mounted() {
-        //animate a count on the stat number
-        if (this.type === 'stat' && this.statNum > 0) {
-            const statElement = document.getElementById(this.statId);
-            if (statElement) {
-                statElement.animate(
-                    [
-                        { transform: 'scale(1)' },
-                        { transform: 'scale(1.2)' },
-                        { transform: 'scale(1)' }
-                    ],
-                    {
-                        duration: 500,
-                        easing: 'ease-in-out',
-                    }
-                );
-            }
-        }
+        this.animateCountUp();
     },
+
+    methods: {
+        animateCountUp() {
+            const startTime = performance.now();
+            const target = this.statNum;
+            const duration = 1000; // Default duration in milliseconds
+
+            // Scale duration based on number size (log10 is a good approximation)
+            const scaledDuration = duration * Math.log10(target + 10);
+
+            const update = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / scaledDuration, 1);
+                this.displayStatValue = Math.floor(progress * target);
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            };
+
+            requestAnimationFrame(update);
+        }
+    }
 };
 </script>
 <style scoped>

@@ -13,7 +13,7 @@ export class RecipeService {
         return await api.get(`recipes/${id}`)
     }
 
-    async getAccountRecipes(accountId) {
+    async getRecipes(accountId) {
         return await api.get(`recipes/all/${accountId}`)
     }
 

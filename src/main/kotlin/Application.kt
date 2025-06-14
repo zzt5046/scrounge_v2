@@ -7,7 +7,6 @@ import zjt.projects.db.modules.accountsModule
 import zjt.projects.db.modules.inventoriesModule
 import zjt.projects.db.modules.recipesModule
 import zjt.projects.db.modules.securityQuestionsModule
-import zjt.projects.db.services.ScroungeEngineService
 import zjt.projects.engine.modules.smartRecipeModule
 
 fun main(args: Array<String>) {
@@ -29,14 +28,12 @@ fun Application.module() {
 fun Application.configureDatabases() {
     connectToMongoDB().also {
         securityQuestionsModule(it)
-        accountsModule(it)
-        recipesModule(it)
-        inventoriesModule(it)
+        accountsModule()
+        recipesModule()
+        inventoriesModule()
     }
 }
 
 fun Application.configureScroungeEngine() {
-    ScroungeEngineService().also {
-        smartRecipeModule(it)
-    }
+    smartRecipeModule()
 }

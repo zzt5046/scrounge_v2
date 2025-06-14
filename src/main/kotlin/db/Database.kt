@@ -3,6 +3,7 @@ package zjt.projects.db
 import com.mongodb.client.*
 import io.ktor.server.application.*
 import io.ktor.server.config.*
+import zjt.projects.AppContext
 
 /**
  * Establishes connection with a MongoDB database.
@@ -39,5 +40,6 @@ fun Application.connectToMongoDB(): MongoDatabase {
         mongoClient.close()
     }
 
+    AppContext.initServices(database)
     return database
 }

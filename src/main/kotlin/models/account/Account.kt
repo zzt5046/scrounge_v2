@@ -1,6 +1,7 @@
 package zjt.projects.models.account
 
 import kotlinx.serialization.Serializable
+import zjt.projects.db.services.InventoryService
 import zjt.projects.models.account.settings.AccountSetting
 
 @Serializable
@@ -24,7 +25,7 @@ data class Account(
                     emailAddress = emailAddress,
                     securityQuestionId = securityQuestionId,
                     settings = settings,
-                    favoriteRecipes = favoriteRecipes
+                    favoriteRecipes = favoriteRecipes,
                 )
             }
         }

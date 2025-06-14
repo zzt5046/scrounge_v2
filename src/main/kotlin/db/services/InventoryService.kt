@@ -10,11 +10,15 @@ import org.bson.Document
 import org.bson.types.ObjectId
 import zjt.projects.models.inventory.Inventory
 
-class InventoryService(database: MongoDatabase){
+class InventoryService(){
 
-    private var collection: MongoCollection<Document>
+    private lateinit var collection: MongoCollection<Document>
 
-    init {
+    private lateinit var database: MongoDatabase
+
+    fun init(database: MongoDatabase){
+        this.database = database
+
         database.createCollection("inventories")
         collection = database.getCollection("inventories")
     }

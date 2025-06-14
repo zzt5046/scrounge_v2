@@ -143,7 +143,7 @@ import { recipeService } from '@/service/.service-registry'
         },
 
         async loadRecipes(){
-            const accountRecipes = await recipeService.getAccountRecipes(store.activeAccountId)
+            const accountRecipes = await recipeService.getRecipes(store.activeAccountId)
             this.accountRecipes = []
             accountRecipes.recipes?.forEach(recipeData => {
                 this.accountRecipes.push({
