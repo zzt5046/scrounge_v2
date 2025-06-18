@@ -7,10 +7,10 @@ export class InventoryService {
         return api.get(`inventories/${accountId}`)
     }
 
-    async updateInventory(accountId, ingredients) {
-        // const newInventory = api.put(`inventories/${accountId}`, { ingredients: ingredients })
-        // console.log(newInventory)
-        return await api.put(`inventories/${accountId}`, { ingredients: ingredients })
+    updateInventory(accountId, ingredients) {
+        api.put(`inventories/${accountId}`, { ingredients: ingredients })
+            .then((response) => { return response })
+        store.setActiveAccountInventory(ingredients)
     }
 
 }

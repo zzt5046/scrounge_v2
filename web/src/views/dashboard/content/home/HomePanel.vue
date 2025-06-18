@@ -32,7 +32,9 @@
             />
         </div>
 
-        <InventoryPanel />
+        <InventoryPanel v-if="!showGenerateRecipe" @generate="showGenerateRecipe = true"/>
+        <GenerateRecipePanel v-else @back="showGenerateRecipe = false"/>
+        
     </div>
 </template>
 
@@ -40,17 +42,21 @@
 import { store } from '../../../../store'
 import HomeCard from '../cards/HomeCard.vue';
 import InventoryPanel from './InventoryPanel.vue';
+import GenerateRecipePanel from './GenerateRecipePanel.vue';
+
 export default {
     name: 'HomePanel',
     components: {
         HomeCard,
         InventoryPanel,
+        GenerateRecipePanel,
     },
 
     data() {
         return {
             recipeCount: null,
             inventoryCount: null,
+            showGenerateRecipe: false,
         };
     },
 

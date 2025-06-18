@@ -52,6 +52,8 @@ const messages = {
       move_down: 'Move Down',
       show: 'Show',
       hide: 'Hide',
+      generate: 'Generate',
+      dismiss: 'Dismiss',
     },
     splash: {
       login: {
@@ -91,9 +93,24 @@ const messages = {
         'no-items': 'No items found.',
         actions: {
           add: 'Add Item',
+          select: 'Select',
           refresh: 'Refresh',
         }
       },
+      generate: {
+        header: 'Generate Recipe',
+        ingredients: 'Ingredients',
+        'select-ingredient': 'Select ingredients from your inventory or add custom.',
+        'ingredient-placeholder': 'Select ingredient',
+        preferences: 'Preferences',
+        'select-preference': 'Select a recipe preference or add custom.',
+        'preference-placeholder': 'Select preference',
+        count: 'Count',
+        'count-note': '*Generate between 1-5 recipes.',
+        summary: 'Summary',
+        'summary-note': 'Ingredients and preferences selected for recipe generation:',
+        results: 'Generated Recipes'
+      }
     },
     recipe: {
       list: {

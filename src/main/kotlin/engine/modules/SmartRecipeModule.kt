@@ -11,10 +11,11 @@ import zjt.projects.models.engine.recipe.GenerateRecipesRequest
 fun Application.smartRecipeModule(){
 
     val scroungeEngineService = ScroungeEngineService()
+    val baseEndpoint = "/smart-food"
 
     routing {
         // Generate recipe from LLM
-        post("/generate-recipe") {
+        post("${baseEndpoint}/generate-recipe") {
             val request = call.receive<GenerateRecipesRequest>()
             val response = scroungeEngineService.generateRecipe(request)
             call.respond(HttpStatusCode.Created, response)

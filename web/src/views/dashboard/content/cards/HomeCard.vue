@@ -68,6 +68,12 @@ export default {
         this.animateCountUp();
     },
 
+    watch: {
+        statNum(newVal) {
+            this.displayStatValue = newVal;
+        }
+    },
+
     methods: {
         animateCountUp() {
             const startTime = performance.now();

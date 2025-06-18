@@ -112,11 +112,20 @@
 }
 
 /* buttons */
-.btn-primary {
-  background: var(--vt-c-fawn) !important;
+.btn-primary,
+.btn-secondary {
   color: black !important;
   border-color: black !important;
   font-weight: bold;
+  height: 2.375rem;
+}
+
+.btn-primary {
+  background: var(--vt-c-fawn) !important;
+}
+
+.btn-secondary {
+  background: var(--vt-c-vanilla) !important;
 }
 
 .favorites-button-hide {
