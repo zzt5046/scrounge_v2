@@ -76,7 +76,7 @@ import AccountPanel from './content/account/AccountPanel.vue';
 
     methods: {
       async loadAccount() {
-        //TODO finish implementing session management to resolve account
+        //need to initially fetch the account from the service
         const account = await accountService.getAccount(store.activeAccountId)
         this.account = account
         store.setActiveAccount(account)
