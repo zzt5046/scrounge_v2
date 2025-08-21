@@ -1,8 +1,9 @@
 @import "fonts.css";
-@import "home/home.css";
+@import "splash/home.css";
 @import "dashboard/dashboard.css";
 @import "dashboard/recipes.css";
 @import "dashboard/account.css";
+@import "dashboard/home.css";
 
 /*This file should contain themes that propagate the entire domainofapplication*/
 /*Ex: Action button themes, input sizes, etc.*/
@@ -32,10 +33,13 @@
 
   /* zach color theme, TODO implement all the way*/
   --vt-c-flame: #D36135;
+  --vt-c-flame-click: #e4764b;
   --vt-c-aparagus: #7FB069;
   --vt-c-vanilla: #ECE4B7;
+  --vt-c-vanilla: #e6e2cd;
   --vt-c-yellow-gold: #E8C900;
   --vt-c-fawn: #E6AA68;
+  --vt-c-fawn-click: #e9be90;
   --vt-c-zblack: #02020B;
 }
 
@@ -110,12 +114,38 @@
   margin-top: 1rem;
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
 /* buttons */
+.btn-primary,
+.btn-secondary {
+  color: black !important;
+  border-color: black !important;
+  font-weight: bold;
+  height: 2.375rem;
+}
+
 .btn-primary {
   background: var(--vt-c-fawn) !important;
-  color: black !important;
-  border-color: transparent !important;
-  font-weight: bold;
+}
+
+.btn-primary:active {
+  background: var(--vt-c-fawn-click) !important;
+}
+
+.btn-secondary {
+  background: var(--vt-c-vanilla) !important;
+}
+.btn-secondary:active {
+  background: var(--vt-c-vanilla-click) !important;
 }
 
 .favorites-button-hide {

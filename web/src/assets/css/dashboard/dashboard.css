@@ -12,9 +12,6 @@
     transition: grid-template-columns 0.3s ease;
 }
 
-/* .dashboard-container.sb-expand {
-    grid-template-columns: 12rem 1fr;
-} */
 .dashboard-container.sb-shrink {
     grid-template-columns: 6rem 1fr;
 }
@@ -131,11 +128,7 @@
 /* END NAVBAR ---------------------------------------*/
 
 .dashboard-content {
-    display: flex;
-    flex-direction: column;
-    padding-left: 2rem;
-    padding-top: 2rem;
-    margin-bottom: 1rem;
+    padding: 2rem;
     height: 100%;
     width: 100%;
 }

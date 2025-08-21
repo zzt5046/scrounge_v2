@@ -3,7 +3,7 @@
   <div>
     <div class="register-panel panel form">
       <div class="register-header">
-        <h3> {{ $t('home.register.header') }} </h3>
+        <h3> {{ $t('splash.register.header') }} </h3>
         <RequiredNote />
       </div>
       <p>
@@ -109,7 +109,7 @@ export default {
         this.$emit('registerSuccess')
       }catch(e){
         console.error('Register error:', e)
-        this.errorText = this.$t('home.register.error')
+        this.errorText = this.$t('splash.register.error')
       }
     }
   }

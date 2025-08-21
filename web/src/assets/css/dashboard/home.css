@@ -1,0 +1,78 @@
+.home-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.home-card-section {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-bottom: 2rem;
+}
+
+.home-card {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    max-width: fit-content;
+    padding: 1rem;
+    margin-right: 2%;
+    max-width: 25%;
+    border-radius: 1rem;
+    box-shadow: 0em 0em 1.2em 0.36em lightgray !important;
+}
+
+.home-card-label {
+    height: 20%;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.home-card-content {
+    height: 80%;
+}
+
+.home-card-content>.stat {
+    color: #E8C900;
+}
+
+.home-card-content span {
+    font-size: large;
+}
+
+/* inventory */
+
+.inventory-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.inventory-search-input,
+.inventory-add-input {
+    max-width: 30rem;
+}
+
+.inventory-panel-header {
+    display: flex;
+    flex-direction: column;
+    height: 9rem;
+}
+
+.inventory-panel-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1rem;
+
+    height: 100%;
+    width: 100%;
+    padding: 1rem;
+    box-shadow: 0rem 0rem 0.1rem 0.04rem lightgray;
+}
+
+.inventory-panel-footer {
+    height: 15%
+}

@@ -52,8 +52,10 @@ const messages = {
       move_down: 'Move Down',
       show: 'Show',
       hide: 'Hide',
+      generate: 'Generate',
+      dismiss: 'Dismiss',
     },
-    home: {
+    splash: {
       login: {
         header: 'LOGIN',
         misc: {
@@ -79,6 +81,24 @@ const messages = {
         logout: 'Logout'
       },
       footer: 'Footer',
+    },
+    home: {
+      'welcome-label': 'Welcome Home!',
+      welcome: 'This is your personal dashboard where you can manage your inventory, view stats, and access other features.',
+      'inventory-items-label': 'Inventory Items',
+      'recipes-stored-label': "Recipes Created",
+      'recipes-favorited-label': "Recipes Favorited",
+      inventory: {
+        header: 'My Inventory',
+        search: 'Search inventory...',
+        add: 'Enter item to add...',
+        'no-items': 'No items found.',
+        actions: {
+          add: 'Add Item',
+          select: 'Select',
+          refresh: 'Refresh',
+        }
+      },
     },
     recipe: {
       list: {
@@ -106,6 +126,7 @@ const messages = {
       actions: {
         add: '+ Add Recipe',
         edit: 'Edit Recipe',
+        generate: 'Generate Recipe',
         show_favorites: 'Show Favorites',
         save: 'Save Recipe',
         favorite: 'Favorite',
@@ -134,6 +155,22 @@ const messages = {
         success: 'Recipe updated successfully.',
         error: 'An error has occurred. Please try again later.'
       },
+      generate: {
+        header: 'Generate Recipe',
+        ingredients: 'Ingredients',
+        'select-ingredient': 'Add ingredients from your inventory or add custom.',
+        'ingredient-placeholder': 'Select ingredient',
+        preferences: 'Preferences',
+        'select-preference': 'Add a recipe preference or add custom.',
+        'preference-placeholder': 'Select preference',
+        count: 'Count',
+        'count-note': '*Generate between 1-5 recipes.',
+        summary: 'Summary',
+        'summary-note': 'Ingredients and preferences selected for recipe generation:',
+        results: 'Generated Recipes',
+        'results-message': 'Generated results will appear here.',
+        'no-results': 'No recipes generated. Please try different ingredients or preferences.',
+      }
     },
     account: {
       information: {

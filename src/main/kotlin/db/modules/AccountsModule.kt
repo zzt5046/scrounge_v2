@@ -1,6 +1,5 @@
 package zjt.projects.db.modules
 
-import com.mongodb.client.MongoDatabase
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
@@ -9,19 +8,21 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.util.reflect.*
+import zjt.projects.AppContext
 import zjt.projects.config.UserSession
-import zjt.projects.db.operations.AccountService
 import zjt.projects.models.account.*
 import zjt.projects.models.account.settings.getAllSettings
 import zjt.projects.util.crypto.sha256
 
-fun Application.accountsModule(db: MongoDatabase){
-    val accountService = AccountService(db)
+fun Application.accountsModule(){
+    val accountService = AppContext.accountService
+    val inventoryService = AppContext.inventoryService
 
     val targetAccountPath = "/accounts/{id}"
     val noIdFound = "No ID found"
 
     routing {
+
         //Auth account (login)
         post("/accounts/login") {
             try {
@@ -50,6 +51,7 @@ fun Application.accountsModule(db: MongoDatabase){
             }catch (e: NullPointerException){
                 call.respond(HttpStatusCode.BadRequest)
             }catch (e: Exception){
+                println(e)
                 call.respond(HttpStatusCode.InternalServerError)
             }
         }
@@ -59,6 +61,7 @@ fun Application.accountsModule(db: MongoDatabase){
             try{
                 val request = call.receive<AccountCreateRequest>()
                 val id = accountService.create(request)
+                inventoryService.create(id)
                 call.respond(HttpStatusCode.Created, id)
             }catch (e: NullPointerException){
                 call.respond(HttpStatusCode.BadRequest)

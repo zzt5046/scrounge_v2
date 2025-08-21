@@ -12,12 +12,17 @@ import org.bson.types.ObjectId
 import zjt.projects.db.operations.AccountService
 import zjt.projects.models.recipe.*
 
-class RecipeService(database: MongoDatabase) {
+class RecipeService {
 
-    private var collection: MongoCollection<Document>
-    private var accountService = AccountService(database)
+    private lateinit var collection: MongoCollection<Document>
 
-    init {
+    private lateinit var database: MongoDatabase
+    private lateinit var accountService: AccountService
+
+    fun init(database: MongoDatabase, accountService: AccountService){
+        this.database = database
+        this.accountService = accountService
+
         database.createCollection("recipes")
         collection = database.getCollection("recipes")
     }

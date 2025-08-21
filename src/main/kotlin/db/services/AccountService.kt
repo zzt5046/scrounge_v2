@@ -8,25 +8,38 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import org.bson.Document
 import org.bson.types.ObjectId
+import zjt.projects.db.services.InventoryService
+import zjt.projects.db.services.RecipeService
 import zjt.projects.models.account.*
 import zjt.projects.models.account.Account.Companion.toAccountResponse
-import zjt.projects.db.services.SessionService
 import zjt.projects.models.account.settings.*
+import zjt.projects.models.recipe.RecipeResponse
 import zjt.projects.util.crypto.generateSalt
 import zjt.projects.util.crypto.sha256
 
-class AccountService(database: MongoDatabase) {
-    private var collection: MongoCollection<Document>
-    private var sessionService = SessionService(database)
+class AccountService {
+    private lateinit var collection: MongoCollection<Document>
 
-    init {
+    private lateinit var database: MongoDatabase
+    private lateinit var recipeService: RecipeService
+    private lateinit var inventoryService: InventoryService
+
+    fun init(
+        db: MongoDatabase,
+        recipeService: RecipeService,
+        inventoryService: InventoryService
+    ) {
+        this.database = db
+        this.recipeService = recipeService
+        this.inventoryService = inventoryService
+
         database.createCollection("accounts")
         collection = database.getCollection("accounts")
     }
 
     // Account Login / Logout
     // -----------------------------------------------------------------------------------------------------------
-    fun authenticate(request: AccountLoginRequest): AccountLoginResponse {
+    suspend fun authenticate(request: AccountLoginRequest): AccountLoginResponse {
 
         val accountDoc = readDocument(accountId = null, userName = request.userName)
         return if(accountDoc != null){
@@ -37,9 +50,11 @@ class AccountService(database: MongoDatabase) {
             if (accountDoc["password"] == (salt + request.password).sha256()){
                 AccountLoginResponse(
                     accountId = accountId,
-                    userName = account.userName,
+                    account = account.toAccountResponse(),
                     status = AccountLoginStatus.SUCCESS,
-                    settings = account.settings
+                    settings = account.settings,
+                    inventory = getInventory(accountId),
+                    recipes = getRecipes(accountId),
                 )
             }else{
                 loginFailedResponse
@@ -49,10 +64,11 @@ class AccountService(database: MongoDatabase) {
         }
     }
 
-    fun logout(accountId: String){
-        sessionService.deleteSession(accountId = accountId)
-    }
-    // -----------------------------------------------------------------------------------------------------------
+    private suspend fun getInventory(accountId: String): List<String>? =
+        inventoryService.findByAccountId(accountId)?.ingredients
+
+    private fun getRecipes(accountId: String): List<RecipeResponse> =
+        recipeService.getRecipesByAccountId(accountId).recipes
 
 
     // CRUD
@@ -109,6 +125,11 @@ class AccountService(database: MongoDatabase) {
     suspend fun findAccountByUsername(userName: String): AccountResponse? =
         readByUsername(userName).toAccountResponse()
 
+    fun getAccountIdByUserName(userName: String): String? =
+        readDocument(accountId = null, userName = userName)?.let {
+            document ->  return document["_id"] as String
+        }
+
     suspend fun getAccountSettings(accountId: String): AccountSettingsResponse {
         val account = findAccount(accountId)
         return account?.settings?.toResponse() ?: defaultAccountSettings().toResponse()
@@ -132,10 +153,12 @@ class AccountService(database: MongoDatabase) {
         fun Document.toAccount(): Account = json.decodeFromString(this.toJson())
         fun Account.toDocument(): Document = Document.parse(Json.encodeToString(this))
         val loginFailedResponse = AccountLoginResponse(
-            accountId = null,
-            userName = null,
             status = AccountLoginStatus.FAILURE,
-            settings = null
+            accountId = null,
+            account = null,
+            settings = null,
+            recipes = null,
+            inventory = null
         )
     }
 }
