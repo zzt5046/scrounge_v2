@@ -20,13 +20,13 @@
 
         <!-- Separate recipe management views -->
         <RecipeCreateView 
-            v-show="createView" 
+            v-show="createRecipe" 
             @create-recipe="loadRecipes" 
             @back="showDefaultView"
         />
 
         <RecipeView 
-            v-show="inspectView"
+            v-show="inspectRecipe"
             v-if="selectedRecipe"
             :recipeData="selectedRecipe"
             @edit-recipe="editSelectedRecipe" 
@@ -80,7 +80,6 @@ import { recipeService } from '@/service/.service-registry'
             showDefault: true,
             createRecipe: false,
             inspectRecipe: false,
-            editRecipe: false,
             generateRecipe: false,
 
             selectedRecipe: null,
@@ -108,7 +107,6 @@ import { recipeService } from '@/service/.service-registry'
             this.showDefault = true
             this.createRecipe = false
             this.inspectRecipe = false
-            this.editRecipe = false
             this.generateRecipe = false
             this.showAccountRecipes()
         },
@@ -116,21 +114,12 @@ import { recipeService } from '@/service/.service-registry'
             this.showDefault = false
             this.createRecipe = true
             this.inspectRecipe = false
-            this.editRecipe = false
             this.generateRecipe = false
         },
         showRecipeInspectView(){
             this.showDefault = false
             this.createRecipe = false
             this.inspectRecipe = true
-            this.editRecipe = false
-            this.generateRecipe = false
-        },
-        showRecipeEditView(){
-            this.showDefault = false
-            this.createRecipe = false
-            this.inspectRecipe = false
-            this.editRecipe = true
             this.generateRecipe = false
         },
         showGenerateRecipeView(){
@@ -138,7 +127,6 @@ import { recipeService } from '@/service/.service-registry'
             this.showDefault = false
             this.createRecipe = false
             this.inspectRecipe = false
-            this.editRecipe = false
             this.generateRecipe = true
         },
 
@@ -190,10 +178,6 @@ import { recipeService } from '@/service/.service-registry'
         selectRecipe(recipeData){
             this.selectedRecipe = recipeData
             this.showRecipeInspectView()
-        },
-
-        editSelectedRecipe(){
-            this.showRecipeEditView()
         },
 
         async deleteRecipe(id){
