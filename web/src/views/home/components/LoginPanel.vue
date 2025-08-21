@@ -2,10 +2,10 @@
   <div>
     <div class="login-panel panel form">
       <div class="login-header">
-        <h3 class="login-header">{{ $t('home.login.header') }}</h3>
+        <h3 class="login-header">{{ $t('splash.login.header') }}</h3>
         <div>
-          {{ $t('home.login.misc.registerDisclaimer1') }}
-          <a href="#" @click="gotoRegister"> {{ $t('home.login.misc.registerDisclaimer2') }} </a>
+          {{ $t('splash.login.misc.registerDisclaimer1') }}
+          <a href="#" @click="gotoRegister"> {{ $t('splash.login.misc.registerDisclaimer2') }} </a>
         </div>
         <RequiredNote />
       </div>
@@ -88,9 +88,9 @@ export default {
         }
       }catch (error) {
         if (error.status == 401) {
-          this.errorText = this.$t('home.login.failed')
+          this.errorText = this.$t('splash.login.failed')
         } else {
-          this.errorText = this.$t('home.login.error')
+          this.errorText = this.$t('splash.login.error')
         }
       }
     },

@@ -1,28 +1,20 @@
 import { api } from '@/service/.service-registry'
-import { recipeService } from '@/service/.service-registry'
+import { cacheService } from '@/service/.service-registry'
 import { store } from '../store'
 
 export class AccountService {
+
   async login(request) {
+
     const loginResponse = await api.post('accounts/login', request)
+
     if (loginResponse && loginResponse.status === 'SUCCESS') {
-      store.setActiveAccountId(loginResponse.accountId)
-      const account = await this.getAccount(loginResponse.accountId)
-      store.setActiveAccount(account)
-
-      store.setActiveAccountSettings(loginResponse.settings)
-      store.setActiveAccountUsername(loginResponse.userName)
-
-      const units = await recipeService.getMeasurementUnits(loginResponse.settings.MEASUREMENT_SYSTEM)
-      store.setMeasurementUnits(units)
+      await cacheService.cacheLoginData(loginResponse)
     }
+
     return loginResponse
   }
 
-  async refreshActiveAccount() {
-    const account = await this.getAccount(store.activeAccountId)
-    store.setActiveAccount(account)
-  }
 
   async logout() {
     store.setActiveAccountId(null)
@@ -60,4 +52,5 @@ export class AccountService {
   async getSecurityQuestions() {
     return await api.get('security-questions')
   }
+
 }

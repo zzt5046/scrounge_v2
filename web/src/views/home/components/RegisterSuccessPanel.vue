@@ -2,7 +2,7 @@
     <div class="container">
       <div class="register-success-panel panel">
         <p class="center">
-          {{ $t('home.register.success') }}
+          {{ $t('splash.register.success') }}
         </p>
         <div>
           <div class="button-section flex-box">

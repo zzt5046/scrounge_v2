@@ -11,9 +11,9 @@
     </aside>
 
     <main class="dashboard-main">
-      <HomePanel v-show="showHomeSection"/>
-      <RecipesPanel :account="account" v-show="showRecipeSection" @refresh-account="loadAccount"/>
-      <AccountPanel :account="account" v-show="showSettingsSection"/>
+      <HomePanel v-if="showHomeSection"/>
+      <RecipesPanel :account="account" v-else-if="showRecipeSection" @refresh-account="loadAccount"/>
+      <AccountPanel :account="account" v-else-if="showSettingsSection"/>
     </main>
     
     <footer class="dashboard-footer">
@@ -28,7 +28,7 @@ import { dashboardState } from './dashboardState.js'
 import { DASHBOARD_HOME, DASHBOARD_RECIPES, DASHBOARD_SETTINGS, DASHBOARD_LOGOUT } from './dashboardState.js'
 import DashboardHeader from './components/DashboardHeader.vue';
 import DashboardNavbar from './components/DashboardNavbar.vue';
-import HomePanel from './content/HomePanel.vue';
+import HomePanel from './content/home/HomePanel.vue';
 import RecipesPanel from './content/recipes/RecipesPanel.vue';
 import AccountPanel from './content/account/AccountPanel.vue';
   export default {

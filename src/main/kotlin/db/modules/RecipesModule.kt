@@ -1,20 +1,18 @@
 package zjt.projects.db.modules
 
-import zjt.projects.db.services.RecipeService
 import zjt.projects.models.recipe.Recipe
-import com.mongodb.client.MongoDatabase
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import zjt.projects.db.operations.AccountService
+import zjt.projects.AppContext
 import zjt.projects.models.account.settings.MeasurementSystem
 import zjt.projects.models.recipe.getMeasurementUnits
 
-fun Application.recipesModule(db: MongoDatabase){
-    val recipeService = RecipeService(db)
-    val accountService = AccountService(db)
+fun Application.recipesModule(){
+    val recipeService = AppContext.recipeService
+    val accountService = AppContext.accountService
 
     val targetRecipePath = "/recipes/{id}"
     val noIdFound = "No ID found"

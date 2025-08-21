@@ -11,6 +11,7 @@
             @add-recipe="showRecipeCreateView"
             @show-favorites="showFavoriteRecipes"
             @hide-favorites="showAccountRecipes"
+            @generate-recipe="showGenerateRecipeView"
         />
         <RecipeSearch 
             v-show="showDefault" 
@@ -35,6 +36,8 @@
             @favorite-recipe="$emit('refresh-account')"
             @cancel-inspect="showDefaultView" 
         />
+
+        <GenerateRecipePanel v-if="generateRecipe" v-show="generateRecipe" @back="showDefaultView"/>
     </div>
 </template>
 
@@ -43,6 +46,7 @@ import RecipeList from './RecipeList.vue'
 import RecipeCreateView from './RecipeCreateView.vue'
 import RecipeView from './RecipeView.vue'
 import RecipeSearch from './RecipeSearch.vue'
+import GenerateRecipePanel from './GenerateRecipePanel.vue'
 import { store } from '../../../../store'
 import { dashboardState } from '../../dashboardState.js'
 import { watch } from 'vue'
@@ -55,7 +59,8 @@ import { recipeService } from '@/service/.service-registry'
         RecipeList, 
         RecipeSearch, 
         RecipeCreateView, 
-        RecipeView
+        RecipeView,
+        GenerateRecipePanel
     },
 
     props: {
@@ -71,10 +76,13 @@ import { recipeService } from '@/service/.service-registry'
             accountRecipes: [],
             favoriteRecipes: [],
             displayFavoriteRecipes: false,
+
             showDefault: true,
             createRecipe: false,
             inspectRecipe: false,
             editRecipe: false,
+            generateRecipe: false,
+
             selectedRecipe: null,
             recipeListInfo: null,
         }
@@ -94,26 +102,6 @@ import { recipeService } from '@/service/.service-registry'
         )
     },
 
-    
-
-    computed: {
-        defaultView(){
-            return this.showDefault
-        },
-        createView(){
-            return this.createRecipe
-        },
-        inspectView(){
-            return this.inspectRecipe && this.selectedRecipe !== null
-        },
-        editView(){
-            return this.editRecipe
-        },
-        currentDashboardView(){
-            return store.currentDashboardView
-        },
-    },
-
     methods: {
         showDefaultView(){
             this.selectedRecipe = null
@@ -121,6 +109,7 @@ import { recipeService } from '@/service/.service-registry'
             this.createRecipe = false
             this.inspectRecipe = false
             this.editRecipe = false
+            this.generateRecipe = false
             this.showAccountRecipes()
         },
         showRecipeCreateView(){
@@ -128,22 +117,33 @@ import { recipeService } from '@/service/.service-registry'
             this.createRecipe = true
             this.inspectRecipe = false
             this.editRecipe = false
+            this.generateRecipe = false
         },
         showRecipeInspectView(){
             this.showDefault = false
             this.createRecipe = false
             this.inspectRecipe = true
             this.editRecipe = false
+            this.generateRecipe = false
         },
         showRecipeEditView(){
             this.showDefault = false
             this.createRecipe = false
             this.inspectRecipe = false
             this.editRecipe = true
+            this.generateRecipe = false
+        },
+        showGenerateRecipeView(){
+            this.selectedRecipe = null
+            this.showDefault = false
+            this.createRecipe = false
+            this.inspectRecipe = false
+            this.editRecipe = false
+            this.generateRecipe = true
         },
 
         async loadRecipes(){
-            const accountRecipes = await recipeService.getAccountRecipes(store.activeAccountId)
+            const accountRecipes = await recipeService.getRecipes(store.activeAccountId)
             this.accountRecipes = []
             accountRecipes.recipes?.forEach(recipeData => {
                 this.accountRecipes.push({

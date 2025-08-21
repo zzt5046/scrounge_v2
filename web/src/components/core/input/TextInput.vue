@@ -7,7 +7,7 @@
     </div>
     <input :id="id" :class="{ 'form-control': true, 'input-error': error }" :type="type" :placeholder="placeholder"
       :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" @keyup.enter="$emit('enter')"
-      v-bind="$attrs" />
+      :min="min" :max="max" v-bind="$attrs" />
       <div class="error-height">
         <span class="input-error-text">{{ errorMessage }}</span>
       </div>
@@ -39,6 +39,14 @@ export default {
       validator: (value) => {
         return ['search', 'text'].includes(value);
       }
+    },
+    min: {
+      type: Number,
+      default: null
+    },
+    max: {
+      type: Number,
+      default: null
     },
     modelValue: {
       type: String,
