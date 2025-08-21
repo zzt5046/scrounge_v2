@@ -3,18 +3,20 @@
         <div class="recipe-list-header">
             <h2 v-if="showFavorites">{{ $t('recipe.list.header_fav') }}</h2>
             <h2 v-else>{{ $t('recipe.list.header') }}</h2>
-            <p class="recipe-list-info" v-if="info" @click="this.$emit('clear-info')">{{ info }}</p>
             <div id="recipe-list-header-actions">
                 <button id="show-favorite-recipes-button" 
-                    :class="{ 'btn btn-primary': true, 'favorites-button-show': showFavorites, 'favorites-button-hide': !showFavorites }" 
+                    :class="{ 'btn btn-primary': true, 'favorites-button-show': showFavorites, 'favorites-button-hide': !showFavorites, 'header-button': true }" 
                     @click="toggleFavorites">
-                    
                     {{ $t('recipe.actions.show_favorites') }}
                 </button>
-                <button id="add-recipe-button" class="btn btn-primary" :disabled="showFavorites" @click="$emit('add-recipe')">
+                <button id="add-recipe-button" class="btn btn-primary header-button" :disabled="showFavorites" @click="$emit('add-recipe')">
                     {{ $t('recipe.actions.add') }}
                 </button>
+                <button id="generate-recipe-button" class="btn btn-primary header-button" @click="$emit('generate-recipe')">
+                    {{ $t('recipe.actions.generate') }}
+                </button>
             </div>
+            <p class="recipe-list-info" v-if="info" @click="this.$emit('clear-info')">{{ info }}</p>
         </div>
         <div class="recipe-list-content" v-if="recipes.length > 0">
             <RecipeCard
@@ -86,8 +88,7 @@ export default {
 }
 </script>
 <style scoped>
-    .favorites-button-hide,
-    .favorites-button-show {
+    .header-button {
         margin-right: 1rem;
     }
 </style>

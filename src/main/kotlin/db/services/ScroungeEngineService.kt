@@ -1,6 +1,5 @@
 package zjt.projects.db.services
 
-import io.ktor.http.*
 import kotlinx.serialization.json.Json
 import zjt.projects.models.engine.recipe.GenerateRecipesRequest
 import zjt.projects.models.engine.recipe.GenerateRecipesResponse
@@ -21,7 +20,11 @@ class ScroungeEngineService {
 
         val httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofString())
 
-        return Json.decodeFromString(httpResponse.body())
+        return try {
+            Json.decodeFromString(httpResponse.body())
+        }catch(e: Exception){
+            GenerateRecipesResponse(listOf(), null)
+        }
     }
 
     companion object {

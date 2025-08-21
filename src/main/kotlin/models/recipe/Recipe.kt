@@ -11,5 +11,6 @@ data class Recipe (
     val description: String?,
     val ingredients: List<Ingredient> = listOf(),
     val directions: List<String> = listOf(),
-    val notes: String? = ""
+    val notes: String? = "",
+    val generated: Boolean = false,
 )

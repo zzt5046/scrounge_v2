@@ -51,17 +51,15 @@
     width: 100%;
 }
 
-.inventory-search,
-.inventory-add {
+.inventory-search-input,
+.inventory-add-input {
     max-width: 30rem;
-    margin-left: 1rem;
 }
 
 .inventory-panel-header {
     display: flex;
-    flex-direction: row;
-    height: 4rem;
-    margin-bottom: 1rem;
+    flex-direction: column;
+    height: 9rem;
 }
 
 .inventory-panel-content {
@@ -77,80 +75,4 @@
 
 .inventory-panel-footer {
     height: 15%
-}
-
-.generate-recipe-panel {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.generate-recipe-form {
-    margin-left: 1rem;
-}
-
-.generate-recipe-form,
-.generate-recipe-results {
-    width: 45%;
-}
-
-.generate-recipe-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-}
-
-#generate-ingredient-custom,
-#generate-preference-custom,
-#generate-count-custom {
-    max-width: 75%;
-}
-
-.generate-ingredients,
-.generate-preferences,
-.generate-count {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 2rem;
-}
-
-#generate-count-custom {
-    width: 10rem;
-}
-
-.generate-recipe-summary {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    margin-bottom: 3rem;
-}
-
-.generate-add-ingredient,
-.generate-add-preference {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 1rem;
-}
-
-.summary-ingredients {
-    margin-right: 5rem;
-}
-
-.summary-ingredients-list,
-.summary-preferences-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
-    gap: 1rem;
-}
-
-.summary-ingredients {
-    margin-right: 50%;
-}
-
-.generate-results-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 1rem;
 }

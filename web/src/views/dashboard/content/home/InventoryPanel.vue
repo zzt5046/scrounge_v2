@@ -2,10 +2,12 @@
     <div class="inventory-panel panel">
         <div class="inventory-panel-header">
             <h3> {{ $t('home.inventory.header') }} </h3>
-            <TextInput class="inventory-search" v-model="inventorySearch" placeholder="Search" type="search" @input="filterInventorySearch"/>
-            <button class="btn btn-primary add-btn" @click="addItem(inventoryAdd)" :disabled="!canAddItem">{{ $t('home.inventory.actions.add') }}</button>
-            <TextInput class="inventory-add" v-model="inventoryAdd" placeholder="Enter item to add." type="search" @enter="addItem(inventoryAdd)"/>
-            <button class="btn btn-primary add-btn" @click="$emit('generate')">{{ $t('home.generate.header') }}</button>
+            <TextInput class="inventory-search-input" v-model="inventorySearch" :placeholder="$t('home.inventory.search')" type="search" @input="filterInventorySearch"/>
+            <div class="flex-row">
+                <TextInput class="inventory-add-input" v-model="inventoryAdd" :placeholder="$t('home.inventory.add')" @enter="addItem(inventoryAdd)"/>
+                <button class="btn btn-primary add-btn" @click="addItem(inventoryAdd)" :disabled="!canAddItem">{{ $t('home.inventory.actions.add') }}</button>
+                <!-- <button class="btn btn-primary add-btn" @click="$emit('generate')">{{ $t('home.generate.header') }}</button> -->
+            </div>
         </div>
         <div class="inventory-panel-content panel">
             <span v-show="items.length == 0"> {{ $t('home.inventory.no-items') }} </span>
@@ -104,6 +106,6 @@ export default {
     }
 
     .add-btn {
-        margin-left: 2.5rem;
+        margin-left: 1rem;
     }
 </style>

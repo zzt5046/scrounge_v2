@@ -4,7 +4,7 @@
     flex-direction: column;
     margin-bottom: 0.5rem;
     height: auto;
-    width: 33%;
+    width: 40%;
     background-color: white;
     box-shadow: 0em 0em 1.2em 0.36em lightgray;
 }
@@ -102,7 +102,7 @@
 
 .recipe-card {
     margin-bottom: 0.25rem;
-    width: 20rem;
+    width: 48%;
     height: 2rem;
     background-color: #EADE8E;
     border-radius: 3px;
@@ -248,4 +248,87 @@
 .recipe-update-error p,
 .recipe-create-error p {
     cursor: pointer;
+}
+
+/* GENERATE RECIPE */
+
+.generate-recipe-panel {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.generate-recipe-form {
+    margin-left: 1rem;
+}
+
+.generate-recipe-form,
+.generate-recipe-results {
+    width: 45%;
+}
+
+.generate-recipe-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+#generate-ingredient-custom,
+#generate-preference-custom,
+#generate-count-custom {
+    max-width: 75%;
+}
+
+.generate-ingredients,
+.generate-preferences,
+.generate-count {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+#generate-count-custom {
+    width: 10rem;
+}
+
+.generate-recipe-summary {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-bottom: 3rem;
+}
+
+.generate-add-ingredient,
+.generate-add-preference {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+}
+
+#generate-ingredient-select,
+#generate-preference-select {
+    margin-right: 1rem;
+}
+
+.generate-summary-ingredients {
+    margin-right: 5rem;
+}
+
+.generate-summary-ingredients-list,
+.generate-summary-preferences-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+    gap: 1rem;
+}
+
+.generate-summary-ingredients {
+    margin-right: 50%;
+}
+
+.generate-results-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 1rem;
 }

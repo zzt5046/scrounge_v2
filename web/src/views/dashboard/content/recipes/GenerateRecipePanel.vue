@@ -2,46 +2,46 @@
     <div class="generate-recipe-panel panel">
         <div class="generate-recipe-form panel">
             <div class="generate-recipe-header">
-                <h3> {{ $t('home.generate.header') }} </h3>
+                <h3> {{ $t('recipe.generate.header') }} </h3>
                 <button class="btn btn-secondary" @click="back"> {{ $t('actions.back') }} </button>
             </div>
 
             <div class="generate-recipe-content">
 
                 <div class="generate-ingredients">
-                    <h4> {{ $t('home.generate.ingredients') }} </h4>
-                    <p> {{ $t('home.generate.select-ingredient') }} </p>
+                    <h4> {{ $t('recipe.generate.ingredients') }} </h4>
+                    <p> {{ $t('recipe.generate.select-ingredient') }} </p>
                     <div class="generate-add-ingredient">
-                        <SelectInput id="generate-ingredient-select" :options="inventory" :placeholder="$t('home.generate.ingredient-placeholder')" v-model="ingredientSelect"/>
-                        <button class="btn btn-primary add-btn" @click="addIngredient(false)" :disabled="!ingredientSelect">{{ $t('home.inventory.actions.select') }}</button>
+                        <SelectInput id="generate-ingredient-select" :options="inventory" :placeholder="$t('recipe.generate.ingredient-placeholder')" v-model="ingredientSelect"/>
+                        <button class="btn btn-primary add-btn ml-1" @click="addIngredient(false)" :disabled="!ingredientSelect">{{ $t('actions.add') }}</button>
                     </div>
-                    <TextInput if="generate-ingredient-custom" v-model="ingredientAdd" placeholder="Press Enter to add" type="search" @enter="addIngredient(true)"/>
+                    <TextInput id="generate-ingredient-custom" v-model="ingredientAdd" placeholder="Press Enter to add" type="search" @enter="addIngredient(true)"/>
                 </div>
                 
 
                 <div class="generate-preferences">
-                    <h4> {{ $t('home.generate.preferences') }} </h4>
-                    <p> {{ $t('home.generate.select-preference') }} </p>
+                    <h4> {{ $t('recipe.generate.preferences') }} </h4>
+                    <p> {{ $t('recipe.generate.select-preference') }} </p>
                     <div class="generate-add-preference">
-                        <SelectInput id="generate-preference-select" :options="premadePreferences" :placeholder="$t('home.generate.preference-placeholder')" v-model="preferenceSelect"/>
-                        <button class="btn btn-primary add-btn" @click="addPreference(false)" :disabled="!preferenceSelect">{{ $t('home.inventory.actions.select') }}</button>
+                        <SelectInput id="generate-preference-select" :options="premadePreferences" :placeholder="$t('recipe.generate.preference-placeholder')" v-model="preferenceSelect"/>
+                        <button class="btn btn-primary add-btn ml-1" @click="addPreference(false)" :disabled="!preferenceSelect">{{ $t('actions.add') }}</button>
                     </div>
                     <TextInput id="generate-preference-custom" v-model="preferenceAdd" placeholder="Press Enter to add" type="search" @enter="addPreference(true)"/>
                 </div>
                 
                 <div class="generate-count">
-                    <h4> {{ $t('home.generate.count') }} </h4>
-                    <p> {{ $t('home.generate.count-note') }} </p>
+                    <h4> {{ $t('recipe.generate.count') }} </h4>
+                    <p> {{ $t('recipe.generate.count-note') }} </p>
                     <TextInput id="generate-count-custom" v-model="count" type="number" min="1" max="5"/>
                 </div>
             </div>
             
-            <h4> {{ $t('home.generate.summary') }} </h4>
+            <h4> {{ $t('recipe.generate.summary') }} </h4>
             <div class="generate-recipe-summary">
 
-                <div class="summary-ingredients">
-                    <h5> {{ $t('home.generate.ingredients') }} </h5>
-                    <div class="summary-ingredients-list">
+                <div class="generate-summary-ingredients">
+                    <h5> {{ $t('recipe.generate.ingredients') }} </h5>
+                    <div class="generate-summary-ingredients-list">
                         <div v-for="(item, index) in ingredients" :key="index">
                             <img src="../../../../assets/icon/x-icon.png" class="remove-item-icon nudge"
                                 :title="$t('actions.remove')" @click="removeIngredient(index)" />
@@ -50,9 +50,9 @@
                     </div>
                 </div>
 
-                <div class="summary-preferences">
-                    <h5> {{ $t('home.generate.preferences') }} </h5>
-                    <div class="summary-preferences-list">
+                <div class="generate-summary-preferences">
+                    <h5> {{ $t('recipe.generate.preferences') }} </h5>
+                    <div class="generate-summary-preferences-list">
                         <div v-for="(item, index) in preferences" :key="index">
                             <img src="../../../../assets/icon/x-icon.png" class="remove-item-icon nudge"
                                 :title="$t('actions.remove')" @click="removePreference(index)" />
@@ -63,20 +63,30 @@
 
             </div>
 
-            <button class="btn btn-primary generate-btn" @click="generateRecipe" 
+            <!-- <button class="btn btn-primary generate-btn" @click="generateRecipe" 
                 :disabled="ingredients.length === 0 || preferences.length === 0" >
                 {{ $t('actions.generate') }}
-            </button> 
+            </button> -->
+
+            <LoadingButton 
+                :label="$t('actions.generate')"
+                @click="generateRecipe"
+                :disabled="ingredients.length === 0 || preferences.length === 0"
+                type="primary"
+                :loading="generating"
+            />
         </div>
 
         <div class="generate-recipe-results panel" v-if="generatedRecipes.length > 0">
-            <div class="generate-results-header">
-                <h3> {{ $t('home.generate.results') }} </h3>
-                <button class="btn btn-secondary" @click="generatedRecipes = []">{{ $t('actions.dismiss') }}</button> 
-            </div>
-            
             <div v-for="(recipe, index) in generatedRecipes" :key="index" class="generated-recipe">
-                <h4> {{ recipe.name }} </h4>
+                <div class="generate-results-header">
+                    <h4> {{ recipe.name }} </h4>
+                    <div class="generated-recipe-actions">
+                        <button class="btn btn-primary" @click="saveRecipe"> {{ $t('actions.save') }} </button>
+                        <button class="btn btn-secondary" @click="generatedRecipes.splice(index, 1)"> {{ $t('actions.dismiss') }} </button>
+                    </div>
+                </div>
+                
                 <p> {{ recipe.description }} </p>
                 <ul>
                     <li v-for="(ingredient, i) in recipe.ingredients" :key="i">{{ ingredient }}</li>
@@ -95,9 +105,10 @@
 <script>
 
 import { store } from '../../../../store';
-import { smartFoodService } from '@/service/.service-registry';
+import { smartFoodService, recipeService } from '@/service/.service-registry';
 import SelectInput from '@/components/core/input/SelectInput.vue';
 import TextInput from '@/components/core/input/TextInput.vue';
+import LoadingButton from '@/components/core/button/LoadingButton.vue';
 
 export default {
     name: 'GenerateRecipePanel',
@@ -105,6 +116,7 @@ export default {
     components: {
         SelectInput,
         TextInput,
+        LoadingButton
     },
 
     data() {
@@ -122,7 +134,7 @@ export default {
             count: 1,
 
             generatedRecipes: [],
-            loading: false,
+            generating: false,
             error: null,
         };
     },
@@ -142,13 +154,25 @@ export default {
 
     methods: {
         async generateRecipe() {
-            this.loading = true;
-            const response = await smartFoodService.generateRecipe(this.ingredients, this.preferences, this.count)
-            this.generatedRecipes = response.recipes || [];
+            this.generating = true;
+            smartFoodService.generateRecipe(this.ingredients, this.preferences, this.count).then((response) => {
+                this.generatedRecipes = response.recipes || [];
+                if(this.generatedRecipes.length === 0) {
+                    this.error = 'No recipes generated. Please try different ingredients or preferences.';
+                } else {
+                    this.error = null;
+                }
+                this.generating = false;
+            })
+        },
 
-            this.error = response.errorMessage || null;
-            console.log('Error:', this.error);
-            this.loading = false;
+        async saveRecipe(recipe) {
+            await recipeService.createRecipe(recipe).then(() => {
+                this.$emit('recipeSaved', recipe);
+            }).catch((error) => {
+                console.error('Error saving recipe:', error);
+                this.error = 'Failed to save the recipe. Please try again.';
+            });
         },
 
         addIngredient(custom) {
@@ -195,5 +219,9 @@ export default {
 .nudge {
     margin-right: 0.5rem;
     margin-bottom: 0.3rem;
+}
+
+.ml-1 {
+    margin-left: 1rem;
 }
 </style>
