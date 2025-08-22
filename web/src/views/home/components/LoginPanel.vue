@@ -84,6 +84,7 @@ export default {
             return response
           })
         if (loginResponse.accountId != null) {
+          localStorage.setItem('token', loginResponse.token)
           this.$router.push('/dashboard')
         }
       }catch (error) {

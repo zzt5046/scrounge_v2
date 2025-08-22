@@ -9,6 +9,15 @@ import i18n from '@/i18n/i18n'
 import VuelidatePlugin from '@vuelidate/core'
 import loadStaticData from './static-data';
 
+router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem('token');
+    if (to.meta.requiresAuth && !token) {
+        next('/');
+    } else {
+        next();
+    }
+});
+
 await loadStaticData().then(() => {
     const app = createApp(App).use(router, axios, bootstrap, VuelidatePlugin)
     app.use(i18n)
