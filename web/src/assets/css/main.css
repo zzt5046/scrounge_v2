@@ -144,6 +144,7 @@
 .btn-secondary {
   background: var(--vt-c-vanilla) !important;
 }
+
 .btn-secondary:active {
   background: var(--vt-c-vanilla-click) !important;
 }
