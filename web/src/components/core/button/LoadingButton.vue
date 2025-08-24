@@ -3,16 +3,19 @@
             :class="['btn', `btn-${type}`, { 'loading': loading }]"
             @click="$emit('click')">
 
-        <VueSpinner v-if="loading" size="20" color="black" />
-        {{ label }}
+        
+        <div class="content">
+            <LoadingSpinner :size="20" :lineSize="1" color="black" v-if="loading"/>
+            <span :class="{'ml': loading}"> {{ label }} </span>
+        </div>
     </button>
 </template>
 <script>
-import { VueSpinner } from 'vue3-spinners';
+import LoadingSpinner from '@/components/core/animated/LoadingSpinner.vue';
 export default {
     name: 'LoadingButton',
     components: {
-        VueSpinner
+        LoadingSpinner
     },
     props: {
         label: {
@@ -41,3 +44,14 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+    .content {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .ml {
+        margin-left: 0.5rem;
+    }
+</style>

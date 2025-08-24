@@ -10,23 +10,25 @@
 
                 <div class="generate-ingredients">
                     <h4> {{ $t('recipe.generate.ingredients') }} </h4>
-                    <p> {{ $t('recipe.generate.select-ingredient') }} </p>
+                    <!-- <p> {{ $t('recipe.generate.select-ingredient') }} </p> -->
                     <div class="generate-add-ingredient">
-                        <SelectInput id="generate-ingredient-select" :options="inventory" :placeholder="$t('recipe.generate.ingredient-placeholder')" v-model="ingredientSelect"/>
+                        <SelectInput id="generate-ingredient-select" :options="inventory" :placeholder="$t('recipe.generate.select-ingredient-placeholder')" v-model="ingredientSelect"/>
                         <button class="btn btn-primary add-btn ml-1" @click="addIngredient(false)" :disabled="!ingredientSelect">{{ $t('actions.add') }}</button>
+                        <button class="btn btn-secondary ml-1" @click="ingredients.length = 0" :disabled="ingredients.length == 0">{{ $t('actions.clear') }}</button>
                     </div>
-                    <TextInput id="generate-ingredient-custom" v-model="ingredientAdd" placeholder="Press Enter to add" type="search" @enter="addIngredient(true)"/>
+                    <TextInput id="generate-ingredient-custom" v-model="ingredientAdd" :placeholder="$t('recipe.generate.custom-ingredient-placeholder')" type="search" @enter="addIngredient(true)"/>
                 </div>
                 
 
                 <div class="generate-preferences">
                     <h4> {{ $t('recipe.generate.preferences') }} </h4>
-                    <p> {{ $t('recipe.generate.select-preference') }} </p>
+                    <!-- <p> {{ $t('recipe.generate.select-preference') }} </p> -->
                     <div class="generate-add-preference">
-                        <SelectInput id="generate-preference-select" :options="premadePreferences" :placeholder="$t('recipe.generate.preference-placeholder')" v-model="preferenceSelect"/>
+                        <SelectInput id="generate-preference-select" :options="premadePreferences" :placeholder="$t('recipe.generate.select-preference-placeholder')" v-model="preferenceSelect"/>
                         <button class="btn btn-primary add-btn ml-1" @click="addPreference(false)" :disabled="!preferenceSelect">{{ $t('actions.add') }}</button>
+                        <button class="btn btn-secondary ml-1" @click="preferences.length = 0" :disabled="preferences.length == 0">{{ $t('actions.clear') }}</button>
                     </div>
-                    <TextInput id="generate-preference-custom" v-model="preferenceAdd" placeholder="Press Enter to add" type="search" @enter="addPreference(true)"/>
+                    <TextInput id="generate-preference-custom" v-model="preferenceAdd" :placeholder="$t('recipe.generate.custom-preference-placeholder')" type="search" @enter="addPreference(true)"/>
                 </div>
                 
                 <div class="generate-count">
@@ -35,8 +37,9 @@
                     <TextInput id="generate-count-custom" v-model="count" type="number" min="1" max="5"/>
                 </div>
             </div>
-            
-            <h4> {{ $t('recipe.generate.summary') }} </h4>
+
+            <hr />
+        
             <div class="generate-recipe-summary">
 
                 <div class="generate-summary-ingredients">
@@ -62,11 +65,6 @@
                 </div>
 
             </div>
-
-            <!-- <button class="btn btn-primary generate-btn" @click="generateRecipe" 
-                :disabled="ingredients.length === 0 || preferences.length === 0" >
-                {{ $t('actions.generate') }}
-            </button> -->
 
             <LoadingButton 
                 :label="$t('actions.generate')"
@@ -95,11 +93,13 @@
                     <li v-for="(step, i) in recipe.directions" :key="i">{{ step }}</li>
                 </ol>
                 <p> {{ recipe.notes }} </p>
+
+                <hr v-show="showRecipeSeperator(index)"/>
             </div>
+            <span v-if="error">{{ this.error }}</span>
         </div>
-        <div class="generate-recipe-results panel" v-if="error">
-            <span>{{ this.error }}</span>
-        </div>
+
+        <LoadingSpinner :size="350" :lineSize="25" color="var(--vt-c-fawn)" v-else-if="generating" class="panel" style="margin: auto;"/>
     </div>
 </template>
 <script>
@@ -109,6 +109,7 @@ import { smartFoodService, recipeService } from '@/service/.service-registry';
 import SelectInput from '@/components/core/input/SelectInput.vue';
 import TextInput from '@/components/core/input/TextInput.vue';
 import LoadingButton from '@/components/core/button/LoadingButton.vue';
+import LoadingSpinner from '@/components/core/animated/LoadingSpinner.vue';
 
 export default {
     name: 'GenerateRecipePanel',
@@ -116,7 +117,8 @@ export default {
     components: {
         SelectInput,
         TextInput,
-        LoadingButton
+        LoadingButton,
+        LoadingSpinner,
     },
 
     data() {
@@ -154,16 +156,22 @@ export default {
 
     methods: {
         async generateRecipe() {
+            this.generatedRecipes = [];
             this.generating = true;
-            smartFoodService.generateRecipe(this.ingredients, this.preferences, this.count).then((response) => {
+            try {
+                const response = await smartFoodService.generateRecipe(this.ingredients, this.preferences, this.count);
                 this.generatedRecipes = response.recipes || [];
                 if(this.generatedRecipes.length === 0) {
                     this.error = 'No recipes generated. Please try different ingredients or preferences.';
                 } else {
                     this.error = null;
                 }
+            } catch (error) {
+                console.error('Error generating recipe:', error);
+                this.error = 'Failed to generate recipes. Please try again.';
+            } finally {
                 this.generating = false;
-            })
+            }
         },
 
         async saveRecipe(recipe) {
@@ -201,6 +209,10 @@ export default {
 
         removePreference(index) {
             this.preferences.splice(index, 1)
+        },
+
+        showRecipeSeperator(index) {
+                return index !== this.generatedRecipes.length - 1;
         },
 
         back() {
