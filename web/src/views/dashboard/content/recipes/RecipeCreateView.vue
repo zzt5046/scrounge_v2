@@ -55,6 +55,8 @@
                             class="newIngredientUnit"
                             :placeholder="$t('recipe.ingredient.unit')"
                             :options="units"
+                            :showNullOption="true"
+                            nullOptionLabel="No Unit"
                             v-model="newIngredient.unit"
                         />
                     
@@ -189,7 +191,7 @@ export default {
     computed: {
 
         newIngredientValid() {
-            return this.newIngredient.quantity && this.newIngredient.unit && this.newIngredient.name && !this.quantityError
+            return this.newIngredient.quantity && this.newIngredient.name && !this.quantityError
         },
         newDirectionValid() {
             return this.newDirection
@@ -234,7 +236,8 @@ export default {
 
         addIngredient() {
             this.ingredientAdded = true
-            if (this.newIngredient.quantity && this.newIngredient.unit && this.newIngredient.name) {
+            if (this.newIngredient.quantity && this.newIngredient.name) {
+
                 this.recipe.ingredients.push({
                     measurement: {
                         quantity: this.newIngredient.quantity,

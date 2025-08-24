@@ -6,6 +6,7 @@
       @change="this.$emit('update:modelValue', $event.target.value)" :value="modelValue" v-bind="$attrs">
 
       <option disabled value>{{ placeholder }}</option>
+      <option value="" v-if="showNullOption">{{ nullOptionLabel }}</option>
       <option v-for="option in options" :key="option.id" :value="option.id" :selected="autoselect(option)">
         {{ option.name }}
       </option>
@@ -36,6 +37,14 @@ export default {
     options: {
       type: Array,
       required: true
+    },
+    showNullOption: {
+      type: Boolean,
+      default: false
+    },
+    nullOptionLabel: {
+      type: String,
+      default: 'N/A'
     },
     label: {
       type: String
