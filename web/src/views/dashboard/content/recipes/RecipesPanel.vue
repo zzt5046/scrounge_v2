@@ -37,7 +37,12 @@
             @cancel-inspect="showDefaultView" 
         />
 
-        <GenerateRecipePanel v-if="generateRecipe" v-show="generateRecipe" @back="showDefaultView"/>
+        <GenerateRecipePanel 
+            v-if="generateRecipe"
+            v-show="generateRecipe"
+            @recipe-saved="reloadAllRecipes"
+            @back="showDefaultView"
+        />
     </div>
 </template>
 

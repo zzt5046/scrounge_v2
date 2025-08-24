@@ -80,7 +80,12 @@
                 <div class="generate-results-header">
                     <h4> {{ recipe.name }} </h4>
                     <div class="generated-recipe-actions">
-                        <button class="btn btn-primary" @click="saveRecipe"> {{ $t('actions.save') }} </button>
+                        <LoadingButton 
+                            :label="$t('actions.save')"
+                            @click="saveRecipe(recipe)"
+                            type="primary"
+                            :loading="saving"
+                        />
                         <button class="btn btn-secondary" @click="generatedRecipes.splice(index, 1)"> {{ $t('actions.dismiss') }} </button>
                     </div>
                 </div>
@@ -110,6 +115,8 @@ import SelectInput from '@/components/core/input/SelectInput.vue';
 import TextInput from '@/components/core/input/TextInput.vue';
 import LoadingButton from '@/components/core/button/LoadingButton.vue';
 import LoadingSpinner from '@/components/core/animated/LoadingSpinner.vue';
+import { sleep } from '../../../../functions';
+import { notifications } from '../../../../notifications';
 
 export default {
     name: 'GenerateRecipePanel',
@@ -136,6 +143,7 @@ export default {
             count: 1,
 
             generatedRecipes: [],
+            saving: false,
             generating: false,
             error: null,
         };
@@ -175,11 +183,30 @@ export default {
         },
 
         async saveRecipe(recipe) {
-            await recipeService.createRecipe(recipe).then(() => {
+            this.saving = true;
+
+            var recipeRequest = {
+                accountId: store.activeAccountId,
+                public: false,
+                author: "Scrounge SmartFood",
+                name: recipe.name,
+                description: recipe.description,
+                ingredients: recipe.ingredients,
+                directions: recipe.directions,
+                notes: recipe.notes,
+                generated: true,
+            }
+
+            await sleep(500);
+            await recipeService.createRecipe(recipeRequest).then(() => {
+                console.log('Recipe saved successfully');
                 this.$emit('recipeSaved', recipe);
+                notifications.showToast('Recipe saved successfully!', 'success');
             }).catch((error) => {
                 console.error('Error saving recipe:', error);
-                this.error = 'Failed to save the recipe. Please try again.';
+                notifications.showToast('Error saving recipe, please try again.', 'error');
+            }).finally(() => {
+                this.saving = false;
             });
         },
 
