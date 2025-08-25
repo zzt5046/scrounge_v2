@@ -1,10 +1,10 @@
 <template>
     <div class="recipe-search">
         <div class="recipe-search-header">
-            <h2>Search Recipes</h2>
+            <h2>{{ $t('recipe.search.header') }}</h2>
         </div>
         <div class="recipe-search-content">
-            <TextInput id="recipe-search-input" v-model="searchQuery" placeholder="Search recipes..." type="search" @input="filterRecipeSearch"/>
+            <TextInput id="recipe-search-input" v-model="searchQuery" :placeholder="$t('recipe.search.placeholder')" type="search" @input="filterRecipeSearch"/>
             <RecipeCard
                 class="recipe-card"
                 v-for="recipeData in searchRecipes"
@@ -12,7 +12,7 @@
                 :recipeName="recipeData.recipe.name"
                 @select-recipe="selectRecipe(recipeData)"
             />
-            <div v-if="showNoResultsNote" class="no-recipes-found">No recipes found.</div>
+            <div v-if="showNoResultsNote" class="no-recipes-found">{{ $t('recipe.search.none_found') }}</div>
         </div>
     </div>
 </template>

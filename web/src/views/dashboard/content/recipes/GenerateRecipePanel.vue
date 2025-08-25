@@ -1,6 +1,6 @@
 <template>
     <div class="generate-recipe-panel panel">
-        <div class="generate-recipe-form panel">
+        <div class="generate-recipe-form">
             <div class="generate-recipe-header">
                 <h3> {{ $t('recipe.generate.header') }} </h3>
                 <button class="btn btn-secondary" @click="back"> {{ $t('actions.back') }} </button>

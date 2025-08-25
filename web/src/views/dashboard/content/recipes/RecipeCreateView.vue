@@ -1,5 +1,5 @@
 <template>
-    <div class="recipe-create">
+    <div class="recipe-create panel">
         <div class="recipe-create-content">
             <div class="recipe-create-header">
                 <h2>{{ $t('recipe.create.header') }}</h2>
@@ -13,7 +13,7 @@
 
             <div class="recipe-ingredients-create">
                 <h3>{{ $t('recipe.ingredients') }}</h3>
-                <p v-if="noIngredientsOnSubmit" class="input-error-text"> Add an ingredient to save!</p>
+                <p v-if="noIngredientsOnSubmit" class="input-error-text">{{ $t('recipe.add_ingredient_tip') }}</p>
                 <ul>
                     <li v-for="(ingredient, index) in recipe.ingredients" :key="index">
                         <div class="recipe-create-list-element">
@@ -67,7 +67,7 @@
             </div>
             <div class="recipe-directions-create">
                 <h3>{{ $t('recipe.directions') }}</h3>
-                <p v-if="noDirectionsOnSubmit" class="input-error-text"> Add a direction to save!</p>
+                <p v-if="noDirectionsOnSubmit" class="input-error-text">{{ $t('recipe.add_direction_tip') }}</p>
                     <ol>
                         <li v-for="(direction, index) in recipe.directions" :key="index">
                             <div class="recipe-create-list-element">

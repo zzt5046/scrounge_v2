@@ -17,10 +17,7 @@
     margin-bottom: 0.5rem;
     height: auto;
     width: 50%;
-    border-radius: 1rem;
-    border: 2px solid #7a7a7a;
     background-color: white;
-    box-shadow: 0em 0em 1.2em 0.36em rgba(0, 0, 0, 0.075);
 }
 
 .recipe-list-header,
@@ -84,7 +81,7 @@
 }
 
 #recipe-search-input {
-    width: 40rem;
+    width: 100%;
     margin-bottom: 1rem;
 }
 
@@ -125,7 +122,7 @@
 
 .recipe-ingredients-create,
 .recipe-directions-create {
-    max-width: 70%;
+    width: auto;
 }
 
 .recipe-notes-edit,
@@ -255,6 +252,8 @@
 .generate-recipe-panel {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
     width: 100%;
 }
 
@@ -314,6 +313,7 @@
 #generate-ingredient-select,
 #generate-preference-select {
     margin-right: 1rem;
+    width: 15rem;
 }
 
 .generate-summary-ingredients-list,
@@ -344,6 +344,12 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-right: 2rem;
     margin-bottom: 1rem;
+}
+
+.generated-recipe-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
 }

@@ -41,6 +41,11 @@ export const dashboardState = reactive({
         this.activeSection = sectionId
     },
 
+    previousSection: '',
+    setPreviousSection(sectionId) {
+        this.previousSection = sectionId
+    },
+
     getLabelKey(sectionId) {
         const section = this.navbarSections.find(section => section.id == sectionId)
         return section ? section.labelKey : null

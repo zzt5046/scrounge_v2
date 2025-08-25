@@ -14,6 +14,7 @@
       <HomePanel v-if="showHomeSection"/>
       <RecipesPanel :account="account" v-else-if="showRecipeSection" @refresh-account="loadAccount"/>
       <AccountPanel :account="account" v-else-if="showSettingsSection"/>
+      <LogoutPanel @back="changeNavbarSection" v-else-if="showLogoutSection"/>
     </main>
     
     <footer class="dashboard-footer">
@@ -31,6 +32,7 @@ import DashboardNavbar from './components/DashboardNavbar.vue';
 import HomePanel from './content/home/HomePanel.vue';
 import RecipesPanel from './content/recipes/RecipesPanel.vue';
 import AccountPanel from './content/account/AccountPanel.vue';
+import LogoutPanel from './content/logout/LogoutPanel.vue';
   export default {
     name: 'DashboardView',
     components: {
@@ -39,6 +41,7 @@ import AccountPanel from './content/account/AccountPanel.vue';
       HomePanel,
       RecipesPanel,
       AccountPanel,
+      LogoutPanel
     },
 
     data() {
@@ -63,6 +66,10 @@ import AccountPanel from './content/account/AccountPanel.vue';
     },
 
     computed: {
+      activeSection() {
+        return dashboardState.activeSection
+      },
+
       showHomeSection() {
         return dashboardState.activeSection == DASHBOARD_HOME
       },
@@ -71,6 +78,9 @@ import AccountPanel from './content/account/AccountPanel.vue';
       },
       showSettingsSection() {
         return dashboardState.activeSection == DASHBOARD_SETTINGS
+      },
+      showLogoutSection() {
+        return dashboardState.activeSection == DASHBOARD_LOGOUT
       },
     },
 
@@ -83,18 +93,9 @@ import AccountPanel from './content/account/AccountPanel.vue';
       },
 
       changeNavbarSection(sectionId) {
-        if(sectionId == DASHBOARD_LOGOUT) {
-          this.logout()
-        } else {
-          const labelKey = dashboardState.getLabelKey(sectionId);
-          this.activeSectionTitle = this.$t(labelKey);
-        }
-      },
-
-      logout() {
-        accountService.logout().then(() =>{
-          this.$router.push({ name: 'root' })
-        })
+        console.log("Changing section to: " + sectionId)
+        const labelKey = dashboardState.getLabelKey(sectionId);
+        this.activeSectionTitle = this.$t(labelKey);
       },
     },
   };

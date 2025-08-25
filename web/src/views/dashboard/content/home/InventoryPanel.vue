@@ -6,10 +6,10 @@
             <div class="flex-row">
                 <TextInput class="inventory-add-input" v-model="inventoryAdd" :placeholder="$t('home.inventory.add')" @enter="addItem(inventoryAdd)"/>
                 <button class="btn btn-primary add-btn" @click="addItem(inventoryAdd)" :disabled="!canAddItem">{{ $t('home.inventory.actions.add') }}</button>
-                <!-- <button class="btn btn-primary add-btn" @click="$emit('generate')">{{ $t('home.generate.header') }}</button> -->
             </div>
         </div>
-        <div class="inventory-panel-content panel">
+
+        <div class="inventory-panel-content">
             <span v-show="items.length == 0"> {{ $t('home.inventory.no-items') }} </span>
             <div v-for="(item, index) in displayedItems" :key="index">
                 <img src="../../../../assets/icon/x-icon.png" class="remove-item-icon nudge"

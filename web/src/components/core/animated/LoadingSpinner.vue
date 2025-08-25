@@ -36,6 +36,7 @@ export default {
         display: inline-block;
         animation: spin 1s linear infinite;
         border-color: gray transparent transparent transparent;
+        will-change: transform, opacity;
     }
     @keyframes spin {
         0% {

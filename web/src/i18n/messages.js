@@ -108,14 +108,21 @@ const messages = {
         no_recipes_fav: 'No recipes found. Favorite a recipe to see it listed here!',
         deleted: 'Deleted recipe: ',
       },
+      search: {
+        header: 'Search Recipes',
+        placeholder: 'Search for recipes',
+        none_found: 'No recipes found.',
+      },
       information: 'Information',
       name: 'Name',
       description: 'Description',
       add_description: 'Add description here.',
       ingredients: 'Ingredients',
       no_ingredients: 'No ingredients found.',
+      add_ingredient_tip: 'Add an ingredient to save!',
       directions: 'Directions',
       add_direction: 'Add direction.',
+      add_direction_tip: 'Add a direction to save!',
       no_directions: 'No directions found.',
       notes: 'Notes',
       add_notes: 'Add notes here.',
@@ -124,9 +131,9 @@ const messages = {
       make_public: 'Make this recipe public?',
       make_public_desc: 'This will allow other users to see this recipe.',
       actions: {
-        add: '+ Add Recipe',
+        add: '+ Add',
         edit: 'Edit Recipe',
-        generate: 'Generate Recipe',
+        generate: '+ Generate',
         show_favorites: 'Show Favorites',
         save: 'Save Recipe',
         favorite: 'Favorite',
@@ -208,6 +215,9 @@ const messages = {
         error: 'An error has occurred. Please try again later.'
       },
 
+    },
+    logout: {
+      message: 'Are you sure you want to logout?'
     },
     validations: {
       required_note: 'Indicates a required field',
