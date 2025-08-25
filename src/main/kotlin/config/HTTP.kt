@@ -23,5 +23,6 @@ fun Application.configureHTTP() {
         allowSameOrigin = true
 
         allowHost("localhost:5173", schemes = listOf("http"))
+        allowHost("localhost:3000", schemes = listOf("http"))
     }
 }

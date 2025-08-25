@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 import org.bson.Document
 import org.bson.types.ObjectId
 import zjt.projects.db.operations.AccountService
+import zjt.projects.models.engine.recipe.EngineRecipe
 import zjt.projects.models.recipe.*
 
 class RecipeService {
@@ -46,8 +47,17 @@ class RecipeService {
     fun getRecipesByIds(ids: Set<String>): RecipesResponse =
         collection.find(Filters.`in`("_id", ids.map { ObjectId(it) })).toRecipesResponse()
 
-    fun getRecipesByAccountId(id: String): RecipesResponse =
-        collection.find(Filters.eq("accountId", id)).toRecipesResponse()
+    fun getRecipesByAccountId(accountId: String): RecipesResponse =
+        collection.find(Filters.eq("accountId", accountId)).toRecipesResponse()
+
+    suspend fun getGeneratedRecipesByAccountId(accountId: String): MutableMap<String, EngineRecipe> {
+        val account = accountService.findAccount(accountId)
+        return if (account != null) {
+            return account.generatedRecipes
+        }else{
+            mutableMapOf()
+        }
+    }
 
     suspend fun updateRecipe(id: String, recipe: Recipe): Document? = withContext(Dispatchers.IO) {
         collection.findOneAndReplace(Filters.eq("_id", ObjectId(id)), recipe.toDocument())

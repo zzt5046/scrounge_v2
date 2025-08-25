@@ -164,22 +164,25 @@ export default {
 
     methods: {
         async generateRecipe() {
+            console.count('generate recipe called')
+            if (this.generating) return;
             this.generatedRecipes = [];
             this.generating = true;
-            try {
-                const response = await smartFoodService.generateRecipe(this.ingredients, this.preferences, this.count);
+            await smartFoodService.generateRecipe(this.ingredients, this.preferences, this.count).then((response) => {
+                console.log(response)
                 this.generatedRecipes = response.recipes || [];
-                if(this.generatedRecipes.length === 0) {
-                    this.error = 'No recipes generated. Please try different ingredients or preferences.';
+                if(this.generatedRecipes?.length === 0) {
+                    notifications.showToast('An error has occurred. Please try different ingredients or preferences', 'error');
                 } else {
                     this.error = null;
                 }
-            } catch (error) {
+            }).catch((error) => {
                 console.error('Error generating recipe:', error);
-                this.error = 'Failed to generate recipes. Please try again.';
-            } finally {
+                notifications.showToast('An error has occurred. Please try again later.', 'error');
+            }).finally(() => {
                 this.generating = false;
-            }
+            });
+            
         },
 
         async saveRecipe(recipe) {
@@ -187,18 +190,18 @@ export default {
 
             var recipeRequest = {
                 accountId: store.activeAccountId,
-                public: false,
-                author: "Scrounge SmartFood",
                 name: recipe.name,
                 description: recipe.description,
                 ingredients: recipe.ingredients,
                 directions: recipe.directions,
                 notes: recipe.notes,
+                public: false,
+                author: 'Scrounge SmartFood',
                 generated: true,
             }
 
             await sleep(500);
-            await recipeService.createRecipe(recipeRequest).then(() => {
+            await recipeService.saveGeneratedRecipe(recipeRequest).then(() => {
                 console.log('Recipe saved successfully');
                 this.$emit('recipeSaved', recipe);
                 notifications.showToast('Recipe saved successfully!', 'success');

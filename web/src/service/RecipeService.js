@@ -25,6 +25,10 @@ export class RecipeService {
         return await api.post('recipes', recipe)
     }
 
+    async saveGeneratedRecipe(recipe) {
+        return await api.post('recipes/generated', recipe)
+    }
+
     async updateRecipe(recipeId, newRecipe) {
         return await api.put(`recipes/${recipeId}`, newRecipe)
     }

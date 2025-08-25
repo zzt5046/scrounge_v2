@@ -137,7 +137,8 @@ fun Application.accountsModule(){
                     securityQuestionId = request.securityQuestionId ?: account.securityQuestionId,
                     securityQuestionAnswer = securityQuestionAnswer,
                     settings = request.settings ?: account.settings,
-                    favoriteRecipes = request.favoriteRecipes ?: account.favoriteRecipes
+                    favoriteRecipes = request.favoriteRecipes ?: account.favoriteRecipes,
+                    generatedRecipes = request.generatedRecipes ?: account.generatedRecipes
                 )
 
                 accountService.update(id, updatedAccount)?.let {
