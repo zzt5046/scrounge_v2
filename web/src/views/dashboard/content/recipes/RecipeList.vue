@@ -5,14 +5,14 @@
             <h2 v-else>{{ $t('recipe.list.header') }}</h2>
             <div id="recipe-list-header-actions">
                 <button id="show-favorite-recipes-button" 
-                    :class="{ 'btn btn-primary': true, 'favorites-button-show': showFavorites, 'favorites-button-hide': !showFavorites, 'header-button': true }" 
+                    :class="{ 'btn btn-primary': true, 'favorites-button-show': showFavorites, 'favorites-button-hide': !showFavorites, 'mr-1': true }" 
                     @click="toggleFavorites">
                     {{ $t('recipe.actions.show_favorites') }}
                 </button>
-                <button id="add-recipe-button" class="btn btn-primary header-button" :disabled="showFavorites" @click="$emit('add-recipe')">
+                <button id="add-recipe-button" class="btn btn-primary mr-1" :disabled="showFavorites" @click="$emit('add-recipe')">
                     {{ $t('recipe.actions.add') }}
                 </button>
-                <button id="generate-recipe-button" class="btn btn-primary header-button" @click="$emit('generate-recipe')">
+                <button id="generate-recipe-button" class="btn btn-primary" @click="$emit('generate-recipe')">
                     {{ $t('recipe.actions.generate') }}
                 </button>
             </div>
@@ -88,7 +88,7 @@ export default {
 }
 </script>
 <style scoped>
-    .header-button {
+    .mr-1 {
         margin-right: 1rem;
     }
 </style>

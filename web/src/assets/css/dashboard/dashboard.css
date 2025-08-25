@@ -133,7 +133,33 @@
     width: 100%;
 }
 
+.logout-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    width: 30%;
+    height: auto;
+    margin: auto;
+    margin-top: 10% !important;
+}
 
+.logout-message {
+    text-align: center;
+}
+
+.logout-icon {
+    width: 40%;
+    height: auto;
+    margin: auto;
+}
+
+.logout-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+}
 
 
 
