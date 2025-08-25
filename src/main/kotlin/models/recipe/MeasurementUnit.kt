@@ -25,8 +25,8 @@ enum class MeasurementUnit(val label: String, val system: MeasurementSystem?) {
     KILOGRAM("kg", MeasurementSystem.METRIC),
 
     //for "no unit" cases, e.g. 3 onions
-    NO_UNIT(" ", null),
+    ITEM("", MeasurementSystem.UNIVERSAL),
 }
 
 fun getMeasurementUnits(system: MeasurementSystem): Map<MeasurementUnit, String> =
-    MeasurementUnit.entries.filter { it.system == system }.associateWith { it.label }
+    MeasurementUnit.entries.filter { it.system == system || it.system == MeasurementSystem.UNIVERSAL }.associateWith { it.label }

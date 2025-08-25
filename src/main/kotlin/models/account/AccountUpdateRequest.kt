@@ -2,6 +2,7 @@ package zjt.projects.models.account
 
 import kotlinx.serialization.Serializable
 import zjt.projects.models.account.settings.AccountSetting
+import zjt.projects.models.engine.recipe.EngineRecipe
 
 @Serializable
 data class AccountUpdateRequest (
@@ -12,4 +13,5 @@ data class AccountUpdateRequest (
     val securityQuestionAnswer: String?,
     val settings: Map<AccountSetting, String>?,
     val favoriteRecipes: Set<String>?,
+    val generatedRecipes: MutableMap<String, EngineRecipe>? = mutableMapOf()
 )

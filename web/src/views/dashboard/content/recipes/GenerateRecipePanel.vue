@@ -80,7 +80,12 @@
                 <div class="generate-results-header">
                     <h4> {{ recipe.name }} </h4>
                     <div class="generated-recipe-actions">
-                        <button class="btn btn-primary" @click="saveRecipe"> {{ $t('actions.save') }} </button>
+                        <LoadingButton 
+                            :label="$t('actions.save')"
+                            @click="saveRecipe(recipe)"
+                            type="primary"
+                            :loading="saving"
+                        />
                         <button class="btn btn-secondary" @click="generatedRecipes.splice(index, 1)"> {{ $t('actions.dismiss') }} </button>
                     </div>
                 </div>
@@ -110,6 +115,8 @@ import SelectInput from '@/components/core/input/SelectInput.vue';
 import TextInput from '@/components/core/input/TextInput.vue';
 import LoadingButton from '@/components/core/button/LoadingButton.vue';
 import LoadingSpinner from '@/components/core/animated/LoadingSpinner.vue';
+import { sleep } from '../../../../functions';
+import { notifications } from '../../../../notifications';
 
 export default {
     name: 'GenerateRecipePanel',
@@ -136,6 +143,7 @@ export default {
             count: 1,
 
             generatedRecipes: [],
+            saving: false,
             generating: false,
             error: null,
         };
@@ -156,30 +164,52 @@ export default {
 
     methods: {
         async generateRecipe() {
+            console.count('generate recipe called')
+            if (this.generating) return;
             this.generatedRecipes = [];
             this.generating = true;
-            try {
-                const response = await smartFoodService.generateRecipe(this.ingredients, this.preferences, this.count);
+            await smartFoodService.generateRecipe(this.ingredients, this.preferences, this.count).then((response) => {
+                console.log(response)
                 this.generatedRecipes = response.recipes || [];
-                if(this.generatedRecipes.length === 0) {
-                    this.error = 'No recipes generated. Please try different ingredients or preferences.';
+                if(this.generatedRecipes?.length === 0) {
+                    notifications.showToast('An error has occurred. Please try different ingredients or preferences', 'error');
                 } else {
                     this.error = null;
                 }
-            } catch (error) {
+            }).catch((error) => {
                 console.error('Error generating recipe:', error);
-                this.error = 'Failed to generate recipes. Please try again.';
-            } finally {
+                notifications.showToast('An error has occurred. Please try again later.', 'error');
+            }).finally(() => {
                 this.generating = false;
-            }
+            });
+            
         },
 
         async saveRecipe(recipe) {
-            await recipeService.createRecipe(recipe).then(() => {
+            this.saving = true;
+
+            var recipeRequest = {
+                accountId: store.activeAccountId,
+                name: recipe.name,
+                description: recipe.description,
+                ingredients: recipe.ingredients,
+                directions: recipe.directions,
+                notes: recipe.notes,
+                public: false,
+                author: 'Scrounge SmartFood',
+                generated: true,
+            }
+
+            await sleep(500);
+            await recipeService.saveGeneratedRecipe(recipeRequest).then(() => {
+                console.log('Recipe saved successfully');
                 this.$emit('recipeSaved', recipe);
+                notifications.showToast('Recipe saved successfully!', 'success');
             }).catch((error) => {
                 console.error('Error saving recipe:', error);
-                this.error = 'Failed to save the recipe. Please try again.';
+                notifications.showToast('Error saving recipe, please try again.', 'error');
+            }).finally(() => {
+                this.saving = false;
             });
         },
 

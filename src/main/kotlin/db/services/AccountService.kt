@@ -3,6 +3,7 @@ package zjt.projects.db.operations
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters
+import io.ktor.server.plugins.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -13,6 +14,7 @@ import zjt.projects.db.services.RecipeService
 import zjt.projects.models.account.*
 import zjt.projects.models.account.Account.Companion.toAccountResponse
 import zjt.projects.models.account.settings.*
+import zjt.projects.models.engine.recipe.EngineRecipe
 import zjt.projects.models.recipe.RecipeResponse
 import zjt.projects.util.crypto.generateSalt
 import zjt.projects.util.crypto.sha256
@@ -86,7 +88,8 @@ class AccountService {
             securityQuestionId = request.securityQuestionId,
             securityQuestionAnswer = (salt + request.securityQuestionAnswer).sha256(),
             settings = defaultAccountSettings(),
-            favoriteRecipes = mutableSetOf()
+            favoriteRecipes = mutableSetOf(),
+            generatedRecipes = mutableMapOf()
         )
         val doc = account.toDocument()
         collection.insertOne(doc)
@@ -145,6 +148,20 @@ class AccountService {
     // ------------------------------------------
     suspend fun delete(id: String): Document? = withContext(Dispatchers.IO) {
         collection.findOneAndDelete(Filters.eq("_id", ObjectId(id)))
+    }
+
+    suspend fun addGeneratedRecipe(recipe: EngineRecipe): String {
+        if(recipe.accountId == null){
+            throw NotFoundException("No account ID supplied with recipe.")
+        }
+
+        val account = findFullAccount(recipe.accountId)
+            ?: throw NotFoundException("No account found with ID: ${recipe.accountId}")
+
+        val id = ObjectId().toString()
+        account.generatedRecipes[id] = recipe
+        update(recipe.accountId, account)
+        return id
     }
 
     // END CRUD --------------------------------------------------------------------------------------------------

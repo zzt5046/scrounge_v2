@@ -3,6 +3,7 @@ package zjt.projects.models.account
 import kotlinx.serialization.Serializable
 import zjt.projects.db.services.InventoryService
 import zjt.projects.models.account.settings.AccountSetting
+import zjt.projects.models.engine.recipe.EngineRecipe
 
 @Serializable
 data class Account(
@@ -13,7 +14,8 @@ data class Account(
     val securityQuestionId: String,
     val securityQuestionAnswer: String,
     val settings: Map<AccountSetting, String>,
-    val favoriteRecipes: Set<String>
+    val favoriteRecipes: Set<String>,
+    val generatedRecipes: MutableMap<String, EngineRecipe>
 ){
     companion object {
         fun Account?.toAccountResponse(): AccountResponse? {
@@ -26,6 +28,7 @@ data class Account(
                     securityQuestionId = securityQuestionId,
                     settings = settings,
                     favoriteRecipes = favoriteRecipes,
+                    generatedRecipes = generatedRecipes
                 )
             }
         }

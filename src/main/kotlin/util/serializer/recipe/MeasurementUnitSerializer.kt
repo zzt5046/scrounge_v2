@@ -21,7 +21,7 @@ object MeasurementUnitSerializer : KSerializer<MeasurementUnit> {
         val label = decoder.decodeString()
         return allUnits[label] ?:
         if(label.isEmpty()) {
-             MeasurementUnit.NO_UNIT
+             MeasurementUnit.ITEM
         }else{
             throw SerializationException("Unknown MeasurementUnit label: '$label'")
         }

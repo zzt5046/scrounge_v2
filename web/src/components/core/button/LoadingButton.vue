@@ -1,9 +1,10 @@
 <template>
-    <button :disabled="disabled || loading"
-            :class="['btn', `btn-${type}`, { 'loading': loading }]"
-            @click="$emit('click')">
+    <button 
+        :disabled="disabled || loading"
+        :class="['btn', `btn-${type}`, { 'loading': loading }]"
+        @click="$emit('click')"
+            >
 
-        
         <div class="content">
             <LoadingSpinner :size="20" :lineSize="1" color="black" v-if="loading"/>
             <span :class="{'ml': loading}"> {{ label }} </span>

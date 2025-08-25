@@ -3,11 +3,13 @@ package zjt.projects.db.modules
 import zjt.projects.models.recipe.Recipe
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import zjt.projects.AppContext
 import zjt.projects.models.account.settings.MeasurementSystem
+import zjt.projects.models.engine.recipe.EngineRecipe
 import zjt.projects.models.recipe.getMeasurementUnits
 
 fun Application.recipesModule(){
@@ -23,6 +25,12 @@ fun Application.recipesModule(){
         post("/recipes") {
             val request = call.receive<Recipe>()
             val id = recipeService.createRecipe(request)
+            call.respond(HttpStatusCode.Created, id)
+        }
+
+        post("/recipes/generated"){
+            val recipe = call.receive<EngineRecipe>()
+            val id = accountService.addGeneratedRecipe(recipe)
             call.respond(HttpStatusCode.Created, id)
         }
 
@@ -51,6 +59,12 @@ fun Application.recipesModule(){
             val accountId = call.parameters["accountId"] ?: throw IllegalArgumentException(noIdFound)
             val account = checkNotNull(accountService.findAccount(accountId))
             call.respond(recipeService.getRecipesByIds(account.favoriteRecipes))
+        }
+
+        // Get generated recipes by accountId
+        get("/recipes/generated/{accountId}") {
+            val accountId = call.parameters["accountId"] ?: throw IllegalArgumentException(noIdFound)
+            call.respond(recipeService.getGeneratedRecipesByAccountId(accountId))
         }
 
         //get measurement units

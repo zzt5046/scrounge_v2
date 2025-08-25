@@ -39,6 +39,7 @@ enum class Language {
 enum class MeasurementSystem{
     IMPERIAL,
     METRIC,
+    UNIVERSAL
 }
 
 enum class Theme{
