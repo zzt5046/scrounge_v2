@@ -43,7 +43,9 @@ export const dashboardState = reactive({
 
     previousSection: '',
     setPreviousSection(sectionId) {
-        this.previousSection = sectionId
+        if (sectionId !== 'logout') {
+            this.previousSection = sectionId
+        }
     },
 
     getLabelKey(sectionId) {
