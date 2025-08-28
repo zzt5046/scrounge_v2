@@ -15,13 +15,15 @@
         <TextInput id="login-password" :label="$t('fields.password')" v-model="password" @enter="login" type="password"
           :error="error(v$, 'password')" :errorMessage="errorMessage(v$, 'password')" required />
       </p>
-      <div>
-        <div class="button-section flex-box">
-          <button id="login-button" class="btn btn-primary" @click="validateAndSubmit">
-            {{ $t('actions.login') }}
-          </button>
-        </div>
-        <div class="login-error-section flex-box">
+      <div class="button-div">
+          <LoadingButton 
+            id="login-button" 
+            class="btn btn-primary" 
+            :loading="loading"
+            :label="$t('actions.login')"
+            @click="validateAndSubmit"
+          />
+        <div class="login-error-section">
           <span class="login-error error-text" v-if="errorText" @click="clearError">
             {{ errorText }}
           </span>
@@ -38,11 +40,16 @@ import FormsMixin from '@/mixins/FormsMixin.js'
 import useVuelidate from '@vuelidate/core'
 import { getValidations } from '@/validations'
 import RequiredNote from '../../../components/core/input/RequiredNote.vue'
+import LoadingButton from '@/components/core/button/LoadingButton.vue'
 
 export default {
   name: 'LoginPanel',
   mixins: [FormsMixin],
-  components: { TextInput, RequiredNote },
+  components: { 
+    TextInput, 
+    RequiredNote,
+    LoadingButton
+  },
 
   data() {
     return {
@@ -50,6 +57,7 @@ export default {
       username: null,
       password: null,
       loginResponse: null,
+      loading: false,
       errorText: null
     }
   },
@@ -69,7 +77,7 @@ export default {
 
     async login() {
 
-      this.v$.$validate()
+      this.loading = true
 
       this.errorText = null
 
@@ -92,6 +100,8 @@ export default {
         } else {
           this.errorText = this.$t('splash.login.error')
         }
+      }finally{
+        this.loading = false
       }
     },
 
@@ -105,3 +115,12 @@ export default {
   },
 }
 </script>
+<style scoped>
+  .button-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+</style>
