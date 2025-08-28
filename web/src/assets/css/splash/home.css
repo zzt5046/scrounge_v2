@@ -47,6 +47,10 @@
     font-style: normal;
 }
 
+#login-button {
+    width: 30%;
+}
+
 .login-error {
     top: 50%;
     max-width: 100%;

@@ -5,7 +5,7 @@
           {{ $t('splash.register.success') }}
         </p>
         <div>
-          <div class="button-section flex-box">
+          <div class="button-section">
             <button id="login-button" class="btn btn-primary" @click="done">
               {{ $t('actions.login') }}
             </button>
