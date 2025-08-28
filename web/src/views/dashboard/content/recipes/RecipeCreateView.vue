@@ -60,7 +60,7 @@
                             v-model="newIngredient.unit"
                         />
                     
-                        <TextInput id="create-recipe-newIngredientName" class="newIngredientName" :placeholder="$t('recipe.ingredient.name')" v-model="newIngredient.name"/>
+                        <TextInput id="create-recipe-newIngredientName" class="newIngredientName" :placeholder="$t('recipe.ingredient.name')" v-model="newIngredient.name" @enter="addIngredient"/>
                     </div>
                     <button class="btn btn-primary" @click="addIngredient" :disabled="!newIngredientValid">{{ $t('recipe.ingredient.add') }}</button>
                 </div>
@@ -100,7 +100,7 @@
                         </li>
                     </ol>
                 <div class="recipe-create-list-add">
-                    <TextInput id="create-recipe-newDirection" class="newDirection" :placeholder="$t('recipe.add_direction')" v-model="newDirection"/>
+                    <TextInput id="create-recipe-newDirection" class="newDirection" :placeholder="$t('recipe.add_direction')" v-model="newDirection" @enter="addDirection"/>
                     <button class="btn btn-primary" @click="addDirection" :disabled="!newDirectionValid">{{ $t('recipe.direction.add') }}</button>
                 </div>
             </div>
@@ -112,11 +112,14 @@
                 <CheckboxField id="recipe-public-checkbox-create" :label="$t('recipe.make_public')" v-model="recipe.public"/>
             </div>
             <div class="recipe-create-actions">
-                <button class="btn btn-primary" @click="validateAndSubmit">{{ $t('actions.save') }}</button>
-                <button class="btn btn-primary" @click="back">{{ $t('actions.cancel') }}</button>
-            </div>
-            <div class="recipe-create-error" v-if="errorText">
-                <p @click="errorText = null">{{ errorText }}</p>
+                <button class="btn btn-secondary" @click="back">{{ $t('actions.cancel') }}</button>
+                <LoadingButton
+                    id="create-recipe-save-button"
+                    class="btn btn-primary"
+                    :loading="loading"
+                    :label="$t('actions.save')"
+                    @click="validateAndSubmit"
+                />
             </div>
         </div>
     </div>
@@ -134,11 +137,21 @@ import { recipeService } from '@/service/.service-registry'
 import { store } from '../../../../store'
 import RequiredNote from '../../../../components/core/input/RequiredNote.vue'
 import { validationMessages } from '../../../../validations.js'
+import { notifications } from '../../../../notifications.js'
+import LoadingButton from '@/components/core/button/LoadingButton.vue'
+import { sleep } from '../../../../functions.js'
 
 export default {
     name: 'RecipeCreateView',
     mixins: [FormsMixin], 
-    components: { TextInput, SelectInput, CheckboxField, TextAreaField, RequiredNote },   
+    components: { 
+        TextInput, 
+        SelectInput, 
+        CheckboxField, 
+        TextAreaField, 
+        RequiredNote,
+        LoadingButton
+    },   
 
     data() {
         return {
@@ -164,8 +177,7 @@ export default {
             newDirection: null,
             directionAdded: false,
             submitted: false,
-            successText: null,
-            errorText: null,
+            loading: false,
         }
     },
 
@@ -305,18 +317,22 @@ export default {
             this.v$.$validate()
             if (!this.v$.$error) {
                 this.saveRecipe()
-            }else{
-                console.log(this.v$)
             }
         },
 
         async saveRecipe() {
+            if(this.loading) return;
+            this.loading = true
+            await sleep(500);
             await recipeService.createRecipe(this.recipe).then(() => {
                 this.$emit('create-recipe')
                 this.back()
+                notifications.success(this.$t('recipe.create.success'))
             }).catch((error) => {
                 console.error('Error creating recipe:', error)
-                this.errorText = this.$t('recipe.create.error')
+                notifications.error(this.$t('recipe.create.error'))
+            }).finally(() => {
+                this.loading = false
             })
         },
     },

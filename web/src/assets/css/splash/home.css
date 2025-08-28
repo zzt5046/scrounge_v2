@@ -47,19 +47,10 @@
     font-style: normal;
 }
 
-#login-button {
+#login-button,
+#register-button,
+#register-back {
     width: 30%;
-}
-
-.login-error {
-    top: 50%;
-    max-width: 100%;
-    flex-grow: 1;
-}
-
-.login-error-section {
-    margin-top: 1rem;
-    text-align: center;
 }
 
 /*---------------------REGISTER------------------------*/
@@ -96,14 +87,9 @@
 }
 
 .button-section {
-    margin-top: 2.25rem;
     display: flex;
-    align-items: flex-start;
-    flex-wrap: nowrap;
-}
-
-.button-section * {
-    width: 40%;
-    margin-right: auto;
-    margin-left: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 1rem;
 }

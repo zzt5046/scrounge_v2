@@ -169,16 +169,15 @@ export default {
             this.generatedRecipes = [];
             this.generating = true;
             await smartFoodService.generateRecipe(this.ingredients, this.preferences, this.count).then((response) => {
-                console.log(response)
                 this.generatedRecipes = response.recipes || [];
                 if(this.generatedRecipes?.length === 0) {
-                    notifications.showToast('An error has occurred. Please try different ingredients or preferences', 'error');
+                    notifications.error('An error has occurred. Please try different ingredients or preferences.');
                 } else {
                     this.error = null;
                 }
             }).catch((error) => {
                 console.error('Error generating recipe:', error);
-                notifications.showToast('An error has occurred. Please try again later.', 'error');
+                notifications.error('An error has occurred. Please try again later.');
             }).finally(() => {
                 this.generating = false;
             });
@@ -202,12 +201,11 @@ export default {
 
             await sleep(500);
             await recipeService.saveGeneratedRecipe(recipeRequest).then(() => {
-                console.log('Recipe saved successfully');
                 this.$emit('recipeSaved', recipe);
-                notifications.showToast('Recipe saved successfully!', 'success');
+                notifications.success('Recipe saved successfully!');
             }).catch((error) => {
                 console.error('Error saving recipe:', error);
-                notifications.showToast('Error saving recipe, please try again.', 'error');
+                notifications.error('Error saving recipe, please try again.');
             }).finally(() => {
                 this.saving = false;
             });
