@@ -15,7 +15,7 @@
         <TextInput id="login-password" :label="$t('fields.password')" v-model="password" @enter="login" type="password"
           :error="error(v$, 'password')" :errorMessage="errorMessage(v$, 'password')" required />
       </p>
-      <div class="button-div">
+      <div class="button-section">
           <LoadingButton 
             id="login-button" 
             class="btn btn-primary" 
@@ -23,11 +23,6 @@
             :label="$t('actions.login')"
             @click="validateAndSubmit"
           />
-        <div class="login-error-section">
-          <span class="login-error error-text" v-if="errorText" @click="clearError">
-            {{ errorText }}
-          </span>
-        </div>
       </div>
     </div>
   </div>
@@ -41,6 +36,8 @@ import useVuelidate from '@vuelidate/core'
 import { getValidations } from '@/validations'
 import RequiredNote from '../../../components/core/input/RequiredNote.vue'
 import LoadingButton from '@/components/core/button/LoadingButton.vue'
+import { notifications } from '../../../notifications'
+import { sleep } from '../../../functions'
 
 export default {
   name: 'LoginPanel',
@@ -57,8 +54,7 @@ export default {
       username: null,
       password: null,
       loginResponse: null,
-      loading: false,
-      errorText: null
+      loading: false
     }
   },
 
@@ -79,8 +75,7 @@ export default {
 
       this.loading = true
 
-      this.errorText = null
-
+      await sleep(500);
       const request = {
         userName: this.username,
         password: this.password
@@ -96,17 +91,13 @@ export default {
         }
       }catch (error) {
         if (error.status == 401) {
-          this.errorText = this.$t('splash.login.failed')
+          notifications.error(this.$t('splash.login.failed'))
         } else {
-          this.errorText = this.$t('splash.login.error')
+          notifications.error(this.$t('splash.login.error'))
         }
       }finally{
         this.loading = false
       }
-    },
-
-    clearError() {
-      this.errorText = null
     },
 
     gotoRegister() {
@@ -115,12 +106,3 @@ export default {
   },
 }
 </script>
-<style scoped>
-  .button-div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1rem;
-  }
-</style>

@@ -11,7 +11,7 @@
             <button :class="{'btn btn-primary': true, 'favorites-button-show': isFavoriteRecipe, 'favorites-button-hide': !isFavoriteRecipe, }" @click="favoriteRecipe">
                 {{ favoriteButtonLabel }}
             </button>
-            <button class="btn btn-primary" @click="$emit('cancel-inspect')">{{ $t('actions.back') }}</button>
+            <button class="btn btn-secondary" @click="$emit('cancel-inspect')">{{ $t('actions.back') }}</button>
         </div>
 
         <div class="recipe-inspect-content">
@@ -106,7 +106,7 @@
                                 :options="units" v-model="newIngredient.unit" />
 
                             <TextInput id="edit-recipe-newIngredientName" class="newIngredientName" :placeholder="$t('recipe.ingredient.name')"
-                                v-model="newIngredient.name" />
+                                v-model="newIngredient.name" @enter="addIngredient" />
                         </div>
                         <button class="btn btn-primary" @click="addIngredient" :disabled="!newIngredientValid">{{ $t('recipe.ingredient.add')
                             }}</button>
@@ -139,7 +139,7 @@
                 </div>
                 <div class="recipe-edit-list-add seventy">
                     <TextInput id="edit-recipe-newDirection" class="newDirection" :placeholder="$t('recipe.add_direction')"
-                        v-model="newDirection" />
+                        v-model="newDirection" @enter="addDirection"/>
                     <button class="btn btn-primary" @click="addDirection" :disabled="!newDirectionValid">{{ $t('recipe.direction.add') }}</button>
                 </div>
             </div>

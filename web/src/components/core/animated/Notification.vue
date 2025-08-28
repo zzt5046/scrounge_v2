@@ -47,9 +47,6 @@ export default {
   gap: 8px;
   z-index: 9999;
 }
-/* .notification.success { background-color: #28a745; }
-.notification.error { background-color: #dc3545; }
-.notification.info { background-color: #007bff; } */
 
 .notification.success { background-color: var(--vt-c-fawn); }
 .notification.error { background-color: #dc3545; }

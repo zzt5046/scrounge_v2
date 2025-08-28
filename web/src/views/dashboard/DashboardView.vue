@@ -93,7 +93,6 @@ import LogoutPanel from './content/logout/LogoutPanel.vue';
       },
 
       changeNavbarSection(sectionId) {
-        console.log("Changing section to: " + sectionId)
         const labelKey = dashboardState.getLabelKey(sectionId);
         this.activeSectionTitle = this.$t(labelKey);
       },

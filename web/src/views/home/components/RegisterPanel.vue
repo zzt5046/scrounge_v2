@@ -30,13 +30,16 @@
       </p>
       <div>
         <div class="button-section">
-          <button class="btn btn-primary" @click="validateAndSubmit">{{ $t('actions.register') }}</button>
-          <button class="btn btn-secondary" @click="back">
+          <LoadingButton
+            id="register-button"
+            class="btn btn-primary"
+            :loading="loading"
+            :label="$t('actions.register')"
+            @click="validateAndSubmit"
+          />
+          <button class="btn btn-secondary" id="register-back" @click="back">
             {{ $t('actions.back') }}
           </button>
-        </div>
-        <div class="error-text" v-if="errorText">
-          <span @click="errorText = null">{{ errorText }}</span>
         </div>
       </div>
     </div>
@@ -52,11 +55,19 @@ import { store } from '../../../store'
 import useVuelidate from '@vuelidate/core'
 import { getValidations } from '@/validations'
 import RequiredNote from '../../../components/core/input/RequiredNote.vue'
+import LoadingButton from '@/components/core/button/LoadingButton.vue'
+import { notifications } from '../../../notifications'
+import { sleep } from '../../../functions'
 
 export default {
   name: 'RegisterPanel',
   mixins: [FormsMixin],
-  components: { TextInput, SelectInput, RequiredNote },
+  components: { 
+    TextInput, 
+    SelectInput, 
+    RequiredNote,
+    LoadingButton
+  },
 
   data() {
     return {
@@ -68,7 +79,7 @@ export default {
       questions: store.securityQuestions,
       securityQuestion: null,
       securityAnswer: null,
-      errorText: null,
+      loading: false,
     }
   },
 
@@ -96,6 +107,9 @@ export default {
 
     async register() {
 
+      this.loading = true
+
+      await sleep(500);
       const request = {
           userName: this.username,
           password: this.password,
@@ -109,7 +123,9 @@ export default {
         this.$emit('registerSuccess')
       }catch(e){
         console.error('Register error:', e)
-        this.errorText = this.$t('splash.register.error')
+        notifications.error(this.$t('splash.register.error'))
+      }finally{
+        this.loading = false
       }
     }
   }
